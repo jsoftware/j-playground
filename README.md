@@ -19,17 +19,16 @@ Building
 
 ```
 docker pull emscripten/emsdk
+# mapping /tmp to /host_tmp to make it easier to work with on the host os (not required)
 docker run -v /tmp:/host_tmp -it emscripten/emsdk bash
 
 # on the docker container shell
-emsdk install  1.38.43
-emsdk activate  1.38.43
-source "/emsdk/emsdk_env.sh" # to set environment variables
-apt update
-apt install python
 cd /host_tmp
 git clone https://github.com/joebo/unbox.git
+cd unbox
 git checkout wasm_poc
+cd src
+cd libj
 ````
 
 ### HTML
