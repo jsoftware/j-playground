@@ -836,5 +836,5 @@ extern A        zpath;
 #if (SYS & SYS_ATARIST+SYS_ATT3B1)
 extern int      memcmp();       /* C library fn                            */
 extern D        strtod();       /* C library fn                            */
-extern I        strtol();       /* C library fn                            */
+//extern I        strtol();       /* C library fn                            */
 #endif

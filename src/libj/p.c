@@ -111,8 +111,11 @@ PT cases[] = {
 F1(jtparse){A*u,*v,y,z;I n;
  RZ(w);
  n=AN(w); v=AAV(w);
+ 
  GA(y,BOX,5+n,1,0); u=AAV(y);
+ 
  RZ(deba(DCPARSE,0L,w,0L));
+ 
  *u++=mark; DO(n, *u++=*v++;); *u++=mark; *u++=mark; *u++=mark; *u++=mark;
  z=parsea(y);
  debz();

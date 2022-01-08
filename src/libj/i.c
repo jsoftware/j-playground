@@ -7,7 +7,7 @@
 #include "w.h"
 
 #if SYS & SYS_FREEBSD
-#include <floatingpoint.h>
+//#include <floatingpoint.h>
 #endif
 
 J gjt=0; // JPF debug
@@ -39,10 +39,12 @@ B jtglobinit(J jt){A x,y;C*s;D*d;I j;UC c,k;
  MC(&inf, XINF,SZD); 
  MC(&jnan,XNAN,SZD);
  infm=-inf;
+ 
  memset(testb,C0,256);
  testb[CIF]=testb[CELSEIF]=testb[CSELECT]=testb[CWHILE]=testb[CWHILST]=testb[CFOR]=testb[CCASE]=testb[CFCASE]=1;
  num=9+numv;
  DO(9, GA(x,INT,1,0,0); ACX(x); * AV(x)=i-9;              num[i-9]   =x;);
+ 
  DO(8, GA(x,INT,1,0,0); ACX(x); * AV(x)=i+2;              num[i+2]   =x;);
  GA(x,B01, 1,0,0     ); ACX(x); *BAV(x)=0;                num[0]=zero=x;
  GA(x,B01, 1,0,0     ); ACX(x); *BAV(x)=1;                num[1]=one =x;
@@ -61,6 +63,7 @@ B jtglobinit(J jt){A x,y;C*s;D*d;I j;UC c,k;
  GA(x,MARK,1,0,0     ); ACX(x); * AV(x)=0;                mark       =x; 
  GA(x,B01, 0,2,&zeroZ); ACX(x);                           mtm        =x;
  GA(x,CMPX,1,0,0     ); ACX(x); d=DAV(x); *d=0; *(1+d)=1; a0j1       =x;
+ 
  RZ(y=str(1L,"z"));     ACX(y);
  GA(x,BOX, 1,1,0     ); ACX(x); *AAV(x)=y;                zpath      =x;
  RZ(mnam=makename("m")); RZ(mdot=makename("m."));
@@ -70,10 +73,13 @@ B jtglobinit(J jt){A x,y;C*s;D*d;I j;UC c,k;
  RZ(xnam=makename("x")); RZ(xdot=makename("x."));
  RZ(ynam=makename("y")); RZ(ydot=makename("y."));
  zeroQ.n =xzero; zeroQ.d =xone;
+
  zeroDX.e=0;     zeroDX.x=xzero;
  memset(minus0,C0,8L); minus0[C_LE?7:0]='\200';
  pf=qpf();
+ 
  pinit();
+ 
  R 1;
 }    /* called once when dll is loaded to create global constants */
 
@@ -139,6 +145,7 @@ static B jtconsinit(J jt){D y;
 static C jtjinit3(J jt){S t;
 /* required for jdll and doesn't hurt others */
  gjt=jt; // global jt for JPF debug
+ 
 #if (SYS & SYS_DOS)
  t=EM_ZERODIVIDE+EM_INVALID; _controlfp(t,t);
 #endif
@@ -148,7 +155,7 @@ static C jtjinit3(J jt){S t;
 #if (SYS & SYS_FREEBSD)
  fpsetmask(0);
 #endif
- jt->tssbase=tod();
+ //jt->tssbase=tod();
  meminit();
  sesminit();
  evinit();

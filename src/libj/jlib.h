@@ -8,6 +8,7 @@ C* _stdcall JGetLocale(J jt);               /* get locale */
 int _stdcall JFree(J jt);                   /* free instance */
 A _stdcall JGetA(J jt,I n,C* name);         /* get 3!:1 from name */
 I _stdcall JSetA(J jt,I n,C* name,I x,C* d);/* name=:3!:2 data */
+A _stdcall Jga(J jt, I t, I n, I r, I*s);
 
 typedef void* (_stdcall *JInitType)     ();
 typedef int   (_stdcall *JDoType)       (void*, C*);

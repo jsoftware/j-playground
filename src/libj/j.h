@@ -218,7 +218,8 @@
 #define ASSERTD(b,s)    {if(!(b)){jsigd((s)); R 0;}}
 #define ASSERTMTV(w)    {RZ(w); ASSERT(1==AR(w),EVRANK); ASSERT(!AN(w),EVLENGTH);}
 #define ASSERTN(b,e,nm) {if(!(b)){jt->curname=(nm); jsignal(e); R 0;}}
-#define ASSERTSYS(b,s)  {if(!(b)){jsignal(EVSYSTEM); jtwri(jt,MTYOSYS,"",(I)strlen(s),s); R 0;}}
+//this creates errors with invoike_iii
+#define ASSERTSYS(b,s)  {if(!(b)){R 0;}}
 #define ASSERTW(b,e)    {if(!(b)){if((e)<=NEVM)jsignal(e); else jt->jerr=(e); R;}}
 #define CALL1(f,w,fs)   ((f)(jt,    (w),(A)(fs)))
 #define CALL2(f,a,w,fs) ((f)(jt,(a),(w),(A)(fs)))
@@ -341,6 +342,15 @@ extern J gjt; // global for JPF (procs without jt)
 #if SY_WINCE_MIPS || defined(__arm__)
 /* strchr fails for CE MIPS - neg chars - spellit fails in ws.c for f=.+.  */
 #define strchr(a,b)     (C*)strchr(a, (UC)b)
+#endif
+
+#if EMSCRIPTEN
+#define FE_INVALID    1
+#define __FE_DENORM   2
+#define FE_DIVBYZERO  4
+#define FE_OVERFLOW   8
+#define FE_UNDERFLOW  16
+#define FE_INEXACT    32
 #endif
 
 #if SYS & SYS_UNIX

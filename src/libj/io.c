@@ -142,6 +142,7 @@ I jdo(J jt, C* lp){I e,old;A x;
  old=jt->tbase+jt->ttop;
  *jt->adbreak=0;
  x=inpl(0,(I)strlen(lp),lp);
+ 
  while(jt->iepdo&&jt->iep){jt->iepdo=0; immex(jt->iep); jt->jerr=0; tpop(old);}
  if(!jt->jerr)immex(x);
  e=jt->jerr;
@@ -155,6 +156,7 @@ I jdo(J jt, C* lp){I e,old;A x;
  showerr();
  spfree();
  tpop(old);
+ 
  R e;
 }
 
@@ -266,6 +268,7 @@ J JInit(void){
      Unix does it here once, but this is not thread safe */
   
   static J g_jt=0;
+  
   if(!g_jt)
   {
     g_jt=malloc(sizeof(JST));
@@ -277,6 +280,7 @@ J JInit(void){
   memset(jt,0,sizeof(JST));
   if(!jtjinit2(jt,0,0)){free(jt); R 0;};
   R jt;
+  
 }
 
 int JFree(J jt){return 0;}
@@ -296,7 +300,7 @@ F1(jtbreakfns){A z;I *fh,*mh; void* ad;
 #if SYS&SYS_UNIX
  fh=(I*)(I)open(CAV(w),O_RDWR);
  ASSERT(-1!=(I)fh,EVDOMAIN);
- ad=mmap(0,1,PROT_READ|PROT_WRITE,MAP_SHARED,(I)fh,0);
+ //ad=mmap(0,1,PROT_READ|PROT_WRITE,MAP_SHARED,(I)fh,0);
  if(0==ad){close((I)fh); ASSERT(0,EVDOMAIN);}
 #else
  RZ(z=toutf16x(w));

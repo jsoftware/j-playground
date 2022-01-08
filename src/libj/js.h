@@ -169,10 +169,15 @@ define one of the following in the build as required
 #endif
 #endif
 
+
+#define SYS SYS_LINUX
+
+//#define SYS SYS_PC386
+
 #ifndef SYS     /* must be defined */
  error: "SYS must be defined"
 #endif
 
 // map C_?? config to old stuff until it is no longer necessary
-#define SY_64 C_64         // eventually replace SY_64 with C_64
+#define SY_64 0         // eventually replace SY_64 with C_64
 

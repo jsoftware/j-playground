@@ -1,0 +1,24 @@
+# J Makefile for wasmer or wasmtime
+
+# wasmtime ../../bin/wasmer/emj.wasm
+# wasmer ../../bin/wasmer/emj.wasm
+
+CC     = emcc 
+CFLAGS = -m32 -DC_64=0
+CFLAGS += -Wno-parentheses -Wno-unused-value -Wno-pointer-sign
+CFLAGS += -Wno-empty-body -Wno-return-type -Wno-constant-logical-operand
+CFLAGS += -Wno-comment -Wno-string-plus-int -Wno-unsequenced  -fomit-frame-pointer -D __linux__=1
+CFLAGS += -D WASMER=1
+
+
+SRCS=$(wildcard *.c)
+
+OBJ=$(SRCS:.c=.o)
+
+j: $(OBJ)
+	  mkdir -p ../../bin/wasmer 
+	  $(CC) $(CFLAGS) $(OBJ) -o ../../bin/wasmer/emj.wasm  -s BINARYEN_EXTRA_PASSES="--pass-arg=max-func-params@61" -s WASM=1 -s EMULATE_FUNCTION_POINTER_CASTS=1 
+
+clean:;	rm -f $(OBJ) j
+
+$(OBJ) : $(HDR)

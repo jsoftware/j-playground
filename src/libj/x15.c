@@ -229,6 +229,7 @@ static void double_trick(double*v, I n){I i=0;
  #endif
 #endif
 
+#define dtrick ;
 
 #define SWITCHCALL                                                         \
   dtrick                                                                   \
@@ -911,7 +912,7 @@ I static CALLBACK cb6(I a,I b,I c,I d,I e,I f){I x[]={a,b,c,d,e,f};R cbold(6,x);
 I static CALLBACK cb7(I a,I b,I c,I d,I e,I f,I g){I x[]={a,b,c,d,e,f,g};R cbold(7,x);}
 I static CALLBACK cb8(I a,I b,I c,I d,I e,I f,I g,I h){I x[]={a,b,c,d,e,f,g,h};R cbold(8,x);}
 I static CALLBACK cb9(I a,I b,I c,I d,I e,I f,I g,I h,I i){I x[]={a,b,c,d,e,f,g,h,i};R cbold(9,x);}
-I static cbv[]={(I)&cb0,(I)&cb1,(I)&cb2,(I)&cb3,(I)&cb4,(I)&cb5,(I)&cb6,(I)&cb7,(I)&cb8,(I)&cb9};
+//I static cbv[]={(I)&cb0,(I)&cb1,(I)&cb2,(I)&cb3,(I)&cb4,(I)&cb5,(I)&cb6,(I)&cb7,(I)&cb8,(I)&cb9};
 
 I static CALLBACK cbx0(){cbxn=0;R cbnew();}
 I static CALLBACK cbx1(I a){cbxn=1;cbx[0]=a;R cbnew();}
@@ -923,7 +924,7 @@ I static CALLBACK cbx6(I a,I b,I c,I d,I e,I f){cbxn=6;cbx[0]=a;cbx[1]=b;cbx[2]=
 I static CALLBACK cbx7(I a,I b,I c,I d,I e,I f,I g){cbxn=7;cbx[0]=a;cbx[1]=b;cbx[2]=c;cbx[3]=d;cbx[4]=e;cbx[5]=f;cbx[6]=g;R cbnew();}
 I static CALLBACK cbx8(I a,I b,I c,I d,I e,I f,I g,I h){cbxn=8;cbx[0]=a;cbx[1]=b;cbx[2]=c;cbx[3]=d;cbx[4]=e;cbx[5]=f;cbx[6]=g;cbx[7]=h;R cbnew();}
 I static CALLBACK cbx9(I a,I b,I c,I d,I e,I f,I g,I h,I i){cbxn=9;cbx[0]=a;cbx[1]=b;cbx[2]=c;cbx[3]=d;cbx[4]=e;cbx[5]=f;cbx[6]=g;cbx[7]=h;cbx[8]=i;R cbnew();}
-I static cbvx[]={(I)&cbx0,(I)&cbx1,(I)&cbx2,(I)&cbx3,(I)&cbx4,(I)&cbx5,(I)&cbx6,(I)&cbx7,(I)&cbx8,(I)&cbx9};
+//I static cbvx[]={(I)&cbx0,(I)&cbx1,(I)&cbx2,(I)&cbx3,(I)&cbx4,(I)&cbx5,(I)&cbx6,(I)&cbx7,(I)&cbx8,(I)&cbx9};
 
 #if SY_WIN32 
 I static _cdecl cbxalt0(){cbxn=0;R cbnew();}
@@ -961,17 +962,17 @@ F1(jtcallback){
   }
   ASSERT(cnt>0&&cnt<CBTYPESMAX,EVDOMAIN);
 #if SY_WIN32
-  R sc((alt?cbvxalt:cbvx)[--cnt]); /* select callback based on alt * args */
+  //R sc((alt?cbvxalt:cbvx)[--cnt]); /* select callback based on alt * args */
 #else
-  R sc(cbvx[--cnt]); /* select callback based on alt * args */
+  //R sc(cbvx[--cnt]); /* select callback based on alt * args */
 #endif
  }
  else
  {
   I k;
   RE(k=i0(w));
-  ASSERT(k>=0&&k<sizeof(cbv)/SZI, EVINDEX);
-  R sc(cbv[k]);
+  //ASSERT(k>=0&&k<sizeof(cbv)/SZI, EVINDEX);
+  //R sc(cbv[k]);
  }
 }    /* 15!:13 */
 

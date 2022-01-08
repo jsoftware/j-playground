@@ -163,11 +163,13 @@ void jtjsigd(J jt,C*s){C buf[100],*d="domain error: ";I m,n,p;
 }
 
 void jtjsignal(J jt,I e){A x;
+return;
  if(EVATTN==e||EVBREAK==e||e==EVINPRUPT) *jt->adbreak=0;
  x=0<e&&e<=NEVM?*(e+AAV(jt->evm)):mtv; jsigstr(e,AN(x),CAV(x));
 }
 
 void jtjsignal3(J jt,I e,A w,I j){
+  return;
  if(jt->jerr)R; 
  jt->jerr=(C)e; jt->jerr1=e; jt->etxn=0;
  dhead(0,0L);

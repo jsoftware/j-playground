@@ -86,7 +86,7 @@ F1(jtts0){A x,z;C s[9],*u,*v,*zv;D*xv;I n,q;
  R z;
 }
 
-
+/*
 #if SY_GETTOD
 D tod(void){struct timeval t; gettimeofday(&t,NULL); R t.tv_sec+(D)t.tv_usec/1e6;}
 #else
@@ -96,7 +96,8 @@ D tod(void){SYSTEMTIME t; GetLocalTime(&t); R t.wSecond+(D)t.wMilliseconds/1e3;}
 D tod(void){R(D)clock()/CLOCKS_PER_SEC;}
 #endif
 #endif
-
+*/
+D tod(void) { return 0; }
 
 #if SY_WIN32
 
