@@ -45,3 +45,12 @@ cd libj
 
 1. make -f makefile.linux
 1. ../../bin/linux/emj
+
+
+```
+root@d88fa49ccb67:/host_tmp/unbox/src/libj# emcc --version
+emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.0 (8e1e305519e1027726a48861a1fec5662f7e18a2)
+Copyright (C) 2014 the Emscripten authors (see AUTHORS.txt)
+This is free and open source software under the MIT license.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+```
