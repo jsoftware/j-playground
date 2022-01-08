@@ -1,5 +1,4 @@
 .tup/
-src/libj/jver.h
 src/libj/defs/hostdefs.c
 src/libj/defs/netdefs.c
 [#]*[#]
