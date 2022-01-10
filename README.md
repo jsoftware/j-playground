@@ -38,6 +38,8 @@ cd libj
 
 ### Wasmer or wasmtime 
 
+#### Pre-requisites
+
 ```
 apt update
 apt install -y libtinfo5
@@ -48,6 +50,8 @@ curl https://get.wasmer.io -sSfL | sh
 # for wasmtime
 curl https://wasmtime.dev/install.sh -sSf | bash
 ```
+
+#### Building
 
 1. make -f makefile.wasmer clean j
 1. wasmer ../../bin/wasmer/emj.wasm
@@ -61,10 +65,14 @@ apt update
 apt install -y g++-multilib
 ```
 
+
+#### Building
+
 1. make -f makefile.linux clean j
 1. ../../bin/linux/emj
 
-
+## emcc version
+The version of emcc used for this experiment is shown below
 ```
 root@d88fa49ccb67:/host_tmp/unbox/src/libj# emcc --version
 emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.0 (8e1e305519e1027726a48861a1fec5662f7e18a2)
