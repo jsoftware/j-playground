@@ -33,17 +33,35 @@ cd libj
 
 ### HTML
 
-1. make -f makefile.html
+1. make -f makefile.html clean j
 2. cd ../../bin/html && python2 -c 'import SimpleHTTPServer; SimpleHTTPServer.test() 
 
 ### Wasmer or wasmtime 
 
-1. make -f makefile.wasmer
+```
+apt update
+apt install -y libtinfo5
+
+# for wasmer
+curl https://get.wasmer.io -sSfL | sh
+
+# for wasmtime
+curl https://wasmtime.dev/install.sh -sSf | bash
+```
+
+1. make -f makefile.wasmer clean j
 1. wasmer ../../bin/wasmer/emj.wasm
 
 ### Linux
 
-1. make -f makefile.linux
+#### Pre-requisites
+
+```
+apt update
+apt install -y g++-multilib
+```
+
+1. make -f makefile.linux clean j
 1. ../../bin/linux/emj
 
 
