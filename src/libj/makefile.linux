@@ -1,0 +1,19 @@
+# J Makefile for Linux (used for testing)
+
+CC     = cc -o ../../bin/linux/emj
+CFLAGS = -m32 -mpc64 -DC_64=0
+CFLAGS += -Wno-parentheses -Wno-unused-value -Wno-pointer-sign
+CFLAGS += -Wno-empty-body -Wno-return-type -Wno-constant-logical-operand
+CFLAGS += -Wno-comment -Wno-string-plus-int -Wno-unsequenced  -fomit-frame-pointer
+
+SRCS=$(wildcard *.c)
+
+OBJ=$(SRCS:.c=.o)
+
+j      : $(OBJ)
+	  mkdir -p ../../bin/linux
+	  $(CC) $(CFLAGS) $(OBJ) -lm  -ldl  
+
+clean:;	rm -f $(OBJ) j
+
+$(OBJ) : $(HDR)
