@@ -1,5 +1,7 @@
-# j-playground
-J playground
+# J Playground
+
+A web-based J language engine. (prototype version)
+
 =====
 Unbox
 =====
@@ -8,7 +10,7 @@ Introduction
 ------------
 This is a proof of concept compilation of unbox into a wasm target. The code lives https://github.com/joebo/unbox/tree/wasm_poc
 
-Demo: https://joebo.github.io/unbox/bin/html/emj.html
+Demo: https://joebo.github.io/unbox/bin/html/emj.html   (todo: replicate this for jsoftware repo)
 
 Introduction
 ------------
