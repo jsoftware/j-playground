@@ -1,6 +1,7 @@
 # J Playground
 
-A web-based J language engine. (prototype version)
+A web-based J console for those who want to explore J without the setup burden of local install. (prototype version)
+
 
 =====
 Unbox
