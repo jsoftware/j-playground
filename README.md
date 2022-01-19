@@ -1,6 +1,6 @@
 # J Playground
 
-A web-based J console for those who want to explore J without the setup burden of local install. (prototype version)
+A web-based J console for those who want to instantly explore the J language. (prototype version)
 
 
 =====
@@ -88,4 +88,3 @@ Copyright (C) 2014 the Emscripten authors (see AUTHORS.txt)
 This is free and open source software under the MIT license.
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ```
->>>>>>> a47cbe92b65a9f203262556a56f7f46d7ae864ee
