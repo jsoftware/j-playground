@@ -1,6 +1,6 @@
 # J Playground
 
-A web-based J console for those who are new to the language and want to instantly explore J. (prototype under development)
+A web-based J console and tutorials for those who are new to the language and want to instantly explore J without installing the engine locally. (prototype under development)
 
 
 Introduction
