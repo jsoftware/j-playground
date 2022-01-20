@@ -1,15 +1,11 @@
 # J Playground
 
-A web-based J console for those who want to instantly explore the J language. (prototype under development)
+A web-based J console for those who are new to the language and want to instantly explore J. (prototype under development)
 
-
-=====
-Unbox
-=====
 
 Introduction
 ------------
-This is a proof of concept compilation of unbox into a wasm target. The code lives https://github.com/joebo/unbox/tree/wasm_poc
+This is a proof of concept compilation of unbox (a browser-based J console) into a wasm target. The code lives https://github.com/joebo/unbox/tree/wasm_poc
 
 Demo: https://joebo.github.io/unbox/bin/html/emj.html   (todo: replicate this for jsoftware repo)
 
