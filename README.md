@@ -1,6 +1,6 @@
 # J Playground
 
-A web-based J console for those who want to instantly explore the J language. (prototype version)
+A web-based J console for those who want to instantly explore the J language. (prototype under development)
 
 
 =====
@@ -33,24 +33,16 @@ cd /host_tmp
 git clone https://github.com/joebo/unbox.git
 cd unbox
 git checkout wasm_poc
-cd src
-cd libj
+cd src/libj
 ````
 
-### HTML
 
-1. apt update
-2. apt install -y python2
-3. make -f makefile.html clean j
-4. cd ../../bin/html && python2 -c 'import SimpleHTTPServer; SimpleHTTPServer.test()'
-
+-----
 ### Wasmer or wasmtime 
 
 #### Pre-requisites
-
 ```
-apt update
-apt install -y libtinfo5
+apt update && apt install -y libtinfo5
 
 # for wasmer
 curl https://get.wasmer.io -sSfL | sh
@@ -62,29 +54,24 @@ curl https://wasmtime.dev/install.sh -sSf | bash
 #### Building
 
 1. make -f makefile.wasmer clean j
-1. /root/.wasmer/bin/wasmer ../../bin/wasmer/emj.wasm
+2. /root/.wasmer/bin/wasmer ../../bin/wasmer/emj.wasm
 
-### Linux
+-----
+### HTML
+The HTML build embeds the browser-based engine in a webpage
+
+1. apt update && apt install -y python2
+2. make -f makefile.html clean j
+3. cd ../../bin/html && python2 -c 'import SimpleHTTPServer; SimpleHTTPServer.test()'
+
+### Linux 
 
 #### Pre-requisites
-
 ```
-apt update
-apt install -y g++-multilib
+apt update && apt install -y g++-multilib
 ```
-
-
 #### Building
 
 1. make -f makefile.linux clean j
-1. ../../bin/linux/emj
+2. ../../bin/linux/emj
 
-## emcc version
-The version of emcc used for this experiment is shown below
-```
-root@d88fa49ccb67:/host_tmp/unbox/src/libj# emcc --version
-emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.0 (8e1e305519e1027726a48861a1fec5662f7e18a2)
-Copyright (C) 2014 the Emscripten authors (see AUTHORS.txt)
-This is free and open source software under the MIT license.
-There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-```
