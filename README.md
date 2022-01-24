@@ -13,7 +13,13 @@ cd /host_tmp
 git clone https://github.com/joebo/jsource.git
 cd jsource
 git checkout j903_wasm
+
+# generate the jversion.h --- this command will have some errors, but proceed anyways
+make_deprecated/build_jconsole.sh
+
 cd jsrc
+
+
 ````
 
 ### HTML
