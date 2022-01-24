@@ -411,7 +411,6 @@ F2(jtamp){A h=0,z;AF f1,f2;B b;C c;I flag,flag2=0,linktype=0,mode=-1,p,r;V*v;
    {PUSHCCTIF(cct,b) h=indexofsub(mode,a,mark); cct=jt->cct; POPCCT f1=ixfixedleft; flag&=~VJTFLGOK1; RZ(h)}  // m&i[.:][!.f], and remember cct when we created the table
   }else switch(c){
    case CWORDS: RZ(a=fsmvfya(a)); f1=jtfsmfx; flag&=~VJTFLGOK1; break;
-   case CIBEAM: if(v->fgh[0]&&v->fgh[1]&&128==i0(v->fgh[0])&&3==i0(v->fgh[1])){RZ(h=crccompile(a)); f1=jtcrcfixedleft; flag&=~VJTFLGOK1;} break;
   }
   z=fdef(0,CAMP,VERB, f1,with2, a,w,h, flag, RMAX,RMAX,RMAX);
   RZ(z); FAV(z)->localuse.lu1.cct=cct; R z;

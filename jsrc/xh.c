@@ -109,7 +109,7 @@ F1(jthost){A z;
  posix_spawn_file_actions_destroy(&action);
 #endif
 #endif
- if(b){f=fopen(fn,FREAD_O); z=rd(f,0L,-1L); fclose(f);}
+ //if(b){f=fopen(fn,FREAD_O); z=rd(f,0L,-1L); fclose(f);}
  unlink(fn);
  ASSERT(b&&f,EVFACE);
 }

@@ -45,7 +45,7 @@
 #define	FNM_PATHNAME	0x02	/* Slash must be matched by slash. */
 #define	FNM_PERIOD	0x04	/* Period must be matched by period. */
 
-#include <sys/cdefs.h>
+//#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 int	 fnmatch __P((const char *, const char *, int));

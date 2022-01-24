@@ -757,11 +757,6 @@ oflo2:
    }else{
      // full matrix products
      I probsize = m*n*(IL)p;  // This is proportional to the number of multiply-adds.  We use it to select the implementation
-     if((UI)probsize < (UI)JT(jt,igemm_thres)){RZ(a=cvt(FL,a)); RZ(w=cvt(FL,w)); cachedmmult(jt,DAV(a),DAV(w),DAV(z),m,n,p,0);}  // Do our matrix multiply - converting   TUNE
-     else {
-      // for large problem, use BLAS
-      mvc(m*n*sizeof(D),DAV(z),1,MEMSET00);
-      igemm_nn(m,n,p,1,(I*)DAV(a),p,1,(I*)DAV(w),n,1,0,DAV(z),n,1);
     }
     // If the result has a value that has been truncated, we should keep it as a float.  Unfortunately, there is no way to be sure that some
     // overflow has not occurred.  So we guess.  If the result is much less than the dynamic range of a float integer, convert the result
@@ -780,7 +775,6 @@ oflo2:
     smallprob=0;  // Don't compute it again
    }else if(!(smallprob = m*n*(IL)p<1000LL)){  // if small problem, avoid the startup overhead of the matrix version  TUNE
       mvc(m*n*sizeof(D),DAV(z),1,MEMSET00);
-      igemm_nn(m,n,p,1,(I*)DAV(a),p,1,(I*)DAV(w),n,1,0,DAV(z),n,1);
    }
    // If there was a floating-point error, retry it the old way in case it was _ * 0
    if(smallprob||NANTEST){D c,*x,*zv;I*u,*v,*wv;
@@ -892,20 +886,9 @@ time1 ,&(x,y)"0 ((256 1e20 1e20 65536 > x*y) # 0 1 2 3) +/ lens
     I flgs=((AFLAG(a)>>(AFUPPERTRIX-FLGAUTRIX))&FLGAUTRI)|((AFLAG(w)>>(AFUPPERTRIX-FLGWUTRIX))&FLGWUTRI);  // flags from a or w
     if((UI)(m*n*(IL)p)>=(UI)JT(jt,dgemm_thres)){   // test for BLAS.  For AVX2 this should not be taken; for other architectures tuning is required
      mvc(m*n*sizeof(D),DAV(z),1,MEMSET00);
-     dgemm_nn(m,n,p,1.0,DAV(a),p,1,DAV(w),n,1,0.0,DAV(z),n,1);
     } else {
      smallprob=1^cachedmmult(jt,av,wv,zv,m,n,p,flgs);  // run the cached mult; if NaN error, remember that fact
     }
-#else
-    I probsize = (m-1)*n*(IL)p;  // This is proportional to the number of multiply-adds.  We use it to select the implementation.  If m==1 we are doing dot-products; no gain from fancy code then
-    if(!(smallprob = (m<=4||probsize<1000LL))){  // if small problem, avoid the startup overhead of the matrix version  TUNE
-     if((UI)probsize < (UI)JT(jt,dgemm_thres))
-      cachedmmult(jt,DAV(a),DAV(w),DAV(z),m,n,p,((AFLAG(a)>>(AFUPPERTRIX-FLGAUTRIX))&FLGAUTRI)|((AFLAG(w)>>(AFUPPERTRIX-FLGWUTRIX))&FLGWUTRI));  // Do our one-core matrix multiply - real   TUNE this is 160x160 times 160x160.  Tell routine if uppertri
-     else{
-      // If the problem is really big, use BLAS
-      mvc(m*n*sizeof(D),DAV(z),1,MEMSET00);
-      dgemm_nn(m,n,p,1.0,DAV(a),p,1,DAV(w),n,1,0.0,DAV(z),n,1);
-     }
     }
 #endif
 #endif
@@ -928,12 +911,6 @@ time1 ,&(x,y)"0 ((256 1e20 1e20 65536 > x*y) # 0 1 2 3) +/ lens
    I probsize = m*n*(IL)p;  // This is proportional to the number of multiply-adds.  We use it to select the implementation
    I smallprob=probsize<1000;  // set if we do the old-fashioned way, possibly after error
    if(!smallprob){  // use old-fashioned way if small.  16b3.4 comes though here
-    if((UI)probsize<(UI)JT(jt,zgemm_thres)){smallprob=1^cachedmmult(jt,DAV(a),DAV(w),DAV(z),m,n*2,p*2,((AFLAG(a)>>(AFUPPERTRIX-FLGAUTRIX))&FLGAUTRI)|((AFLAG(w)>>(AFUPPERTRIX-FLGWUTRIX))&FLGWUTRI)|FLGCMP);}  // Do the fast matrix multiply - complex.  Change widths to widths in D atoms, not complex atoms  TUNE  this is 130x130 times 130x130
-    else {
-      // Large problem - start up BLAS
-      mvc(2*m*n*sizeof(D),DAV(z),1,MEMSET00);
-      zgemm_nn(m,n,p,zone,(dcomplex*)DAV(a),p,1,(dcomplex*)DAV(w),n,1,zzero,(dcomplex*)DAV(z),n,1);
-    }
    }
    if(smallprob||NANTEST){Z c,*u,*v,*wv,*x,*zv;
     // There was a floating-point error.  In case it was 0*_ retry old-style

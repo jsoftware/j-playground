@@ -678,7 +678,8 @@ void jsto(JS jt,I type,C*s){C e;I ex;
 C dll_initialized= 0; // dll init sets to 1
 
 // dll init on load - eqivalent to windows DLLMAIN DLL_ATTACH_PROOCESS
-__attribute__((constructor)) static void Initializer(int argc, char** argv, char** envp)
+//__attribute__((constructor)) static void Initializer(int argc, char** argv, char** envp)
+__attribute__((constructor)) static void Initializer()
 {
  // Initialize J globals.  This is done only once.  Many of the globals are in static memory, initialized
  // by the compiler; some must be initialized a run-time in static memory; some must be allocated into A blocks

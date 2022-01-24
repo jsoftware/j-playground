@@ -56,6 +56,7 @@ F2(jtforeign){I p,q;
  if(11==p)R fdef(0,CIBEAM,VERB, jtwd,0L, a,w,0L, VASGSAFE, 1L,RMAX,RMAX);
  ASSERT((UI)p<=(UI)128 && (UI)q<XCC,EVDOMAIN);
  switch(XC(p,q)){
+	 /*
   case XC(0,  0): 
   case XC(0,100): R SDERI2(CIBEAM, jtscm00,      jtscm002,     VASGSAFE,RMAX,RMAX,RMAX);
   case XC(0,  1): 
@@ -70,7 +71,7 @@ F2(jtforeign){I p,q;
   case XC(1,0):   R SDERIV(CIBEAM, jtjdir,       0,            VASGSAFE,RMAX,RMAX,RMAX);
   case XC(1,1):   R SDERIV(CIBEAM, jtjfread,     0,            VASGSAFE,0,   RMAX,RMAX);
   case XC(1,2):   R SDERIV(CIBEAM, 0,            jtjfwrite,    VASGSAFE,RMAX,RMAX,0   );
-  case XC(1,3):   R SDERIV(CIBEAM, 0,            jtjfappend,   VASGSAFE,RMAX,RMAX,0   );
+  //case XC(1,3):   R SDERIV(CIBEAM, 0,            jtjfappend,   VASGSAFE,RMAX,RMAX,0   );
   case XC(1,4):   R SDERIV(CIBEAM, jtjfsize,     0,            VASGSAFE,0,   RMAX,RMAX);
   case XC(1,5):   R SDERIV(CIBEAM, jtjmkdir,     0,            VASGSAFE,0,   RMAX,RMAX);
   case XC(1,6):   R SDERIV(CIBEAM, jtjfatt1,     jtjfatt2,     VASGSAFE,0,   1,   0   );
@@ -93,7 +94,7 @@ F2(jtforeign){I p,q;
   case XC(1,44):  R SDERIV(CIBEAM, jtpathchdir,  0,            VASGSAFE,RMAX,RMAX,RMAX);
   case XC(1,46):  R CDERIV(CIBEAM, jtpathdll,    0,            VASGSAFE,RMAX,RMAX,RMAX);
 
-  case XC(1,55):  R SDERIV(CIBEAM, jtjferase,    0,            VASGSAFE,0,   RMAX,RMAX);
+  //case XC(1,55):  R SDERIV(CIBEAM, jtjferase,    0,            VASGSAFE,0,   RMAX,RMAX);
 
   case XC(2,0):   R SDERIV(CIBEAM, jthost,       0,            VASGSAFE,1,   RMAX,RMAX);
   case XC(2,1):   R SDERIV(CIBEAM, jthostne,     0,            VASGSAFE,1,   RMAX,RMAX);
@@ -116,8 +117,8 @@ F2(jtforeign){I p,q;
   case XC(3,4):   R CDERIV(CIBEAM, 0,            jtic2,        VASGSAFE,RMAX,RMAX,RMAX);
   case XC(3,5):   R CDERIV(CIBEAM, 0,            jtfc2,        VASGSAFE,RMAX,RMAX,RMAX);
   case XC(3,6):   R CDERIV(CIBEAM, jtlock1,      jtlock2,      VASGSAFE,RMAX,RMAX,RMAX);
-  case XC(3,10):  R CDERIV(CIBEAM, jttobase64,   0,            VASGSAFE,RMAX,RMAX,RMAX);
-  case XC(3,11):  R CDERIV(CIBEAM, jtfrombase64, 0,            VASGSAFE,RMAX,RMAX,RMAX);
+  case XC(3,10):  R CDERIV(CIBEAM, 0,   0,            VASGSAFE,RMAX,RMAX,RMAX);
+  case XC(3,11):  R CDERIV(CIBEAM, 0, 0,            VASGSAFE,RMAX,RMAX,RMAX);
 
   case XC(3,9):   R CDERIV(CIBEAM, 0,            jtnouninfo2,  VASGSAFE,RMAX,RMAX,RMAX);
 
@@ -228,7 +229,7 @@ F2(jtforeign){I p,q;
   case XC(9,63):  R CDERIV(CIBEAM, jtshowinplacing1, jtshowinplacing2,  VASGSAFE|VJTFLGOK1|VJTFLGOK2,RMAX,RMAX,RMAX);
   case XC(9,66):  R CDERIV(CIBEAM, jtcheckcompfeatures, 0,  VASGSAFE,RMAX,RMAX,RMAX);
 
-
+*/
 
 /* case XC(11,*):      handled at beginning */
 /* case XC(12,*):      reserved for D.H. Steinbrook tree stuff         */
@@ -302,12 +303,12 @@ F2(jtforeign){I p,q;
   case XC(128,0): R CDERIV(CIBEAM, jtqr,         0,            VASGSAFE,2,   RMAX,RMAX);
   case XC(128,1): R CDERIV(CIBEAM, jtrinv,       0,            VASGSAFE,2,   RMAX,RMAX);
   case XC(128,2): R CDERIV(CIBEAM, 0,            jtapplystr,   VFLAGNONE,RMAX,1,   RMAX);
-  case XC(128,3): R CDERIV(CIBEAM, jtcrc1,       jtcrc2,       VASGSAFE,RMAX,RMAX,RMAX);
+  case XC(128,3): R CDERIV(CIBEAM, 0,       0,       VASGSAFE,RMAX,RMAX,RMAX);
   case XC(128,4): R CDERIV(CIBEAM, jtrngraw,     0,            VASGSAFE,RMAX,RMAX,RMAX);
   case XC(128,5): R CDERIV(CIBEAM, jtisnan,      0,            VASGSAFE,RMAX,RMAX,RMAX);
-  case XC(128,6): R CDERIV(CIBEAM, jtshasum1,    jtshasum2,    VASGSAFE,1,1,RMAX);
-  case XC(128,7): R CDERIV(CIBEAM, 0,            jtaes2,       VASGSAFE,RMAX,RMAX,RMAX);
-  case XC(128,8): R CDERIV(CIBEAM, jtqhash12,    jtqhash12,    VASGSAFE|VJTFLGOK1|VJTFLGOK2,RMAX,RMAX,RMAX);  
+  case XC(128,6): R CDERIV(CIBEAM, 0,    0,    VASGSAFE,1,1,RMAX);
+  case XC(128,7): R CDERIV(CIBEAM, 0,            0,       VASGSAFE,RMAX,RMAX,RMAX);
+  case XC(128,8): R CDERIV(CIBEAM, 0,    0,    VASGSAFE|VJTFLGOK1|VJTFLGOK2,RMAX,RMAX,RMAX);  
 //  case XC(128,110): R CDERIV(CIBEAM, jttest1,    0,            VASGSAFE,RMAX,RMAX,RMAX);
   case XC(128,9): R CDERIVF(CIBEAM, jtmvmsparse,         0,VF2WILLOPEN1,     VASGSAFE,RMAX,   RMAX,RMAX);
   case XC(128,10): R CDERIV(CIBEAM, jtludecomp,         0,     VASGSAFE,RMAX,   RMAX,RMAX);

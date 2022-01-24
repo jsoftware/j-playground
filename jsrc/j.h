@@ -1976,6 +1976,15 @@ extern JS gjt; // global for JPF (procs without jt)
 #endif
 #define ZZ(x)
 
+#if EMSCRIPTEN
+#define FE_INVALID    1
+#define __FE_DENORM   2
+#define FE_DIVBYZERO  4
+#define FE_OVERFLOW   8
+#define FE_UNDERFLOW  16
+#define FE_INEXACT    32
+#endif
+
 /* workaround clang branch prediction side effect */
 #if defined(__clang__) && ( (__clang_major__ > 3) || ((__clang_major__ == 3) && (__clang_minor__ > 3)))
 #define dmul2(u,v) ({__asm__("" ::: "cc");(u)*(v);})
