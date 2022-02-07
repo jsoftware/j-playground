@@ -5068,6 +5068,7 @@ document.body.appendChild(outputDiv)
 
 var jdo1 = Module.cwrap('em_jdo','string',['string'])
 
+
 function getLine(textarea) {
     //console.log("getting stuff");
     let v = textarea.value;
@@ -5095,13 +5096,14 @@ code.addEventListener("keydown", (e) => {
         let str = s.trim();
  //       console.log('str| ' + str);
         let out = "";
+        jdo1("''") // execute empty string to clear last J engine call result
+        //execute empty string to flush j engine
         if(str == ")h") {out = `REPL Help:
 )cls - clears all text on screen.`; }
         else if(str == ")cls") { code.value = ""; }
         else if(str != "") { try {
 //          console.log('calling engine: jdo1(str)')
             out = jdo1(str);
-            jdo1("''")
         } catch (obj) {
             out = "ERROR: " + obj;
         } }
