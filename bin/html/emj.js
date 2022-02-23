@@ -5098,9 +5098,20 @@ code.addEventListener("keydown", (e) => {
         let out = "";
         jdo1("''") // execute empty string to clear last J engine call result
         //execute empty string to flush j engine
-        if(str == ")h") {out = `REPL Help:
-)cls - clears all text on screen.`; }
+        if(str == ")h") {out = "REPL Help:"+
+"\n)cls - clears all text on screen."+
+"\n)ex  - clears all text on screen."
+; }
         else if(str == ")cls") { code.value = ""; }
+        else if(str == ")ex") { code.value = "Code examples:"+
+                                "\n 3 + 2.3 7 4500 1.2e4                      NB. Add 3 to vector of numbers"+
+                                "\n i. 3 4                                    NB. create matrix of integers"+
+                                "\n %. 3 3 $ 243 252 234                      NB. invert 3 by 3 matrix"+
+                                "\n %: +/ *: i. 3 4 "+
+                                "\n %: @: (+/) @: #: @: i. 3 4 "+
+                                "\n ;: 'I read what I want to read'           NB. split string into boxed words"+
+                                "\n (~.,.<@#/.~);: 'I read what I want to read' NB. group by unique word and count appearances"
+        ; }
         else if(str != "") { try {
 //          console.log('calling engine: jdo1(str)')
             out = jdo1(str);
