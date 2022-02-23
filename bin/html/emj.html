@@ -4,18 +4,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J repl</title>
+    <title>J playground</title>
   </head>
   <body> 
-    <style type="text/css">@font-face {
-      font-family: "courier";
-      font-size: 1.875em;
-    }
+    <style type="text/css">
+
+
     body {
       width:100%;
       min-height: 100%;
       margin:0;
       overflow:hidden;
+    }
+    h1{
+      font-family: "courier";
+      font-size: 2.1em;
     }
     textarea {
       font-family: "courier";
@@ -28,10 +31,59 @@
       scrollbar-color: initial;
       overflow: scroll;
     }
+
+    .dropbtn {
+  /*  background-color: #f1f1f1; */
+  font-family: "courier";
+  color: black;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  font-family: "courier";
+}
+
+.dropdown-content {
+  display: none;
+  color: black;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,.5);
+  z-index: 1;
+  font-family: "courier";
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #f1f1f1;}
     </style>
+    <div class="dropdown">
+      <button class="dropbtn">Links</button>
+      <div class="dropdown-content">
+        <a target="_blank" href="https://www.youtube.com/watch?v=aV936cVrN0I&list=WL&index=9">Teaser Video (youtube)</a>
+        <a target="_blank" href="https://code.jsoftware.com/wiki/Main_Page">Wiki</a>
+        <a target="_blank" href="https://github.com/jsoftware">J software (github)</a>
+        <a target="_blank" href="https://code.jsoftware.com/wiki/System/Installation/J903">Download J</a>
+        <a target="_blank" href="https://code.jsoftware.com/wiki/NuVoc">Vocabulary</a>
+      </div>
+    </div>
+<h1> J Playground</h1>
     <textarea name="" autocomplete="off" spellcheck="false" autocorrect="off" id="code" autofocus>
-J playground, a repl and J tutorial.
-type )h for help.
+A browser-based J REPL. Type )h for help.
     </textarea>
     <!--textarea id="output" rows="8"></textarea-->
     <script async type="text/javascript" src="emj.js"></script>
