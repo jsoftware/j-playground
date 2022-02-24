@@ -5108,7 +5108,7 @@ code.addEventListener("keydown", (e) => {
                                 "\n 3 + 2.3 7 4500 1.2e4                        NB. Add 3 to vector of numbers"+
                                 "\n i. 3 4                                      NB. create matrix of integers"+
                                 "\n %. 3 3 $ 243 252 234                        NB. invert 3 by 3 matrix"+
-                                "\n %: +/ *: i. 3 4 "+
+                                "\n %: +/ *: i. 3 4                             NB. geometric average of matrix columns"
                                 "\n %: @: (+/) @: #: @: i. 3 4 "+
                                 "\n ;: 'I read what I want to read'             NB. split string into boxed words"+
                                 "\n (~.,.<@#/.~);: 'I read what I want to read' NB. group by unique word and count appearances"
