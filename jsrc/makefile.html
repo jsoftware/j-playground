@@ -23,7 +23,7 @@ OBJ=$(SRCS:.c=.o)
 j      : $(OBJ)
 	  mkdir -p ../bin/html 
 	  $(CC) $(CFLAGS) $(OBJ) -o ../bin/html/emj.html  -s BINARYEN_EXTRA_PASSES="--pass-arg=max-func-params@75" \
-	  -s WASM=1 -s EMULATE_FUNCTION_POINTER_CASTS=1 -s EXPORTED_FUNCTIONS='["_main","_em_jdo"]' \
+	  -s WASM=1 -s EMULATE_FUNCTION_POINTER_CASTS=1 -s EXPORTED_FUNCTIONS='["_main","_em_jdo", "_em_jsetstr"]' \
 	  -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap","ccall"]' -s NO_EXIT_RUNTIME=1 -s ALLOW_MEMORY_GROWTH=1 \
 	  --extern-post-js extra.js
 
