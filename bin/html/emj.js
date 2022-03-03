@@ -5259,13 +5259,29 @@ function getLine(textarea) {
 
     return v.substr(start, end - start);
 }
-let scrollToBottom = (element) => {
-    element.scroll({ top: element.scrollHeight, behavior: 'smooth' });
-  }
+
 let onLast = (ta) => ta.value.substr(0, ta.selectionStart).split("\n").length == ta.value.split("\n").length;
+let scrollToBottom = (element) => {
+  element.scroll({ top: element.scrollHeight, behavior: 'smooth' });
+}
 
 let code = document.getElementById("code");
 code.setSelectionRange(code.value.length,code.value.length);
+
+//override out
+window.out = function(str, skipLineFeed=false) {
+    let code = document.getElementById("code");
+    code.value +=  str + (skipLineFeed ? "" : "\n");
+    code.selectionStart = code.value.length;
+    code.selectionEnd = code.value.length;
+    scrollToBottom(code);
+    console.log(str);
+}
+
+
+window.out("A browser-based J REPL. Type )h for help.")
+window.out("   ", true)
+
 code.addEventListener("keydown", (e) => {
     if (e.key == "Enter") {
         e.preventDefault();
@@ -5273,7 +5289,7 @@ code.addEventListener("keydown", (e) => {
         let str = s.trim();
  //       console.log('str| ' + str);
         let out = "";
-        jdo1("''") // execute empty string to clear last J engine call result
+        //jdo1("''") // execute empty string to clear last J engine call result
         //execute empty string to flush j engine
         if(str == ")h") {out = "REPL Help:"+
 "\n)cls - clears all text on screen."+
@@ -5291,23 +5307,14 @@ code.addEventListener("keydown", (e) => {
                                 "\n (~.,.<@#/.~);: 'I read what I want to read' NB. group by unique word and count appearances"
         ; }
         else if(str != "") { try {
-//          console.log('calling engine: jdo1(str)')
-            out = jdo1(str);
-        } catch (obj) {
-            out = "ERROR: " + obj;
-        } }
-        if(!onLast(code)) {
-//         console.log('done')
-           out = s + out; 
-          }
+          //no need to echo here since we override window.out  
+          window.out("")
+          jdo1(str);
+          window.out("   ", true)
 
-//        console.log('out| '+out);
-        code.value += code.value ? ( "\n" + out + "\n  ") : "  ";
-        code.selectionStart = code.value.length;
-        code.selectionEnd = code.value.length;
-        
-//        console.log('code.value| ' + code.value);
-        scrollToBottom(code);
+        } catch (obj) {
+            window.out("ERROR: " + obj);
+        } }
     }
 });
 

@@ -137,9 +137,7 @@
       </div>
     </div>
     <div class="repl" id="repl">
-        <textarea name="" autocomplete="off" spellcheck="false" autocorrect="off" id="code" autofocus style="height:100%">
-    A browser-based J REPL. Type )h for help.
-        </textarea>
+        <textarea name="" autocomplete="off" spellcheck="false" autocorrect="off" id="code" autofocus style="height:100%"></textarea>
      </div>
 </div>
 
@@ -232,15 +230,7 @@
         }
         checkPermalink()
 
-        //override out
-        window.out = function(str) {
-            let code = document.getElementById("code");
-            code.value += code.value ? ( "\n" + str + "\n  ") : "  ";
-            code.selectionStart = code.value.length;
-            code.selectionEnd = code.value.length;
-            scrollToBottom(code);
-            console.log(str);
-        }
+        
       });
     </script>
   </body>
