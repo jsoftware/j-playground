@@ -5271,11 +5271,20 @@ code.setSelectionRange(code.value.length,code.value.length);
 //override out
 window.out = function(str, skipLineFeed=false) {
     let code = document.getElementById("code");
+
+    //if the console already has been indentened for line input
+    if (code.value.split('\n').slice(-1) == '   ') {
+      //strip the leading 3 spaces
+      str = str.replace(/^\s\s\s/,'')
+    }
+
     code.value +=  str + (skipLineFeed ? "" : "\n");
-    code.selectionStart = code.value.length;
-    code.selectionEnd = code.value.length;
+    //joebo commented out since it didn't seem like it was doing anything
+    //code.selectionStart = code.value.length;
+    //code.selectionEnd = code.value.length;
     scrollToBottom(code);
     console.log(str);
+    
 }
 
 

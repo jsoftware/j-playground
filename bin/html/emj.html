@@ -169,13 +169,7 @@
             var editorValue = editor.getValue();    
             jsetstr('CODE',editorValue);
             var out = jdo1("(0!:101) CODE");
-            /*
-            let code = document.getElementById("code");
-            code.value += code.value ? ( "\n" + out + "\n  ") : "  ";
-            code.selectionStart = code.value.length;
-            code.selectionEnd = code.value.length;
-            scrollToBottom(code);
-            */
+            window.out("   ", true)
             document.getElementById("permalinkBase").href = '#code='+encodeURIComponent(editorValue);
             document.getElementById("permalink").style.display = '';
 
