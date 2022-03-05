@@ -22,7 +22,6 @@
     }
     textarea {
       font-family: "courier";
-      font-size: 1.875em;
       scrollbar-color: transparent transparent;
       box-sizing: border-box;
       width:100%; height:40%;border: none; outline: none; resize: none;  white-space: pre; overflow: hidden;
@@ -104,7 +103,7 @@
         color: #242625;
         border-bottom: 1px dotted #242625;
       }
-
+      #editor textarea { border: 1px solid #c0c0c0}
     </style>
     
     <div class="dropdown">
@@ -179,53 +178,78 @@ window.out("   ", true)
 
 
     </script>
-    <script type="text/javascript" src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
     <script>
-      require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' }});
-    
-      // Before loading vs/editor/editor.main, define a global MonacoEnvironment that overwrites
-      // the default worker url location (used when creating WebWorkers). The problem here is that
-      // HTML5 does not allow cross-domain web workers, so we need to proxy the instantiation of
-      // a web worker through a same-domain script
-      window.MonacoEnvironment = {
-        getWorkerUrl: function(workerId, label) {
-          return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
-            self.MonacoEnvironment = {
-              baseUrl: 'https://unpkg.com/monaco-editor@latest/min/'
-            };
-            importScripts('https://unpkg.com/monaco-editor@latest/min/vs/base/worker/workerMain.js');`
-          )}`;
-        }
-      };
-    
-      require(["vs/editor/editor.main"], function () {
-        window.editor = monaco.editor.create(document.querySelector('.editor'), {
-          value: ``,
-          language: 'j',
-          theme: 'vs-dark',
-        });
-        
-   
-        //hide editor by default
-        toggleEditor();
-
-        function checkPermalink() {
-          var code = decodeURIComponent(window.location.hash).substr(1);
-          if (code.substring(0,5)=='code=') {
-            document.getElementById("permalinkBase").href =
-              window.location.href;
-            code = code.substring(5);
-            editor.setValue(code);
-            toggleEditor();
-            document.getElementById("permalink").style.display = '';
+          function checkPermalink() {
+              var code = decodeURIComponent(window.location.hash).substr(1);
+              if (code.substring(0,5)=='code=') {
+                document.getElementById("permalinkBase").href = window.location.href;
+                code = code.substring(5);
+                editor.setValue(code);
+                toggleEditor();
+                document.getElementById("permalink").style.display = '';
+              } else {
+                document.getElementById("permalink").style.display = 'none';
+              }
+            }
+            
+          //use monaco on a bigger device
+          var useMonaco = window.innerWidth > 900;
+          if (useMonaco) {
+            let x = document.createElement("script");
+            x.src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"//your script path will goes gere
+            document.querySelector("html").append(x);
+      
           } else {
-            document.getElementById("permalink").style.display = 'none';
+            let codeEditor = document.createElement("textarea");
+            codeEditor.style.height="100%";
+            document.querySelector("#editor").append(codeEditor);
+            window.editor = {
+              setValue: function(value) {
+                codeEditor.value = value;
+              },
+              getValue: function() {
+                return codeEditor.value;
+              }
+            }
+            toggleEditor();
+            checkPermalink();
           }
-        }
-        checkPermalink()
-
+      </script>
+      <script>
+        document.onreadystatechange = function(){
+        if(document.readyState === 'complete' && useMonaco){
+      
+          require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' }});
         
+          // Before loading vs/editor/editor.main, define a global MonacoEnvironment that overwrites
+          // the default worker url location (used when creating WebWorkers). The problem here is that
+          // HTML5 does not allow cross-domain web workers, so we need to proxy the instantiation of
+          // a web worker through a same-domain script
+          window.MonacoEnvironment = {
+            getWorkerUrl: function(workerId, label) {
+              return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+                self.MonacoEnvironment = {
+                  baseUrl: 'https://unpkg.com/monaco-editor@latest/min/'
+                };
+                importScripts('https://unpkg.com/monaco-editor@latest/min/vs/base/worker/workerMain.js');`
+              )}`;
+            }
+          };
+        
+          require(["vs/editor/editor.main"], function () {
+            window.editor = monaco.editor.create(document.querySelector('.editor'), {
+              value: ``,
+              language: 'j',
+              theme: 'vs-dark',
+            });
+        
+            //hide editor by default
+            toggleEditor();
+
+            checkPermalink()                  
       });
+    }
+  }
     </script>
   </body>
 </html>
