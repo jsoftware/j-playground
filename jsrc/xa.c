@@ -205,6 +205,9 @@ F1(jtsysparms){A*wv;I k,m;
 
 F1(jtsysq){I j;
  ASSERTMTV(w);
+#ifdef WASM
+ j=999;
+#else
  switch(SYS){
   case SYS_PC:        j=0;                break;
   case SYS_PC386:     j=1;                break;
@@ -213,6 +216,7 @@ F1(jtsysq){I j;
   case SYS_OS2:       j=4;                break;
   default:            j=SYS&SYS_UNIX ? 5 : -1;
  }
+#endif
  R sc(j);
 }
 

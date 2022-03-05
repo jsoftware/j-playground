@@ -221,7 +221,7 @@ Module['FS_createPath']("/jlibrary/tools", "regex", true, true);
     }
   
    }
-   loadPackage({"files": [{"filename": "/jlibrary/copy_library_from_current.bat", "start": 0, "end": 528}, {"filename": "/jlibrary/foo.ijs", "start": 528, "end": 534}, {"filename": "/jlibrary/system/defs/hostdefs_win.ijs", "start": 534, "end": 1466}, {"filename": "/jlibrary/system/defs/netdefs_android.ijs", "start": 1466, "end": 3368}, {"filename": "/jlibrary/system/defs/netdefs_linux.ijs", "start": 3368, "end": 5267}, {"filename": "/jlibrary/system/defs/hostdefs_darwin.ijs", "start": 5267, "end": 6942}, {"filename": "/jlibrary/system/defs/netdefs_aix.ijs", "start": 6942, "end": 8720}, {"filename": "/jlibrary/system/defs/netdefs_linux_64.ijs", "start": 8720, "end": 10623}, {"filename": "/jlibrary/system/defs/netdefs_darwin.ijs", "start": 10623, "end": 12677}, {"filename": "/jlibrary/system/defs/hostdefs_android.ijs", "start": 12677, "end": 14246}, {"filename": "/jlibrary/system/defs/hostdefs_linux_64.ijs", "start": 14246, "end": 15818}, {"filename": "/jlibrary/system/defs/hostdefs_win_64.ijs", "start": 15818, "end": 16753}, {"filename": "/jlibrary/system/defs/hostdefs_darwin_64.ijs", "start": 16753, "end": 18323}, {"filename": "/jlibrary/system/defs/netdefs_win_64.ijs", "start": 18323, "end": 21189}, {"filename": "/jlibrary/system/defs/hostdefs_android_64.ijs", "start": 21189, "end": 22761}, {"filename": "/jlibrary/system/defs/hostdefs_aix.ijs", "start": 22761, "end": 24330}, {"filename": "/jlibrary/system/defs/netdefs_win.ijs", "start": 24330, "end": 27193}, {"filename": "/jlibrary/system/defs/netdefs_android_64.ijs", "start": 27193, "end": 29096}, {"filename": "/jlibrary/system/defs/netdefs_sunos.ijs", "start": 29096, "end": 31010}, {"filename": "/jlibrary/system/defs/hostdefs_sunos.ijs", "start": 31010, "end": 32597}, {"filename": "/jlibrary/system/defs/hostdefs_linux.ijs", "start": 32597, "end": 34165}, {"filename": "/jlibrary/system/defs/netdefs_darwin_64.ijs", "start": 34165, "end": 36115}, {"filename": "/jlibrary/system/config/base.cfg", "start": 36115, "end": 38748}, {"filename": "/jlibrary/system/config/folders.cfg", "start": 38748, "end": 39025}, {"filename": "/jlibrary/system/util/tar.ijs", "start": 39025, "end": 44913}, {"filename": "/jlibrary/system/util/pp.ijs", "start": 44913, "end": 53776}, {"filename": "/jlibrary/system/util/pacman.ijs", "start": 53776, "end": 95026}, {"filename": "/jlibrary/system/util/scripts.ijs", "start": 95026, "end": 97030}, {"filename": "/jlibrary/system/util/pm.ijs", "start": 97030, "end": 111453}, {"filename": "/jlibrary/system/util/boot.ijs", "start": 111453, "end": 114936}, {"filename": "/jlibrary/system/util/project.ijs", "start": 114936, "end": 124443}, {"filename": "/jlibrary/system/util/configure.ijs", "start": 124443, "end": 127975}, {"filename": "/jlibrary/system/main/stdlib.ijs", "start": 127975, "end": 188395}, {"filename": "/jlibrary/system/main/socket.ijs", "start": 188395, "end": 197153}, {"filename": "/jlibrary/system/main/regex.ijs", "start": 197153, "end": 207905}, {"filename": "/jlibrary/system/main/task.ijs", "start": 207905, "end": 215381}, {"filename": "/jlibrary/addons/data/jfiles/history.txt", "start": 215381, "end": 215465}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.txt", "start": 215465, "end": 215838}, {"filename": "/jlibrary/addons/data/jfiles/manifest.ijs", "start": 215838, "end": 216254}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.ijs", "start": 216254, "end": 225869}, {"filename": "/jlibrary/addons/data/jfiles/keyfiles.txt", "start": 225869, "end": 228107}, {"filename": "/jlibrary/addons/data/jfiles/test/test1.ijs", "start": 228107, "end": 229496}, {"filename": "/jlibrary/addons/data/jfiles/test/test0.ijs", "start": 229496, "end": 229626}, {"filename": "/jlibrary/addons/data/jmf/history.txt", "start": 229626, "end": 229855}, {"filename": "/jlibrary/addons/data/jmf/jmf.ijs", "start": 229855, "end": 242491}, {"filename": "/jlibrary/addons/data/jmf/manifest.ijs", "start": 242491, "end": 242747}, {"filename": "/jlibrary/addons/data/jmf/test/testjmf.ijs", "start": 242747, "end": 244886}, {"filename": "/jlibrary/addons/data/jmf/test/testdata.ijs", "start": 244886, "end": 245050}, {"filename": "/jlibrary/addons/dev/fold/foldr.ijs", "start": 245050, "end": 249220}, {"filename": "/jlibrary/addons/dev/fold/fold.ijs", "start": 249220, "end": 253389}, {"filename": "/jlibrary/addons/dev/fold/manifest.ijs", "start": 253389, "end": 253598}, {"filename": "/jlibrary/addons/dev/lu/lu.ijs", "start": 253598, "end": 254794}, {"filename": "/jlibrary/addons/dev/lu/manifest.ijs", "start": 254794, "end": 254981}, {"filename": "/jlibrary/bin/profile.ijs", "start": 254981, "end": 256958}, {"filename": "/jlibrary/tools/ftp/busybox.exe", "start": 256958, "end": 855998}, {"filename": "/jlibrary/tools/ftp/license.txt", "start": 855998, "end": 856358}, {"filename": "/jlibrary/tools/ftp/wget.exe", "start": 856358, "end": 1189158}, {"filename": "/jlibrary/tools/ftp/busybox_license.txt", "start": 1189158, "end": 1207506}, {"filename": "/jlibrary/tools/regex/readme.txt", "start": 1207506, "end": 1207550}], "remote_package_size": 1207550, "package_uuid": "26737709-1239-4ad4-9afe-90f0d189c9e8"});
+   loadPackage({"files": [{"filename": "/jlibrary/copy_library_from_current.bat", "start": 0, "end": 528}, {"filename": "/jlibrary/foo.ijs", "start": 528, "end": 534}, {"filename": "/jlibrary/system/defs/hostdefs_win.ijs", "start": 534, "end": 1466}, {"filename": "/jlibrary/system/defs/netdefs_android.ijs", "start": 1466, "end": 3368}, {"filename": "/jlibrary/system/defs/netdefs_linux.ijs", "start": 3368, "end": 5267}, {"filename": "/jlibrary/system/defs/hostdefs_darwin.ijs", "start": 5267, "end": 6942}, {"filename": "/jlibrary/system/defs/netdefs_aix.ijs", "start": 6942, "end": 8720}, {"filename": "/jlibrary/system/defs/netdefs_linux_64.ijs", "start": 8720, "end": 10623}, {"filename": "/jlibrary/system/defs/netdefs_darwin.ijs", "start": 10623, "end": 12677}, {"filename": "/jlibrary/system/defs/hostdefs_android.ijs", "start": 12677, "end": 14246}, {"filename": "/jlibrary/system/defs/hostdefs_linux_64.ijs", "start": 14246, "end": 15818}, {"filename": "/jlibrary/system/defs/hostdefs_win_64.ijs", "start": 15818, "end": 16753}, {"filename": "/jlibrary/system/defs/hostdefs_darwin_64.ijs", "start": 16753, "end": 18323}, {"filename": "/jlibrary/system/defs/netdefs_win_64.ijs", "start": 18323, "end": 21189}, {"filename": "/jlibrary/system/defs/hostdefs_android_64.ijs", "start": 21189, "end": 22761}, {"filename": "/jlibrary/system/defs/hostdefs_aix.ijs", "start": 22761, "end": 24330}, {"filename": "/jlibrary/system/defs/netdefs_win.ijs", "start": 24330, "end": 27193}, {"filename": "/jlibrary/system/defs/netdefs_android_64.ijs", "start": 27193, "end": 29096}, {"filename": "/jlibrary/system/defs/netdefs_sunos.ijs", "start": 29096, "end": 31010}, {"filename": "/jlibrary/system/defs/hostdefs_sunos.ijs", "start": 31010, "end": 32597}, {"filename": "/jlibrary/system/defs/hostdefs_linux.ijs", "start": 32597, "end": 34165}, {"filename": "/jlibrary/system/defs/netdefs_darwin_64.ijs", "start": 34165, "end": 36115}, {"filename": "/jlibrary/system/config/base.cfg", "start": 36115, "end": 38748}, {"filename": "/jlibrary/system/config/folders.cfg", "start": 38748, "end": 39025}, {"filename": "/jlibrary/system/util/tar.ijs", "start": 39025, "end": 44913}, {"filename": "/jlibrary/system/util/pp.ijs", "start": 44913, "end": 53776}, {"filename": "/jlibrary/system/util/pacman.ijs", "start": 53776, "end": 95026}, {"filename": "/jlibrary/system/util/scripts.ijs", "start": 95026, "end": 97030}, {"filename": "/jlibrary/system/util/pm.ijs", "start": 97030, "end": 111453}, {"filename": "/jlibrary/system/util/boot.ijs", "start": 111453, "end": 114936}, {"filename": "/jlibrary/system/util/project.ijs", "start": 114936, "end": 124443}, {"filename": "/jlibrary/system/util/configure.ijs", "start": 124443, "end": 127975}, {"filename": "/jlibrary/system/main/stdlib.ijs", "start": 127975, "end": 188395}, {"filename": "/jlibrary/system/main/socket.ijs", "start": 188395, "end": 197153}, {"filename": "/jlibrary/system/main/regex.ijs", "start": 197153, "end": 207905}, {"filename": "/jlibrary/system/main/task.ijs", "start": 207905, "end": 215381}, {"filename": "/jlibrary/addons/data/jfiles/history.txt", "start": 215381, "end": 215465}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.txt", "start": 215465, "end": 215838}, {"filename": "/jlibrary/addons/data/jfiles/manifest.ijs", "start": 215838, "end": 216254}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.ijs", "start": 216254, "end": 225869}, {"filename": "/jlibrary/addons/data/jfiles/keyfiles.txt", "start": 225869, "end": 228107}, {"filename": "/jlibrary/addons/data/jfiles/test/test1.ijs", "start": 228107, "end": 229496}, {"filename": "/jlibrary/addons/data/jfiles/test/test0.ijs", "start": 229496, "end": 229626}, {"filename": "/jlibrary/addons/data/jmf/history.txt", "start": 229626, "end": 229855}, {"filename": "/jlibrary/addons/data/jmf/jmf.ijs", "start": 229855, "end": 242491}, {"filename": "/jlibrary/addons/data/jmf/manifest.ijs", "start": 242491, "end": 242747}, {"filename": "/jlibrary/addons/data/jmf/test/testjmf.ijs", "start": 242747, "end": 244886}, {"filename": "/jlibrary/addons/data/jmf/test/testdata.ijs", "start": 244886, "end": 245050}, {"filename": "/jlibrary/addons/dev/fold/foldr.ijs", "start": 245050, "end": 249220}, {"filename": "/jlibrary/addons/dev/fold/fold.ijs", "start": 249220, "end": 253389}, {"filename": "/jlibrary/addons/dev/fold/manifest.ijs", "start": 253389, "end": 253598}, {"filename": "/jlibrary/addons/dev/lu/lu.ijs", "start": 253598, "end": 254794}, {"filename": "/jlibrary/addons/dev/lu/manifest.ijs", "start": 254794, "end": 254981}, {"filename": "/jlibrary/bin/profile.ijs", "start": 254981, "end": 256958}, {"filename": "/jlibrary/tools/ftp/busybox.exe", "start": 256958, "end": 855998}, {"filename": "/jlibrary/tools/ftp/license.txt", "start": 855998, "end": 856358}, {"filename": "/jlibrary/tools/ftp/wget.exe", "start": 856358, "end": 1189158}, {"filename": "/jlibrary/tools/ftp/busybox_license.txt", "start": 1189158, "end": 1207506}, {"filename": "/jlibrary/tools/regex/readme.txt", "start": 1207506, "end": 1207550}], "remote_package_size": 1207550, "package_uuid": "afce6e73-9480-4a6e-b00a-ee60285549f4"});
   
   })();
   
@@ -2040,6 +2040,40 @@ var ASM_CONSTS = {
   function ___assert_fail(condition, filename, line, func) {
       abort('Assertion failed: ' + UTF8ToString(condition) + ', at: ' + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
     }
+
+  var _emscripten_get_now;if (ENVIRONMENT_IS_NODE) {
+    _emscripten_get_now = () => {
+      var t = process['hrtime']();
+      return t[0] * 1e3 + t[1] / 1e6;
+    };
+  } else _emscripten_get_now = () => performance.now();
+  ;
+  
+  var _emscripten_get_now_is_monotonic = true;;
+  
+  function setErrNo(value) {
+      HEAP32[((___errno_location())>>2)] = value;
+      return value;
+    }
+  function _clock_gettime(clk_id, tp) {
+      // int clock_gettime(clockid_t clk_id, struct timespec *tp);
+      var now;
+      if (clk_id === 0) {
+        now = Date.now();
+      } else if ((clk_id === 1 || clk_id === 4) && _emscripten_get_now_is_monotonic) {
+        now = _emscripten_get_now();
+      } else {
+        setErrNo(28);
+        return -1;
+      }
+      HEAP32[((tp)>>2)] = (now/1000)|0; // seconds
+      HEAP32[(((tp)+(4))>>2)] = ((now % 1000)*1000*1000)|0; // nanoseconds
+      return 0;
+    }
+  function ___clock_gettime(a0,a1
+  ) {
+  return _clock_gettime(a0,a1);
+  }
 
   var PATH = {splitPath:function(filename) {
         var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
@@ -4404,10 +4438,28 @@ var ASM_CONSTS = {
   }
   }
 
-  function setErrNo(value) {
-      HEAP32[((___errno_location())>>2)] = value;
-      return value;
-    }
+  function ___syscall_chdir(path) {try {
+  
+      path = SYSCALLS.getStr(path);
+      FS.chdir(path);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) throw e;
+    return -e.errno;
+  }
+  }
+
+  function ___syscall_chmod(path, mode) {try {
+  
+      path = SYSCALLS.getStr(path);
+      FS.chmod(path, mode);
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) throw e;
+    return -e.errno;
+  }
+  }
+
   function ___syscall_fcntl64(fd, cmd, varargs) {SYSCALLS.varargs = varargs;
   try {
   
@@ -4484,6 +4536,20 @@ var ASM_CONSTS = {
       assert(!flags, flags);
       path = SYSCALLS.calculateAt(dirfd, path, allowEmpty);
       return SYSCALLS.doStat(nofollow ? FS.lstat : FS.stat, path, buf);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) throw e;
+    return -e.errno;
+  }
+  }
+
+  function ___syscall_getcwd(buf, size) {try {
+  
+      if (size === 0) return -28;
+      var cwd = FS.cwd();
+      var cwdLengthInBytes = lengthBytesUTF8(cwd);
+      if (size < cwdLengthInBytes + 1) return -68;
+      stringToUTF8(cwd, buf, size);
+      return buf;
     } catch (e) {
     if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) throw e;
     return -e.errno;
@@ -4605,6 +4671,52 @@ var ASM_CONSTS = {
   }
   }
 
+  function ___syscall_mkdir(path, mode) {try {
+  
+      path = SYSCALLS.getStr(path);
+      return SYSCALLS.doMkdir(path, mode);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) throw e;
+    return -e.errno;
+  }
+  }
+
+  function syscallMmap2(addr, len, prot, flags, fd, off) {
+      off <<= 12; // undo pgoffset
+      var ptr;
+      var allocated = false;
+  
+      // addr argument must be page aligned if MAP_FIXED flag is set.
+      if ((flags & 16) !== 0 && (addr % 65536) !== 0) {
+        return -28;
+      }
+  
+      // MAP_ANONYMOUS (aka MAP_ANON) isn't actually defined by POSIX spec,
+      // but it is widely used way to allocate memory pages on Linux, BSD and Mac.
+      // In this case fd argument is ignored.
+      if ((flags & 32) !== 0) {
+        ptr = mmapAlloc(len);
+        if (!ptr) return -48;
+        allocated = true;
+      } else {
+        var info = FS.getStream(fd);
+        if (!info) return -8;
+        var res = FS.mmap(info, addr, len, off, prot, flags);
+        ptr = res.ptr;
+        allocated = res.allocated;
+      }
+      SYSCALLS.mappings[ptr] = { malloc: ptr, len: len, allocated: allocated, fd: fd, prot: prot, flags: flags, offset: off };
+      return ptr;
+    }
+  function ___syscall_mmap2(addr, len, prot, flags, fd, off) {try {
+  
+      return syscallMmap2(addr, len, prot, flags, fd, off);
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) throw e;
+    return -e.errno;
+  }
+  }
+
   function syscallMunmap(addr, len) {
       // TODO: support unmmap'ing parts of allocations
       var info = SYSCALLS.mappings[addr];
@@ -4677,6 +4789,9 @@ var ASM_CONSTS = {
       abort("To use dlopen, you need to use Emscripten's linking support, see https://github.com/emscripten-core/emscripten/wiki/Linking");
     }
 
+  function __emscripten_throw_longjmp() { throw 'longjmp'; }
+
+
   function _emscripten_memcpy_big(dest, src, num) {
       HEAPU8.copyWithin(dest, src, src + num);
     }
@@ -4737,6 +4852,63 @@ var ASM_CONSTS = {
       }
       err('Failed to grow the heap from ' + oldSize + ' bytes to ' + newSize + ' bytes, not enough memory!');
       return false;
+    }
+
+  var ENV = {};
+  
+  function getExecutableName() {
+      return thisProgram || './this.program';
+    }
+  function getEnvStrings() {
+      if (!getEnvStrings.strings) {
+        // Default values.
+        // Browser language detection #8751
+        var lang = ((typeof navigator === 'object' && navigator.languages && navigator.languages[0]) || 'C').replace('-', '_') + '.UTF-8';
+        var env = {
+          'USER': 'web_user',
+          'LOGNAME': 'web_user',
+          'PATH': '/',
+          'PWD': '/',
+          'HOME': '/home/web_user',
+          'LANG': lang,
+          '_': getExecutableName()
+        };
+        // Apply the user-provided values, if any.
+        for (var x in ENV) {
+          // x is a key in ENV; if ENV[x] is undefined, that means it was
+          // explicitly set to be so. We allow user code to do that to
+          // force variables with default values to remain unset.
+          if (ENV[x] === undefined) delete env[x];
+          else env[x] = ENV[x];
+        }
+        var strings = [];
+        for (var x in env) {
+          strings.push(x + '=' + env[x]);
+        }
+        getEnvStrings.strings = strings;
+      }
+      return getEnvStrings.strings;
+    }
+  function _environ_get(__environ, environ_buf) {
+      var bufSize = 0;
+      getEnvStrings().forEach(function(string, i) {
+        var ptr = environ_buf + bufSize;
+        HEAP32[(((__environ)+(i * 4))>>2)] = ptr;
+        writeAsciiToMemory(string, ptr);
+        bufSize += string.length + 1;
+      });
+      return 0;
+    }
+
+  function _environ_sizes_get(penviron_count, penviron_buf_size) {
+      var strings = getEnvStrings();
+      HEAP32[((penviron_count)>>2)] = strings.length;
+      var bufSize = 0;
+      strings.forEach(function(string) {
+        bufSize += string.length + 1;
+      });
+      HEAP32[((penviron_buf_size)>>2)] = bufSize;
+      return 0;
     }
 
   function _exit(status) {
@@ -4804,6 +4976,10 @@ var ASM_CONSTS = {
     return e.errno;
   }
   }
+
+  function _getTempRet0() {
+      return getTempRet0();
+    }
 
   function _gettimeofday(ptr) {
       var now = Date.now();
@@ -4886,6 +5062,56 @@ var ASM_CONSTS = {
 
   function _setTempRet0(val) {
       setTempRet0(val);
+    }
+
+  function _system(command) {
+      if (ENVIRONMENT_IS_NODE) {
+        if (!command) return 1; // shell is available
+  
+        var cmdstr = UTF8ToString(command);
+        if (!cmdstr.length) return 0; // this is what glibc seems to do (shell works test?)
+  
+        var cp = require('child_process');
+        var ret = cp.spawnSync(cmdstr, [], {shell:true, stdio:'inherit'});
+  
+        var _W_EXITCODE = (ret, sig) => ((ret) << 8 | (sig));
+  
+        // this really only can happen if process is killed by signal
+        if (ret.status === null) {
+          // sadly node doesn't expose such function
+          var signalToNumber = (sig) => {
+            // implement only the most common ones, and fallback to SIGINT
+            switch (sig) {
+              case 'SIGHUP': return 1;
+              case 'SIGINT': return 2;
+              case 'SIGQUIT': return 3;
+              case 'SIGFPE': return 8;
+              case 'SIGKILL': return 9;
+              case 'SIGALRM': return 14;
+              case 'SIGTERM': return 15;
+            }
+            return 2; // SIGINT
+          }
+          return _W_EXITCODE(0, signalToNumber(ret.signal));
+        }
+  
+        return _W_EXITCODE(ret.status, 0);
+      }
+      // int system(const char *command);
+      // http://pubs.opengroup.org/onlinepubs/000095399/functions/system.html
+      // Can't call external programs.
+      if (!command) return 0; // no shell available
+      setErrNo(52);
+      return -1;
+    }
+
+  function _time(ptr) {
+      ;
+      var ret = (Date.now()/1000)|0;
+      if (ptr) {
+        HEAP32[((ptr)>>2)] = ret;
+      }
+      return ret;
     }
 
 
@@ -5161,29 +5387,48 @@ function tryParseAsDataURI(filename) {
 
 var asmLibraryArg = {
   "__assert_fail": ___assert_fail,
+  "__clock_gettime": ___clock_gettime,
   "__syscall_access": ___syscall_access,
+  "__syscall_chdir": ___syscall_chdir,
+  "__syscall_chmod": ___syscall_chmod,
   "__syscall_fcntl64": ___syscall_fcntl64,
   "__syscall_fstat64": ___syscall_fstat64,
   "__syscall_fstatat64": ___syscall_fstatat64,
+  "__syscall_getcwd": ___syscall_getcwd,
   "__syscall_getdents64": ___syscall_getdents64,
   "__syscall_ioctl": ___syscall_ioctl,
   "__syscall_lstat64": ___syscall_lstat64,
+  "__syscall_mkdir": ___syscall_mkdir,
+  "__syscall_mmap2": ___syscall_mmap2,
   "__syscall_munmap": ___syscall_munmap,
   "__syscall_open": ___syscall_open,
   "__syscall_stat64": ___syscall_stat64,
   "__syscall_unlink": ___syscall_unlink,
   "_dlopen_js": __dlopen_js,
   "_dlsym_js": __dlsym_js,
+  "_emscripten_throw_longjmp": __emscripten_throw_longjmp,
+  "emscripten_get_now": _emscripten_get_now,
   "emscripten_memcpy_big": _emscripten_memcpy_big,
   "emscripten_resize_heap": _emscripten_resize_heap,
+  "environ_get": _environ_get,
+  "environ_sizes_get": _environ_sizes_get,
   "exit": _exit,
   "fd_close": _fd_close,
   "fd_read": _fd_read,
   "fd_seek": _fd_seek,
   "fd_write": _fd_write,
+  "getTempRet0": _getTempRet0,
   "gettimeofday": _gettimeofday,
+  "invoke_ii": invoke_ii,
+  "invoke_iii": invoke_iii,
+  "invoke_iiii": invoke_iiii,
+  "invoke_iiiii": invoke_iiiii,
+  "invoke_vii": invoke_vii,
+  "invoke_viiiii": invoke_viiiii,
   "localtime_r": _localtime_r,
-  "setTempRet0": _setTempRet0
+  "setTempRet0": _setTempRet0,
+  "system": _system,
+  "time": _time
 };
 var asm = createWasm();
 /** @type {function(...*):?} */
@@ -5258,6 +5503,72 @@ var _memalign = Module["_memalign"] = createExportWrapper("memalign");
 /** @type {function(...*):?} */
 var dynCall_jiji = Module["dynCall_jiji"] = createExportWrapper("dynCall_jiji");
 
+
+function invoke_iii(index,a1,a2) {
+var sp = stackSave();
+try {
+  return getWasmTableEntry(index)(a1,a2);
+} catch(e) {
+  stackRestore(sp);
+  if (e !== e+0 && e !== 'longjmp') throw e;
+  _setThrew(1, 0);
+}
+}
+
+function invoke_iiii(index,a1,a2,a3) {
+var sp = stackSave();
+try {
+  return getWasmTableEntry(index)(a1,a2,a3);
+} catch(e) {
+  stackRestore(sp);
+  if (e !== e+0 && e !== 'longjmp') throw e;
+  _setThrew(1, 0);
+}
+}
+
+function invoke_vii(index,a1,a2) {
+var sp = stackSave();
+try {
+  getWasmTableEntry(index)(a1,a2);
+} catch(e) {
+  stackRestore(sp);
+  if (e !== e+0 && e !== 'longjmp') throw e;
+  _setThrew(1, 0);
+}
+}
+
+function invoke_ii(index,a1) {
+var sp = stackSave();
+try {
+  return getWasmTableEntry(index)(a1);
+} catch(e) {
+  stackRestore(sp);
+  if (e !== e+0 && e !== 'longjmp') throw e;
+  _setThrew(1, 0);
+}
+}
+
+function invoke_iiiii(index,a1,a2,a3,a4) {
+var sp = stackSave();
+try {
+  return getWasmTableEntry(index)(a1,a2,a3,a4);
+} catch(e) {
+  stackRestore(sp);
+  if (e !== e+0 && e !== 'longjmp') throw e;
+  _setThrew(1, 0);
+}
+}
+
+function invoke_viiiii(index,a1,a2,a3,a4,a5) {
+var sp = stackSave();
+try {
+  getWasmTableEntry(index)(a1,a2,a3,a4,a5);
+} catch(e) {
+  stackRestore(sp);
+  if (e !== e+0 && e !== 'longjmp') throw e;
+  _setThrew(1, 0);
+}
+}
 
 
 
@@ -5695,6 +6006,7 @@ var shouldRunNow = true;
 
 if (Module['noInitialRun']) shouldRunNow = false;
 
+
 run();
 
 //just some dummy javascript to try out
@@ -5715,7 +6027,6 @@ document.body.appendChild(outputDiv)
 
 var jdo1 = Module.cwrap('em_jdo','string',['string'])
 var jsetstr = Module.cwrap('em_jsetstr','void',['string','string'])
-
 
 function getLine(textarea) {
     //console.log("getting stuff");
@@ -5802,3 +6113,4 @@ code.addEventListener("keydown", (e) => {
         } }
     }
 });
+

@@ -67,5 +67,9 @@ int main( void ) {
 //   printf( "Enter two numbers: \n\n" );
    //scanf( "%lf%lf", &x, &y );
    //printf( "The arithmetic-geometric mean is %lf\n", agm(x, y) );
+#if WASM
+ //load stdlib
+ em_jdo("(0!:0) <'jlibrary/system/main/stdlib.ijs'");
+#endif
    return 0;
 }

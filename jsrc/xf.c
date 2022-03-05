@@ -240,6 +240,9 @@ static B rmdir(C*v){R!rmdir1(v);}
 
 
 F1(jtjmkdir){A y,z;
+#ifdef WASM
+ R 0;
+#endif
  F1RANK(0,jtjmkdir,DUMMYSELF);
  ASSERT(AT(w)&BOX,EVDOMAIN);
  RZ(y=str0(vslit(AAV(w)[0])));
@@ -254,6 +257,9 @@ F1(jtjmkdir){A y,z;
 // 1!:55
 F1(jtjferase){A y,fn;US*s;I h;
  F1RANK(0,jtjferase,DUMMYSELF);
+#if WASM
+ R 0;
+#endif
  RE(h=fnum(w));
  if(h) {RZ(y=str0(fname(sc(h))))} else ASSERT(y=vslit(AAV(w)[0]),EVFNUM);
  if(h)RZ(jclose(sc(h)));
@@ -303,6 +309,10 @@ F1(jtpathchdir){A z;
 F1(jtjgetenv){
  F1RANK(1,jtjgetenv,DUMMYSELF);
  ASSERT((LIT+C2T+C4T)&AT(w),EVDOMAIN);
+#if WASM
+ R cstr("NOT_IMPLEMENTED");
+#endif
+
 #if (SYS & SYS_UNIX)
  {
   C*s;
