@@ -1,14 +1,15 @@
 # J Makefile for Linux (used for testing)
 
 CC     = cc -o ../bin/linux/emj
-CFLAGS = -m32 -mpc64 -DC_64=0 -DRASPI=1
+CFLAGS = -g -m32 -mpc64 -DC_64=0 -DRASPI=1
 CFLAGS += -Wno-parentheses -Wno-unused-value -Wno-pointer-sign
 CFLAGS += -Wno-empty-body -Wno-return-type -Wno-constant-logical-operand
 CFLAGS += -Wno-comment -Wno-string-plus-int -Wno-unsequenced  -fomit-frame-pointer
 
 SRCS=$(wildcard *.c)
 
-EXCLUDE:=aes-ni.c andjnative.c fnmatch.c gemm.c jconsole.c jep.c jfex.c xaes.c xcrc.c xf.c xsha.c
+#xf.c
+EXCLUDE:=aes-ni.c andjnative.c fnmatch.c gemm.c jconsole.c jep.c jfex.c xaes.c xcrc.c xsha.c
 
 SRCS:=$(filter-out $(EXCLUDE),$(SRCS))
 

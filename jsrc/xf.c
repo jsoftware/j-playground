@@ -15,7 +15,11 @@
 #endif
 #include <sys/types.h>
 #include <unistd.h>
+
+#ifndef WASM
 #include <fts.h>
+#endif
+
 #ifdef ANDROID
 /*
  * Strictly these functions were available before Lollipop/21, but there was an accidental ABI
@@ -126,8 +130,11 @@ static B jtwa(J jt,F f,I j,A w){C*x;I n,p=0;size_t q=1;
 F1(jtjfread){A z;F f;
  F1RANK(0,jtjfread,DUMMYSELF);
  RE(f=stdf(w));  // f=file#, or 0 if w is a filename
+ printf("in jtjfread 1\n");
  if(f)R 1==(I)f?jgets("\001"):3==(I)f?rdns(stdin):rd(vfn(f),0L,-1L);  // if special file, read it all, possibly with error
+ printf("in jtjfread 2\n");
  RZ(f=jope(w,FREAD_O)); z=rd(f,0L,-1L); fclose(f);  // otherwise open/read/close named file
+ printf("in jtjfread 3\n");
  RETF(z);
 }
 
@@ -350,6 +357,7 @@ F1(jtpathdll){char p[MAX_PATH]; extern C dllpath[];
 }
 #endif
 
+#ifndef WASM
 #if (SYS & SYS_UNIX)
 int rmdir2(const char *dir)
 {
@@ -427,4 +435,5 @@ int rmdir2(J jt, const wchar_t *dir){A z;US*zv;
  sh.lpszProgressTitle = NULL;
  R SHFileOperationW (&sh);
 }
+#endif
 #endif

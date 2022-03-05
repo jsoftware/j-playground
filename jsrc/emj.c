@@ -24,22 +24,6 @@ void em_jsetstr(char *var, char *val) {
 	I r = JSetM(jt,var,&type,&jr,(I*)&jl,(I*)&val);
 }
 
-#define FWRITE_O          "wb"
-
-// 1!:2
-F2(jtjfwrite){B b;F f;
- F2RANK(RMAX,0,jtjfwrite,DUMMYSELF);
- if(BOX&AT(w)){ASSERT(1>=AR(a),EVRANK); ASSERT(!AN(a)||AT(a)&LIT+C2T+C4T,EVDOMAIN);}
- RE(f=stdf(w));
- if(2==(I)f){jtjpr((J)((I)jt|MTYOFILE),a); R a;}  // this forces typeout, with NOSTDOUT off
- if(4==(I)f){R (U)AN(a)!=fwrite(CAV(a),sizeof(C),AN(a),stdout)?jerrno():a;}
- if(5==(I)f){R (U)AN(a)!=fwrite(CAV(a),sizeof(C),AN(a),stderr)?jerrno():a;}
- if(b=!f)RZ(f=jope(w,FWRITE_O)) else RE(vfn(f)); 
- //wa(f,0L,a); 
- if(b)fclose(f);else fflush(f);
- RNE(mtm);
-}
-
 /* J calls for output */
 void _stdcall Joutput(JS jt,int type, C* s)
 {

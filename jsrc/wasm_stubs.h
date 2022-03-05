@@ -20,9 +20,13 @@ int __syscall_dup(int a) {
 int __syscall_access(int a, int b) {
     return 1;
 }
+int __syscall_getdents64(int a) {
+    return 1;
+}
 
 int __syscall_chdir(int a) {
-    return 1;
+	printf("in chdir");
+	return 1;
 }
 
 int __syscall_mkdir(int a) {
@@ -33,18 +37,18 @@ int __syscall_rmdir(int a) {
     return 1;
 }
 
-int __syscall_getdents64(int a) {
-    return 1;
-}
 int __syscall_fstat64(int a) {
-    return 1;
+	printf("in fstat64");
+	return 1;
 }
-
+	
 int __syscall_stat64(int a) {
+	printf("in stat64\n");
     return 1;
 }
 
 int __syscall_fstatat64(int a) {
+	printf("in fstata64\n");
     return 1;
 }
 int __syscall_pipe(int a) {
@@ -52,7 +56,8 @@ int __syscall_pipe(int a) {
 }
 
 int __syscall_getcwd(int a, int b) {
-    return 1;
+	printf("in getcwd");
+	return 1;
 }
 
 int __syscall_chmod(int a, int b) {
@@ -60,10 +65,9 @@ int __syscall_chmod(int a, int b) {
 }
 
 int __syscall_lstat64(int a, int b) {
+	printf("in lstat64\n");
     return 1;
 }
-
-
 
 
 int __assert_fail(int a, int b, int c) {
@@ -118,10 +122,10 @@ int __syscall_unlink(int a, int b) {
 int _emscripten_throw_longjmp(int a, int b) {
     return 1;
 }
+/*
 size_t __stdio_read(FILE *f, const unsigned char *buf, size_t len, int z) {
     return 1;
 }
-
 int __stdio_close(FILE *f) {
     return 1;
 }
@@ -133,7 +137,7 @@ off_t __stdio_seek(FILE *_f, off_t _offset, int _value) {
 size_t __stdout_write(FILE *f, const unsigned char *buf, size_t len) {
   return 1;
 }
-
+*/
 int system(const char *c) { }
 int invoke_iii(int, int, int) { }
 int invoke_iiii(int, int, int, int) { }
@@ -152,7 +156,7 @@ int invoke_iiiiii(int, int, int, int, int) { }
 
 
 void emscripten_notify_memory_growth() { }
-int fd_close(int v) { return 0; }
+//int fd_close(int v) { return 0; }
 int getTempRet0() { return 0; }
 void exit() { return; }
 void gettimeofday() { return; }

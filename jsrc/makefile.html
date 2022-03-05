@@ -8,12 +8,12 @@ CFLAGS = -m32 -DC_64=0
 CFLAGS += -Wno-parentheses -Wno-unused-value -Wno-pointer-sign
 CFLAGS += -Wno-empty-body -Wno-return-type -Wno-constant-logical-operand
 CFLAGS += -Wno-comment -Wno-string-plus-int -Wno-unsequenced  -fomit-frame-pointer -D __linux__=1
-CFLAGS += -D HTML=1
+CFLAGS += -D HTML=1 -D WASM=1
 
 
 SRCS=$(wildcard *.c)
 
-EXCLUDE:=aes-ni.c andjnative.c fnmatch.c gemm.c jconsole.c jep.c jfex.c xaes.c xcrc.c xf.c xsha.c
+EXCLUDE:=aes-ni.c andjnative.c fnmatch.c gemm.c jconsole.c jep.c jfex.c xaes.c xcrc.c xsha.c
 
 SRCS:=$(filter-out $(EXCLUDE),$(SRCS))
 
@@ -25,7 +25,7 @@ j      : $(OBJ)
 	  $(CC) $(CFLAGS) $(OBJ) -o ../bin/html/emj.html  -s BINARYEN_EXTRA_PASSES="--pass-arg=max-func-params@75" \
 	  -s WASM=1 -s EMULATE_FUNCTION_POINTER_CASTS=1 -s EXPORTED_FUNCTIONS='["_main","_em_jdo", "_em_jsetstr"]' \
 	  -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap","ccall"]' -s NO_EXIT_RUNTIME=1 -s ALLOW_MEMORY_GROWTH=1 \
-	  --extern-post-js extra.js
+	  --extern-post-js extra.js --preload-file ../jlibrary/
 
 clean:;	rm -f $(OBJ) j
 
