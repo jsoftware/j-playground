@@ -61,8 +61,14 @@ R cstr("");
 #ifdef HTML
  EM_JS(char *, execHost, (const char* ptr), {
 	var cmd = Module.UTF8ToString(ptr);
-	//console.log(cmd);
-	var ret = eval(cmd) || " ";
+	//console.log('code is: \n-----\n' + cmd + '\n--------');
+	//catch errors and make sure we exit cleanly
+	try {
+          var ret = eval(cmd) || " ";
+    	} catch (e) {
+	  console.log(e); 
+	  var ret = "error";
+	}
 	const byteCount = (Module.lengthBytesUTF8(ret) + 1);
 	const retPtr = Module._malloc(byteCount);
 	Module.stringToUTF8(ret, retPtr, byteCount);
@@ -84,9 +90,12 @@ F1(jthost){A z;
 #endif
  n=AN(w);
 #ifdef HTML
- GATV0(t,LIT,n+1,1); s=CAV(t);  // +1 for trailing nul
+ GATV0(t,LIT,n,1); s=CAV(t);
  MC(s,AV(w),n);
+ s[n]='\0';
  char * ret = execHost(s);
+ //should this be unlinked?
+ unlink(s);
  return cstr(ret);
 #endif
  GATV0(t,LIT,n+5+L_tmpnam+1,1); s=CAV(t);  // +1 for trailing nul
