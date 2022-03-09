@@ -162,10 +162,6 @@
           _editorShown = !_editorShown;
         }
         
-        window.prompt = function(x) { 
-          console.log('calling prompt')
-          return editor.getValue() + '\n)\n' };
-
         function runEditor() {        
             var editorValue = editor.getValue();    
             jsetstr('CODE',editorValue);

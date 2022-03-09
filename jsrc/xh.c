@@ -23,6 +23,10 @@
 #define unlink _unlink
 #endif
 
+#ifdef WASM
+#include <emscripten.h>
+#endif
+
 #include "j.h"
 #include "x.h"
 #include "cpuinfo.h"
@@ -53,6 +57,19 @@ if(getCpuFeatures()&CPU_X86_FEATURE_AVX) R cstr("avx");
 R cstr("");
 }
 
+//don't yet know how to do this for wasmer target
+#ifdef HTML
+ EM_JS(char *, execHost, (const char* ptr), {
+	var cmd = Module.UTF8ToString(ptr);
+	//console.log(cmd);
+	var ret = eval(cmd) || " ";
+	const byteCount = (Module.lengthBytesUTF8(ret) + 1);
+	const retPtr = Module._malloc(byteCount);
+	Module.stringToUTF8(ret, retPtr, byteCount);
+	return retPtr;
+ })
+#endif
+
 F1(jthost){A z;
  F1RANK(1,jthost,DUMMYSELF);
  RZ(w=vslit(w));
@@ -66,6 +83,12 @@ F1(jthost){A z;
  const char*ftmp=getenv("TMPDIR");  /* android always define TMPDIR in jeload */
 #endif
  n=AN(w);
+#ifdef HTML
+ GATV0(t,LIT,n+1,1); s=CAV(t);  // +1 for trailing nul
+ MC(s,AV(w),n);
+ char * ret = execHost(s);
+ return cstr(ret);
+#endif
  GATV0(t,LIT,n+5+L_tmpnam+1,1); s=CAV(t);  // +1 for trailing nul
  fn=5+n+s; MC(s,AV(w),n);
  MC(n+s,"   > ",5L);

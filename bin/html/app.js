@@ -67,12 +67,14 @@ code.addEventListener("keydown", (e) => {
         else if(str == ")cls") { code.value = "   "; }
         else if(str == ")play") { window.out(
                                 "\nTo execute code examples, click on line and press return/enter.\n" + 
-                                "\n 3 + 2.3 7 4500 1.2e4                        NB. Add 3 to vector of numbers"+
-                                "\n i. 3 4                                      NB. create matrix of integers"+
-                                "\n %. 3 3 $ 243 252 234                        NB. invert 3 by 3 matrix"+
-                                "\n ;: 'I read what I want to read'             NB. split string into boxed words"+
-                                "\n (~.,.<@#/.~);: 'I read what I want to read' NB. group by unique word and count appearances" +
-                                "\n(1!:0) 'jlibrary/system/main/*.ijs           NB. list directory matching *.ijs "
+                                "\n 3 + 2.3 7 4500 1.2e4                                NB. Add 3 to vector of numbers"+
+                                "\n i. 3 4                                              NB. create matrix of integers"+
+                                "\n %. 3 3 $ 243 252 234                                NB. invert 3 by 3 matrix"+
+                                "\n ;: 'I read what I want to read'                     NB. split string into boxed words"+
+                                "\n (~.,.<@#/.~);: 'I read what I want to read'         NB. group by unique word and count appearances" +
+                                "\n (2!:0) 'alert(\"hello world\")'                     NB. show alert popup" +
+                                "\n smoutput 'hello: ', ((2!:0) 'prompt(\"name?\")')    NB. interact with host javascript" +
+                                "\n (1!:0) 'jlibrary/system/main/*.ijs'                 NB. list directory matching *.ijs "
                                 );
                                 window.out("   ", true)
          }
