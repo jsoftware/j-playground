@@ -89,3 +89,104 @@ code.addEventListener("keydown", (e) => {
         } }
     }
 });
+
+
+var _editorShown = true;
+function toggleEditor(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  //hide the editor
+  if (_editorShown) {
+    document.getElementById('editContainer').style.display='none';
+    document.getElementById('repl').style.height='85%';
+  } else {
+    document.getElementById('editContainer').style.display='';
+    document.getElementById('repl').style.height='35%';
+  }
+  _editorShown = !_editorShown;
+}
+
+function runEditor() {        
+    var editorValue = editor.getValue();    
+    jsetstr('CODE',editorValue);
+    var out = jdo1("(0!:101) CODE");
+window.out("   ", true)
+    document.getElementById("permalinkBase").href = '#code='+encodeURIComponent(editorValue);
+    document.getElementById("permalink").style.display = '';
+
+}
+document.getElementById('toggleEditor').addEventListener('click', toggleEditor);        
+document.getElementById('runEditor').addEventListener('click', runEditor);  
+
+function checkPermalink() {
+    var code = decodeURIComponent(window.location.hash).substr(1);
+    if (code.substring(0,5)=='code=') {
+      document.getElementById("permalinkBase").href = window.location.href;
+      code = code.substring(5);
+      editor.setValue(code);
+      toggleEditor();
+      document.getElementById("permalink").style.display = '';
+    } else {
+      document.getElementById("permalink").style.display = 'none';
+    }
+  }
+  
+//use monaco on a bigger device
+var useMonaco = window.innerWidth > 900;
+if (useMonaco) {
+  let x = document.createElement("script");
+  x.src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"//your script path will goes gere
+  document.querySelector("html").append(x);
+
+} else {
+  let codeEditor = document.createElement("textarea");
+  codeEditor.style.height="100%";
+  document.querySelector("#editor").append(codeEditor);
+  window.editor = {
+    setValue: function(value) {
+      codeEditor.value = value;
+    },
+    getValue: function() {
+      return codeEditor.value;
+    }
+  }
+  toggleEditor();
+  checkPermalink();
+}
+
+document.onreadystatechange = function(){
+    if(document.readyState === 'complete' && useMonaco){
+  
+      require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' }});
+    
+      // Before loading vs/editor/editor.main, define a global MonacoEnvironment that overwrites
+      // the default worker url location (used when creating WebWorkers). The problem here is that
+      // HTML5 does not allow cross-domain web workers, so we need to proxy the instantiation of
+      // a web worker through a same-domain script
+      window.MonacoEnvironment = {
+        getWorkerUrl: function(workerId, label) {
+          return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+            self.MonacoEnvironment = {
+              baseUrl: 'https://unpkg.com/monaco-editor@latest/min/'
+            };
+            importScripts('https://unpkg.com/monaco-editor@latest/min/vs/base/worker/workerMain.js');`
+          )}`;
+        }
+      };
+    
+      require(["vs/editor/editor.main"], function () {
+        window.editor = monaco.editor.create(document.querySelector('.editor'), {
+          value: ``,
+          language: 'j',
+          theme: 'vs-dark',
+        });
+    
+        //hide editor by default
+        toggleEditor();
+
+        checkPermalink()                  
+  });
+}
+}
