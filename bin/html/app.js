@@ -128,7 +128,16 @@ function checkPermalink() {
       editor.setValue(code);
       toggleEditor();
       document.getElementById("permalink").style.display = '';
-    } else {
+    } 
+    else if (code.toLowerCase().substring(0,4) == 'url=') {
+        let url = code.substring(4);
+        console.log(url);
+        fetch(url).then(response=>response.text()).then(data=>{ 
+            editor.setValue(data) 
+            toggleEditor()
+        });    
+    }
+    else {
       document.getElementById("permalink").style.display = 'none';
     }
   }
