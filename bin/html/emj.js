@@ -221,7 +221,7 @@ Module['FS_createPath']("/jlibrary/tools", "regex", true, true);
     }
   
    }
-   loadPackage({"files": [{"filename": "/jlibrary/copy_library_from_current.bat", "start": 0, "end": 528}, {"filename": "/jlibrary/foo.ijs", "start": 528, "end": 534}, {"filename": "/jlibrary/system/defs/hostdefs_win.ijs", "start": 534, "end": 1466}, {"filename": "/jlibrary/system/defs/netdefs_android.ijs", "start": 1466, "end": 3368}, {"filename": "/jlibrary/system/defs/netdefs_linux.ijs", "start": 3368, "end": 5267}, {"filename": "/jlibrary/system/defs/hostdefs_darwin.ijs", "start": 5267, "end": 6942}, {"filename": "/jlibrary/system/defs/netdefs_aix.ijs", "start": 6942, "end": 8720}, {"filename": "/jlibrary/system/defs/netdefs_linux_64.ijs", "start": 8720, "end": 10623}, {"filename": "/jlibrary/system/defs/netdefs_darwin.ijs", "start": 10623, "end": 12677}, {"filename": "/jlibrary/system/defs/hostdefs_android.ijs", "start": 12677, "end": 14246}, {"filename": "/jlibrary/system/defs/hostdefs_linux_64.ijs", "start": 14246, "end": 15818}, {"filename": "/jlibrary/system/defs/hostdefs_win_64.ijs", "start": 15818, "end": 16753}, {"filename": "/jlibrary/system/defs/hostdefs_darwin_64.ijs", "start": 16753, "end": 18323}, {"filename": "/jlibrary/system/defs/netdefs_win_64.ijs", "start": 18323, "end": 21189}, {"filename": "/jlibrary/system/defs/hostdefs_android_64.ijs", "start": 21189, "end": 22761}, {"filename": "/jlibrary/system/defs/hostdefs_aix.ijs", "start": 22761, "end": 24330}, {"filename": "/jlibrary/system/defs/netdefs_win.ijs", "start": 24330, "end": 27193}, {"filename": "/jlibrary/system/defs/netdefs_android_64.ijs", "start": 27193, "end": 29096}, {"filename": "/jlibrary/system/defs/netdefs_sunos.ijs", "start": 29096, "end": 31010}, {"filename": "/jlibrary/system/defs/hostdefs_sunos.ijs", "start": 31010, "end": 32597}, {"filename": "/jlibrary/system/defs/hostdefs_linux.ijs", "start": 32597, "end": 34165}, {"filename": "/jlibrary/system/defs/netdefs_darwin_64.ijs", "start": 34165, "end": 36115}, {"filename": "/jlibrary/system/config/base.cfg", "start": 36115, "end": 38748}, {"filename": "/jlibrary/system/config/folders.cfg", "start": 38748, "end": 39025}, {"filename": "/jlibrary/system/util/tar.ijs", "start": 39025, "end": 44913}, {"filename": "/jlibrary/system/util/pp.ijs", "start": 44913, "end": 53776}, {"filename": "/jlibrary/system/util/pacman.ijs", "start": 53776, "end": 95026}, {"filename": "/jlibrary/system/util/scripts.ijs", "start": 95026, "end": 97030}, {"filename": "/jlibrary/system/util/pm.ijs", "start": 97030, "end": 111453}, {"filename": "/jlibrary/system/util/boot.ijs", "start": 111453, "end": 114936}, {"filename": "/jlibrary/system/util/project.ijs", "start": 114936, "end": 124443}, {"filename": "/jlibrary/system/util/configure.ijs", "start": 124443, "end": 127975}, {"filename": "/jlibrary/system/main/stdlib.ijs", "start": 127975, "end": 188395}, {"filename": "/jlibrary/system/main/socket.ijs", "start": 188395, "end": 197153}, {"filename": "/jlibrary/system/main/regex.ijs", "start": 197153, "end": 207905}, {"filename": "/jlibrary/system/main/task.ijs", "start": 207905, "end": 215381}, {"filename": "/jlibrary/addons/data/jfiles/history.txt", "start": 215381, "end": 215465}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.txt", "start": 215465, "end": 215838}, {"filename": "/jlibrary/addons/data/jfiles/manifest.ijs", "start": 215838, "end": 216254}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.ijs", "start": 216254, "end": 225869}, {"filename": "/jlibrary/addons/data/jfiles/keyfiles.txt", "start": 225869, "end": 228107}, {"filename": "/jlibrary/addons/data/jfiles/test/test1.ijs", "start": 228107, "end": 229496}, {"filename": "/jlibrary/addons/data/jfiles/test/test0.ijs", "start": 229496, "end": 229626}, {"filename": "/jlibrary/addons/data/jmf/history.txt", "start": 229626, "end": 229855}, {"filename": "/jlibrary/addons/data/jmf/jmf.ijs", "start": 229855, "end": 242491}, {"filename": "/jlibrary/addons/data/jmf/manifest.ijs", "start": 242491, "end": 242747}, {"filename": "/jlibrary/addons/data/jmf/test/testjmf.ijs", "start": 242747, "end": 244886}, {"filename": "/jlibrary/addons/data/jmf/test/testdata.ijs", "start": 244886, "end": 245050}, {"filename": "/jlibrary/addons/dev/fold/foldr.ijs", "start": 245050, "end": 249220}, {"filename": "/jlibrary/addons/dev/fold/fold.ijs", "start": 249220, "end": 253389}, {"filename": "/jlibrary/addons/dev/fold/manifest.ijs", "start": 253389, "end": 253598}, {"filename": "/jlibrary/addons/dev/lu/lu.ijs", "start": 253598, "end": 254794}, {"filename": "/jlibrary/addons/dev/lu/manifest.ijs", "start": 254794, "end": 254981}, {"filename": "/jlibrary/bin/profile.ijs", "start": 254981, "end": 256958}, {"filename": "/jlibrary/tools/ftp/busybox.exe", "start": 256958, "end": 855998}, {"filename": "/jlibrary/tools/ftp/license.txt", "start": 855998, "end": 856358}, {"filename": "/jlibrary/tools/ftp/wget.exe", "start": 856358, "end": 1189158}, {"filename": "/jlibrary/tools/ftp/busybox_license.txt", "start": 1189158, "end": 1207506}, {"filename": "/jlibrary/tools/regex/readme.txt", "start": 1207506, "end": 1207550}], "remote_package_size": 1207550, "package_uuid": "afce6e73-9480-4a6e-b00a-ee60285549f4"});
+   loadPackage({"files": [{"filename": "/jlibrary/copy_library_from_current.bat", "start": 0, "end": 528}, {"filename": "/jlibrary/foo.ijs", "start": 528, "end": 534}, {"filename": "/jlibrary/system/defs/hostdefs_win.ijs", "start": 534, "end": 1466}, {"filename": "/jlibrary/system/defs/netdefs_android.ijs", "start": 1466, "end": 3368}, {"filename": "/jlibrary/system/defs/netdefs_linux.ijs", "start": 3368, "end": 5267}, {"filename": "/jlibrary/system/defs/hostdefs_darwin.ijs", "start": 5267, "end": 6942}, {"filename": "/jlibrary/system/defs/netdefs_aix.ijs", "start": 6942, "end": 8720}, {"filename": "/jlibrary/system/defs/netdefs_linux_64.ijs", "start": 8720, "end": 10623}, {"filename": "/jlibrary/system/defs/netdefs_darwin.ijs", "start": 10623, "end": 12677}, {"filename": "/jlibrary/system/defs/hostdefs_android.ijs", "start": 12677, "end": 14246}, {"filename": "/jlibrary/system/defs/hostdefs_linux_64.ijs", "start": 14246, "end": 15818}, {"filename": "/jlibrary/system/defs/hostdefs_win_64.ijs", "start": 15818, "end": 16753}, {"filename": "/jlibrary/system/defs/hostdefs_darwin_64.ijs", "start": 16753, "end": 18323}, {"filename": "/jlibrary/system/defs/netdefs_win_64.ijs", "start": 18323, "end": 21189}, {"filename": "/jlibrary/system/defs/hostdefs_android_64.ijs", "start": 21189, "end": 22761}, {"filename": "/jlibrary/system/defs/hostdefs_aix.ijs", "start": 22761, "end": 24330}, {"filename": "/jlibrary/system/defs/netdefs_win.ijs", "start": 24330, "end": 27193}, {"filename": "/jlibrary/system/defs/netdefs_android_64.ijs", "start": 27193, "end": 29096}, {"filename": "/jlibrary/system/defs/netdefs_sunos.ijs", "start": 29096, "end": 31010}, {"filename": "/jlibrary/system/defs/hostdefs_sunos.ijs", "start": 31010, "end": 32597}, {"filename": "/jlibrary/system/defs/hostdefs_linux.ijs", "start": 32597, "end": 34165}, {"filename": "/jlibrary/system/defs/netdefs_darwin_64.ijs", "start": 34165, "end": 36115}, {"filename": "/jlibrary/system/config/base.cfg", "start": 36115, "end": 38748}, {"filename": "/jlibrary/system/config/folders.cfg", "start": 38748, "end": 39025}, {"filename": "/jlibrary/system/util/tar.ijs", "start": 39025, "end": 44913}, {"filename": "/jlibrary/system/util/pp.ijs", "start": 44913, "end": 53776}, {"filename": "/jlibrary/system/util/pacman.ijs", "start": 53776, "end": 95026}, {"filename": "/jlibrary/system/util/scripts.ijs", "start": 95026, "end": 97030}, {"filename": "/jlibrary/system/util/pm.ijs", "start": 97030, "end": 111453}, {"filename": "/jlibrary/system/util/boot.ijs", "start": 111453, "end": 114936}, {"filename": "/jlibrary/system/util/project.ijs", "start": 114936, "end": 124443}, {"filename": "/jlibrary/system/util/configure.ijs", "start": 124443, "end": 127975}, {"filename": "/jlibrary/system/main/stdlib.ijs", "start": 127975, "end": 188395}, {"filename": "/jlibrary/system/main/socket.ijs", "start": 188395, "end": 197153}, {"filename": "/jlibrary/system/main/regex.ijs", "start": 197153, "end": 207905}, {"filename": "/jlibrary/system/main/task.ijs", "start": 207905, "end": 215381}, {"filename": "/jlibrary/addons/data/jfiles/history.txt", "start": 215381, "end": 215465}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.txt", "start": 215465, "end": 215838}, {"filename": "/jlibrary/addons/data/jfiles/manifest.ijs", "start": 215838, "end": 216254}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.ijs", "start": 216254, "end": 225869}, {"filename": "/jlibrary/addons/data/jfiles/keyfiles.txt", "start": 225869, "end": 228107}, {"filename": "/jlibrary/addons/data/jfiles/test/test1.ijs", "start": 228107, "end": 229496}, {"filename": "/jlibrary/addons/data/jfiles/test/test0.ijs", "start": 229496, "end": 229626}, {"filename": "/jlibrary/addons/data/jmf/history.txt", "start": 229626, "end": 229855}, {"filename": "/jlibrary/addons/data/jmf/jmf.ijs", "start": 229855, "end": 242491}, {"filename": "/jlibrary/addons/data/jmf/manifest.ijs", "start": 242491, "end": 242747}, {"filename": "/jlibrary/addons/data/jmf/test/testjmf.ijs", "start": 242747, "end": 244886}, {"filename": "/jlibrary/addons/data/jmf/test/testdata.ijs", "start": 244886, "end": 245050}, {"filename": "/jlibrary/addons/dev/fold/foldr.ijs", "start": 245050, "end": 249220}, {"filename": "/jlibrary/addons/dev/fold/fold.ijs", "start": 249220, "end": 253389}, {"filename": "/jlibrary/addons/dev/fold/manifest.ijs", "start": 253389, "end": 253598}, {"filename": "/jlibrary/addons/dev/lu/lu.ijs", "start": 253598, "end": 254794}, {"filename": "/jlibrary/addons/dev/lu/manifest.ijs", "start": 254794, "end": 254981}, {"filename": "/jlibrary/bin/profile.ijs", "start": 254981, "end": 256958}, {"filename": "/jlibrary/tools/ftp/busybox.exe", "start": 256958, "end": 855998}, {"filename": "/jlibrary/tools/ftp/license.txt", "start": 855998, "end": 856358}, {"filename": "/jlibrary/tools/ftp/wget.exe", "start": 856358, "end": 1189158}, {"filename": "/jlibrary/tools/ftp/busybox_license.txt", "start": 1189158, "end": 1207506}, {"filename": "/jlibrary/tools/regex/readme.txt", "start": 1207506, "end": 1207550}], "remote_package_size": 1207550, "package_uuid": "82d9fc8e-e2eb-4d77-8403-5635e7d72d1e"});
   
   })();
   
@@ -2035,10 +2035,6 @@ var ASM_CONSTS = {
       var js = jsStackTrace();
       if (Module['extraStackTrace']) js += '\n' + Module['extraStackTrace']();
       return demangleAll(js);
-    }
-
-  function ___assert_fail(condition, filename, line, func) {
-      abort('Assertion failed: ' + UTF8ToString(condition) + ', at: ' + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
     }
 
   var _emscripten_get_now;if (ENVIRONMENT_IS_NODE) {
@@ -4671,16 +4667,6 @@ var ASM_CONSTS = {
   }
   }
 
-  function ___syscall_mkdir(path, mode) {try {
-  
-      path = SYSCALLS.getStr(path);
-      return SYSCALLS.doMkdir(path, mode);
-    } catch (e) {
-    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) throw e;
-    return -e.errno;
-  }
-  }
-
   function syscallMmap2(addr, len, prot, flags, fd, off) {
       off <<= 12; // undo pgoffset
       var ptr;
@@ -4780,14 +4766,6 @@ var ASM_CONSTS = {
     return -e.errno;
   }
   }
-
-  function __dlopen_js(filename, flag) {
-      abort("To use dlopen, you need to use Emscripten's linking support, see https://github.com/emscripten-core/emscripten/wiki/Linking");
-    }
-
-  function __dlsym_js(handle, symbol) {
-      abort("To use dlopen, you need to use Emscripten's linking support, see https://github.com/emscripten-core/emscripten/wiki/Linking");
-    }
 
   function __emscripten_throw_longjmp() { throw 'longjmp'; }
 
@@ -5386,7 +5364,6 @@ function tryParseAsDataURI(filename) {
 
 
 var asmLibraryArg = {
-  "__assert_fail": ___assert_fail,
   "__clock_gettime": ___clock_gettime,
   "__syscall_access": ___syscall_access,
   "__syscall_chdir": ___syscall_chdir,
@@ -5398,14 +5375,11 @@ var asmLibraryArg = {
   "__syscall_getdents64": ___syscall_getdents64,
   "__syscall_ioctl": ___syscall_ioctl,
   "__syscall_lstat64": ___syscall_lstat64,
-  "__syscall_mkdir": ___syscall_mkdir,
   "__syscall_mmap2": ___syscall_mmap2,
   "__syscall_munmap": ___syscall_munmap,
   "__syscall_open": ___syscall_open,
   "__syscall_stat64": ___syscall_stat64,
   "__syscall_unlink": ___syscall_unlink,
-  "_dlopen_js": __dlopen_js,
-  "_dlsym_js": __dlsym_js,
   "_emscripten_throw_longjmp": __emscripten_throw_longjmp,
   "emscripten_get_now": _emscripten_get_now,
   "emscripten_memcpy_big": _emscripten_memcpy_big,
@@ -6006,111 +5980,9 @@ var shouldRunNow = true;
 
 if (Module['noInitialRun']) shouldRunNow = false;
 
-
 run();
 
-//just some dummy javascript to try out
-//var jdo = Module.cwrap('em_jdo','string',['string'])
-//
-//var newDiv = document.createElement('div')
-//newDiv.id = 'inputDiv'
-//newDiv.innerHTML = '<div><span style="font-size:2em">Input</span> <textarea style="width:500px;height:40px" id="input"></textarea><input type="button" id="submit" value="Run"></div>'
-////etc.
-//document.body.appendChild(newDiv)
-//document.getElementById('submit').onclick = function() {
-//  var result = jdo(document.getElementById('input').value);
-//  outputDiv.innerHTML = result;
-//}
-
-var outputDiv = document.createElement('div')
-document.body.appendChild(outputDiv)
-
-var jdo1 = Module.cwrap('em_jdo','string',['string'])
-var jsetstr = Module.cwrap('em_jsetstr','void',['string','string'])
-
-function getLine(textarea) {
-    //console.log("getting stuff");
-    let v = textarea.value;
-    let start = 0, end = v.length;
-    for (let i = textarea.selectionStart; i < v.length; i++) {
-        if (v[i] == '\n') { end = i + 1 ; break; }
-    }
-    for (let i = textarea.selectionStart - 1; i >=0 ; i--) {
-        if (v[i] == '\n') { start = i + 1; break; }
-    }
-
-    return v.substr(start, end - start);
-}
-
-let onLast = (ta) => ta.value.substr(0, ta.selectionStart).split("\n").length == ta.value.split("\n").length;
-let scrollToBottom = (element) => {
-  element.scroll({ top: element.scrollHeight, behavior: 'smooth' });
-}
-
-let code = document.getElementById("code");
-code.setSelectionRange(code.value.length,code.value.length);
-
-//override out
-window.out = function(str, skipLineFeed=false) {
-    let code = document.getElementById("code");
-
-    //if the console already has been indentened for line input
-    if (code.value.split('\n').slice(-1) == '   ') {
-      //strip the leading 3 spaces
-      str = str.replace(/^\s\s\s/,'')
-    }
-
-    code.value +=  str + (skipLineFeed ? "" : "\n");
-    //joebo commented out since it didn't seem like it was doing anything
-    //code.selectionStart = code.value.length;
-    //code.selectionEnd = code.value.length;
-    scrollToBottom(code);
-    console.log(str);
-    
-}
 
 
-window.out("A browser-based J REPL. Type )h for help.")
-window.out("   ", true)
 
-code.addEventListener("keydown", (e) => {
-    if (e.key == "Enter") {
-        e.preventDefault();
-        let s = getLine(code);
-        let str = s.trim();
- //       console.log('str| ' + str);
-        let out = "";
-        //jdo1("''") // execute empty string to clear last J engine call result
-        //execute empty string to flush j engine
-        if(str == ")h") {
-          window.out("\nREPL Help:"+
-"\n)cls - clears all text on screen."+
-"\n)play - code examples to play with."); 
-        window.out("   ", true)
-}
-        else if(str == ")cls") { code.value = "   "; }
-        else if(str == ")play") { window.out(
-                                "To execute code examples, click on line and press return/enter.\n" + 
-                                "\n 3 + 2.3 7 4500 1.2e4                        NB. Add 3 to vector of numbers"+
-                                "\n i. 3 4                                      NB. create matrix of integers"+
-                                "\n %. 3 3 $ 243 252 234                        NB. invert 3 by 3 matrix"+
-                                "\n %: +/ *: i. 3 4                             NB. geometric average of matrix columns" +
-                                "\n %: @: (+/) @: #: @: i. 3 4 "+
-                                "\n ;: 'I read what I want to read'             NB. split string into boxed words"+
-                                "\n (~.,.<@#/.~);: 'I read what I want to read' NB. group by unique word and count appearances" +
-                                "\n(1!:0) 'jlibrary/system/main/*.ijs           NB. list directory matching *.ijs " +
-                                "\n(0!:1) <'jlibrary/system/main/stdlib.ijs'    NB. load stdlib");
-                                window.out("   ", true)
-         }
-        else if(str != "") { try {
-          //no need to echo here since we override window.out  
-          window.out("")
-          jdo1(str);
-          window.out("   ", true)
-
-        } catch (obj) {
-            window.out("ERROR: " + obj);
-        } }
-    }
-});
 
