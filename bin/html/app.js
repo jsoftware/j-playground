@@ -191,7 +191,26 @@ document.onreadystatechange = function(){
           language: 'j',
           theme: 'vs-dark',
         });
-    
+
+        //add keybinding to run all lines similar to jqt
+        editor.addAction({
+            id: 'my-run-editor',        
+            // A label of the action that will be presented to the user in F1.
+            label: 'Run Editor',
+            // An optional array of keybindings for the action.
+            keybindings: [
+                monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyE,
+                monaco.KeyMod.CtrlCmd |  monaco.KeyCode.KeyL,
+            ],                
+            contextMenuGroupId: 'navigation',        
+            contextMenuOrder: 1.5,        
+            // Method that will be executed when the action is triggered.
+            // @param editor The editor instance is passed in as a convenience
+            run: function (ed) {
+                runEditor();
+            }
+        });
+        
         //hide editor by default
         toggleEditor();
 
