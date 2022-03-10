@@ -236,7 +236,6 @@ var labs =[
 'core/sparse',
 'core/monad',
 'core/intro',
-'core/compositions',
 'math/fntab',
 'math/shapley',
 'math/iter',
@@ -268,6 +267,8 @@ labs.forEach(x=>{
     var labPath = e.target.getAttribute('href').slice(1); //drop the leading #
     var lab = labPath.slice(labPath.indexOf('/')+1);
     jdo1("lab 'labs/" + lab + ".ijt'")
+    //go back to the base locale so the labs execute where the user can interact
+    jdo1("('base';'z') copath 'jlab805'")
 
     document.getElementById("advanceLab").style.display='';
     e.preventDefault();
