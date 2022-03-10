@@ -1,0 +1,300 @@
+LABTITLE=: 'Explicate (convert to explicit) a given tacit verb'
+
+NB. =========================================================
+Lab Section Introduction
+
+Newcomers to J are apt to view tacit code with perplexity:
+
+ * Isn't this simply "p-code"
+    - the sort of thing a good compiler generates for us?
+ * Isn't it best kept hidden?
+ * Why do we have to bother with trying to read it?
+ * Aren't there any tools to help us?
+)
+
+NB. =========================================================
+Lab Section
+
+J-ers delight in writing tacit code.
+ They even embed tacit idioms in explicit sentences,
+ like this
+   z=. (+/ % #) y       NB. mean value of y
+)
+
+(+/ % #) 3 4 5       NB. mean value of (3 4 5)
+
+NB. =========================================================
+Lab Section
+
+"Tacit J" and "explicit J" are not two distinct languages.
+ They can be mixed:
+  - tacit in explicit
+  - and explicit in tacit.
+
+NOTE:
+ The tacit phrase: (+/ % #) is a construct called a "fork".
+ It is NOT the same as
+   z=. +/ % # y
+)
+
+(+/ % #) 3 4 5
+ +/ % #  3 4 5
+	NB. ---equivalent to
++/ (% (# 3 4 5))
+
+NB. =========================================================
+Lab Section
+
+To many J-ers tacit code is as easy to read as explicit code
+ --if not easier.
+
+Much published code is in tacit form.
+ Indeed MOST of the verbs in stdlib.ijs are tacit
+ (NOTE: stdlib.ijs populates the _z_ locale).
+
+So, would-be J-ers need to come to terms with tacit code.
+
+There's a need for tools to help read a tacit definition.
+)
+
+NB. =========================================================
+Lab Section
+
+J has a built-in tool to convert explicit code to tacit code.
+ (You'd expect that, wouldn't you?)
+ You might even think to call it "compilation".
+  - (but J-ers don't think of it that way.)
+
+Suppose we define (mean y) explicitly as:
+ the sum of y           +/y
+ divided by             %
+ the count of y         #y
+)
+
+cocurrent 'base'
+mean=: 3 : '(+/y) % (#y)'
+mean 3 4 5
+
+NB. =========================================================
+Lab Section
+
+...Then, replacing: mean=: 3 :
+ by: 13 :
+ we see an equivalent tacit phrase.
+
+We can use this phrase directly in sentences
+ or assign it to a name,
+ and we can use it in place of our original explicit verb.
+)
+
+13 : '(+/y) % (#y)'
+(+/ % #) 3 4 5
+meanT=: 13 : '(+/y) % (#y)'
+meanT
+meanT 3 4 5
+meanU=: +/ % #
+meanU 3 4 5
+
+NB. =========================================================
+Lab Section
+
+So even a beginner can reliably convert a given verb...
+      explicit --> tacit
+
+Wouldn't it be nice to have a tool to go the other way? ...
+      tacit --> explicit
+
+It might give us a definition that's easier to read.
+
+But, alas, there's more than one way to do that.
+ (As will become apparent.)
+ However the goal is not impossible.
+)
+
+NB. =========================================================
+Lab Section The adverb: tte
+
+Let's be sure we're working in the _base_ locale.
+
+Also, let's get rid of the verbs we defined earlier
+ in case they get in our way...
+)
+
+cocurrent 'base'
+erase 'mean meanT meanU'
+
+NB. =========================================================
+Lab Section
+
+Let's use the word "explication" to describe the process:
+      tacit --> explicit
+ - because it "explicates" (i.e. offers an explanation for)
+   a given tacit verb.
+
+The addon: debug/tte defines (in locale: _z_) an adverb: tte
+ which "explicates" a given tacit verb.
+ The given verb can be a word (a "proverb") or an expression.
+)
+
+require 'debug/tte'
+type 'tte_z_'
+
+NB. =========================================================
+Lab Section Sample tacit verbs
+
+Loading 'debug/tte' also defines (in locale: _z_)
+ three test verbs for us to play with.
+ They are all defined with tacit definitions ...
+)
+
+mean_z_
+nub_z_
+cat_z_
+
+NB. =========================================================
+Lab Section Explicate a sample tacit verb
+
+To explicate a given verb, follow it with the adverb: tte
+
+(tte signals "explicit definition" error if the definition
+ of the verb is already explicit.)
+)
+
+mean tte
+
+NB. =========================================================
+Lab Section
+
+The result is not a block of text, but a verb.
+ The verb is explicitly defined,
+ - so what you see is the verb's (explicit) definition
+  i.e. the "value" of the verb
+  - which is what you see when you enter a verb name.
+
+The verb hasn't got a name yet.
+ But you can assign a name to it ...
+)
+
+meanX=: mean tte	NB. explicitly defined verb
+type 'meanX'
+meanX
+meanX 3 4 5
+
+NB. =========================================================
+Lab Section
+
+You can use the actual tacit definition of: mean in place of the proverb: mean
+ (proverb: the J-word whose value is a verb) ...
+)
+
+(+/ % #) tte
+
+NB. =========================================================
+Lab Section
+
+But it's wise to put parentheses round the verb definition.
+
+Otherwise, by J's parsing rules, an adverb acts only on the verb immediately preceding it
+ (in this case, the verb: #) ...
+)
+
+ +/ % #  tte
+
+NB. =========================================================
+Lab Section Adjusting tte
+
+Inside the _tte_ locale there are some user-alterable nouns
+controlling the appearance of the explication.
+
+This sentence has a special meaning:  ? tte
+ - It displays the current values of these nouns in _tte_.
+ - Re-enter these lines to change the settings.
+)
+
+? tte
+
+NB. =========================================================
+Lab Section
+
+The user-alterable nouns in _tte_ are as follows:
+
+  COPULA        The copula to be used in the explication
+                        Can be: '=:' or: '=.'
+
+  NOCOMMENT     Boolean: controls line-comments
+                        1 - suppress line-comments
+                        0 - append line-comments.
+
+  PREVERB       Optional prefix verb for each sentence
+                        Suggest: ']' or: 'smoutput'
+                        or: '' (no prefix).
+
+  PREFIX        4-atom boxed stringlist, signifying ...
+                 1st-letters of names for intermediate ...
+                        nouns           >0{PREFIX
+                        adverbs         >1{PREFIX
+                        conjunctions    >2{PREFIX
+                        verbs           >3{PREFIX
+
+  DECOMPOSE	Boolean: separate @ and & phrases?
+                        1 - split u@v into 2 sentences
+                        0 - keep u@v together in 1 sentence.
+)
+
+NB. =========================================================
+Lab Section
+
+Example: alter NOCOMMENT ...
+)
+
+mean tte
+NOCOMMENT_tte_=: 1
+mean tte
+NOCOMMENT_tte_=: 0	NB. restore to original value.
+
+NB. =========================================================
+Lab Section Ambivalent verbs
+
+The explication ALWAYS contains a monad and a dyad section,
+even if one or the other is meaningless.
+ - Example: the tacit verb: mean
+
+Why?
+
+Because a tacit verb is in principle ALWAYS ambivalent.
+
+However, some tacit verbs contain Monad-dyad (:)
+to specify monad-only and dyad-only parts.
+
+Adverb: tte honours this construct by separately explicating
+the monad-only and dyad-only parts in the correct section.
+)
+
+(mo : dy) tte
+
+NB. =========================================================
+Lab Section
+
+NOTE: a tacit verb can employ Monad-dyad (:) and Cap ([:)
+ to forbid its use as a monad
+ or alternatively as a dyad.
+
+This trick relies on Cap ([:) always raising a domain error
+ whatever its arguments.
+
+But tte makes it clear what's going on ...
+)
+
+mean0=: (mean : [:)     NB. signal error if called as dyad
+mean0 tte
+
+NB. =========================================================
+Lab Section
+
+NOTE: tte works even if (:[:) is buried in
+a "fixed" definition ...
+)
+
+mean0 f. tte    NB. (f.) forces expansion of embedded: mean
+
+NB. =========================================================

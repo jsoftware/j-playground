@@ -1,0 +1,497 @@
+LABTITLE=: 'Compositions @ @: & &:'
+LABFOCUS=: 1
+LABWIDTH=: 80
+
+NB. =========================================================
+Lab Chapter Compositions
+NB. =========================================================
+Lab Section What is a composition?
+To see the Table of Contents for this lab, go to Help|Studio|Chapters in the menu for this window.
+
+A composition is a verb that applies two verbs in sequence.
+
+An example is ((>: @: *:) y) .
+
+This applies the verb (*:) [square] to (y), and then applies the verb (>:) [increment] to the result of (*:).
+
+To advance to the next section, press ctrl+J in any of the main lab windows [the term window, the debug window, or the dissect window].  On a Mac, use Cmd+J.
+
+NOTE: In this lab, parentheses are used to indicate J code.
+)
+PREPARE
+require 'debug/dissect'
+
+NB. Fix up user's config file
+desiredkeyvals =: ';'&(taketo ; takeafter);._2 (0 : 0)
+F2;0;Dissect Line;dissect&.finddissectline_dissect_ 0
+F3;0;Dissect Last Error;dissect&.finddissectline_dissect_ 1
+F4;0;Lint;lintwindow_lint_''
+)
+fkeystatus =: 3 : 0''
+fkeyinfo =. 0$a:
+cfiled =. 1!:1 cfile =. < jpath '~config/userkeys.cfg'
+if. LF ~: {:cfiled do. cfiled =. cfiled , LF end.
+NB. Cut to lines
+lines =. <;._2 cfiled -. CR
+NB. discard comments
+lines =. (#~  ('NB.' -.@-: 3 {. deb)@>) lines  
+NB. get delimiter for each line
+delims =. (,&';' {~ 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+' i.&0@:e.~ deb)@> lines
+NB. get existing keyname;values
+keynameval =. delims (taketo ; takeafter)&> lines
+NB. for each desired value, get the key assigned currently
+keyassigns =. keynameval i.&:(1&{"1) desiredkeyvals
+NB. For the values not yet assigned, see if the keys are
+NB. available
+if. +./ assignedmask =. keyassigns < #keynameval do.
+  fkeyinfo =. fkeyinfo , ((0 {"1 keynameval) {~ assignedmask # keyassigns) ('You can use ' , [ , ' for ' , ])&.> ';' ([ taketo takeafter)&.> assignedmask # 1 {"1 desiredkeyvals
+end.
+
+keysneeded =. (keyassigns = #keynameval) # (0 {"1 desiredkeyvals)
+if. #availkeys =. keysneeded -. 0 {"1 keynameval do.
+  NB. Get the string to use for the new keys
+  newvals =. (availkeys e.~ 0 {"1 desiredkeyvals) # desiredkeyvals
+  NB. Get strings to add to config
+  newconfigs =. ; (0&{ , ';' ; (<LF) ,~ 1&{)"1 newvals
+  NB. Get prompt string to use
+  select. #newkeys =. {."1 newvals
+  case. 1 do.
+    keystg =. 'key ', ; newkeys
+  case. 2 do.
+    keystg =. 'keys ' , (>{. newkeys) , ' and ' , (>{: newkeys)
+  case. do.
+    keystg =. _2 }. 'keys ' , ; (}: , (<'and ') , {:) (,&', '&.> newkeys)
+  end.
+  if. 'yes' -: wd 'mb query mb_yes mb_no "May I change configuration?" "I would like to define function ',keystg,'.  Is that OK with you?',LF,LF,'If so, I will stop J and you will need to restart it."' do.
+    NB. Rewrite config file
+    (cfiled , newconfigs) 1!:2 cfile
+    NB. Kill J to allow restart with new keys
+    2!:55 (0)
+  end.
+end.
+fkeyinfo
+)
+PREPARE
+y =. i. 5
+- y
+(+/ @: -) y
+
+
+
+NB. =========================================================
+Lab Section The Dissect tool
+In this lab we will use the Dissect tool to examine the results of execution.
+
+You see the dissection of the sentence ((>: @: *:) i. 5).
+
+To see the dissection of any sentence, click in the sentence and press F2.
+
+Take a moment to experiment with running Dissect on sentences.  We will not need all the facilities of the Dissect tool.  If you want to learn about them, you can run the Labs for Dissect.  For our purposes, it is enough that you notice that execution flow is from top to bottom, and that each block contains the result of one verb, whose name and rank are displayed at the top of the block.
+
+)
+dissect '((>: @: *:) i. 5)'
+
+NB. =========================================================
+Lab Section Who needs composition?
+Consider the sentence
+
+   +/ - i. 5
+_10
+
+Dissect it, just for practice.  [Click in the sentence and press F2.]  Observe that it executes (i.), then (-), then (+/) in order.
+
+Now suppose you want to write a single verb that does the operation of (-) followed by (+/).  You want to call this verb sumneg and you will use it with
+
+  sumneg i. 5
+_10
+
+Write the definition of sumneg.  Your definition will look like
+
+sumneg =: <some combination including +/ and - >
+
+Test your (sumneg) program and see if it works correctly. 
+NB. =========================================================
+Lab Section sumneg
+
+If you got a working definition of sumneg, good on you.  Most novices don't.  The mistakes are instructive.
+
+The most common attempt is
+
+sumneg =: +/ -
+
+Let's try it:
+
+   sumneg =: +/ -
+   sumneg i. 5
+ 0 _1 _2 _3 _4
+ 1  0 _1 _2 _3
+ 2  1  0 _1 _2
+ 3  2  1  0 _1
+ 4  3  2  1  0
+
+??? What happened?  Run dissect to see.  [Click in the sentence and press F2.]  At first, all you see is that the verb sumneg took in a perfectly valid argument and produced something wild.  But you can look deeper.  In the dissect window, right-click on the big word 'sumneg' at the top of its block.  That will open a dissection of the internals of that verb.  What did it execute?
+
+The input (i. 5) came in at the top and went into (-), but it also went into (+/).  What was executed was not
+
++/ - i. 5
+
+but
+
+(i. 5) +/ - i. 5
+
+We don't need to know what that did, except to observe that it wasn't what we wanted.  How do we fix sumneg?
+)
+PREPARE
+sumneg =: +/ -
+PREPARE
+
+NB. =========================================================
+Lab Section sumneg explained
+Let's go back to the definition:
+
+   sumneg =: +/ -
+
+The author of this definition had a common misconception: that executing a name in J is like a macro expansion, where the name is replaced by the text of its definition.  In fact, executing a name is more like calling a subroutine in a normal language: the definition of the name is compiled into an internal form, and the arguments are presented to that form for execution.
+
+What is the internal form of this sumneg?
+
+The full explanation is more than we can handle right now, but fortunately there is a simple way to end up at the right place:
+
+To see the value of an assigned verb, put parentheses around the definition.
+
+Thus, sumneg has the value  (+/ -)  where the parentheses are necessary.
+
+You may say, Well, what does THAT mean then?  That's progress: formerly you thought you knew what +/ - meant, while now you realize you don't know what (+/ -) means.  You have to look it up or ask for help, and you will find that exactly two verbs enclosed by parentheses are a HOOK, and that
+
+   (u v) y
+
+is executed as
+
+   y u v y
+
+which is what we suspected from our Dissect work.  You can run
+
+   (+/ -) i. 5
+
+to verify.
+)
+(+/ -) i. 5
+
+
+NB. =========================================================
+Lab Section sumneg repaired
+Since just writing verbs in sequence doesn't cause them to be executed in sequence, what does?
+
+This is where you need a composition.  You need a way to combine the two verbs into a single verb that executes one verb then the other.
+
+The composition you want is (@:).  (u@:v y) executes (v y) and then executes (u) on the result.
+
+(+/)@:- is the verb you want.  And adding parentheses doesn't change its value, so you can assign that verb to a name.
+
+Run dissect to see how sumneg should work.
+)
+sumneg =: +/@:-
+sumneg i. 5
++/@:- i. 5  NB. same result
+
+
+NB. =========================================================
+Lab Section @: vs @
+The other common mistake in defining sumneg is to use (@) instead of (@:) to produce
+   sumneg =: +/@-
+   sumneg i. 5
+ 0 _1 _2 _3 _4
+
+Why didn't it add up the values?
+
+To see what went wrong, run dissect and right-click in the name sumneg.
+
+Dissect balks.  It says you 'must select a single result-cell for analysis'.  Humor it.  Click on the center value (_2) in the result area, and then go back and click on the name sumneg.
+
+Now dissect shows the execution of sumneg, but you can see it is operating on only one atom rather than the entire array.  The 'sum' is being taken over only one number, which isn't much of a sum at all.
+
+What's the difference between (@:) and (@)?  Drum roll... the rank of the verb they produce.
+
+To see the rank of a verb, use (b. 0), like so:
+)
+sumneg =: +/@:-
+sumneg b. 0
+sumneg =: +/@-
+sumneg b. 0
+
+NB. =========================================================
+Lab Section +/@-
+The key fact, whose capital importance you must grasp, is that every verb has a rank, including verbs made by combining primitives.
+
+Definition: the rank of a verb is the rank of the pieces that its arguments will be diced into.  The verb will execute on each of those pieces, called argument cells, independently.  When the verb is finished, the result-cells from the executionas will be assembled into the result of the verb.
+
+The rank of (u@:v) is infinite, which means the arguments are not split at all.  That is why (+/@:-) operated on its argument as a whole.
+
+The rank of (u@v) is the same as the rank of (v).  The rank of (-) is 0.  Thus the rank of (+/@-) is 0.  That means that the verb operated on every cell of rank 0 - that is, every atom - separately.  That's what we saw, and we didn't like it.
+
+How do you know that the rank of (-) is 0?  You can look in NuVoc, or you can use (b. 0).  [Some programmers just guess, but that's not recommended - they don't seem to use J for long.]
+)
+- b. 0
+
+NB. =========================================================
+Lab Section @ in Dissect
+(@) and (@:) produce different displays in Dissect.  We have already seen (@:); let's look into an example of (@).
+
+We will use a program that counts the number of items inside each box of a noun.  The verb to count items is (# y), and the verb to open a box is (> y).
+
+Now dissect (#@> y) [by clicking on it and pressing F2].
+
+You can see the value of y, and the result, which is as expected: 4 items, 5 items, 2 items.
+
+Think and click until you can answer two questions:
+
+Why is the result of executing (>) not visible?
+
+How can you see it? 
+)
+]y =. 'word';1 2 3 4 5;i. 2 5
+#@> y
+)
+PREPARE
+y =. 'word';1 2 3 4 5;i. 2 5
+PREPARE
+
+NB. =========================================================
+Lab Section @ in Dissect
+The result of (> y) is not visible for the most compelling of reasons: it doesn't exist.
+
+(> y) was never executed.  In fact, it couldn't be executed - doing so would produce a domain error [try it and see].
+
+The overall verb (#@> y) has rank 0, because (> y) has rank 0.  That means that (#@>) was executed for each box of y - 3 times in all.  And thus (>) was executed 3 times.
+
+To see the result of executing (>), you have to choose a single result-cell of (#@>) to examine.  Do so by clicking in the overall result.  When you have selected a result-cell that depends only on a single argument-cell into (#@>), the complete execution on that cell will be displayed.  With this verb one click is enough.  With more complex verbs you may have to click more than once.
+)
+
+NB. =========================================================
+Lab Chapter Worked Problems
+NB. =========================================================
+Lab Section The length of a vector
+The rest of this lab is a sequence of problems of increasing complexity.  Each problem will be stated, with an example of the desired result.  Your job is to write the composition that produces that result.
+
+After you have solved the problem, you may advance the lab to see a correct solution with commentary.
+
+Problem:
+
+Define the length of a vector as the square root of the sum of the squares of the components of the vector.
+
+Write a verb (length) to compute the length of the list  y, which may have any number of components.
+
+The verb (%: y) takes the square root of (y); (*: y) is (y) squared; and (+/ y) sums the items of (y).
+
+   length 3 4 12
+13
+)
+
+NB. =========================================================
+Lab Section The length of a vector (solution)
+
+Define the length of a vector as the square root of the sum of the squares of the components of the vector.  Write a verb (length) to compute the length of the list  y, which may have any number of components.
+
+Solution:
+
+Apply the verbs in order with 
+
+length =: %: @: (+/) @: *:
+
+Another solution is
+
+length2 =: %: @ (+/) @: *:
+
+(length2) is parsed as (%:@(+/))@:*: which means that (%:@(+/)) has the rank of (+/) which is infinite.  In this case (@) and (@:) give the same result.
+
+But don't try 
+
+lengthx =: %: @: (+/) @ *:
+
+!  Dissect it if you don't understand why it will fail.
+)
+length =: %: @: (+/) @: *: of the lengths of the vectors.
+length 3 4 12
+
+NB. =========================================================
+Lab Section The length of each vector in a table of vectors
+Problem: given a table of vectors (y), where each vector is a row of (y), write a program (lengths) that produces a list of the lengths of the vectors.
+
+   ]y =. 2 3 $ 3 4 12   9 12 112
+3  4  12
+9 12 112
+   lengths 2 3 $ 3 4 12   9 12 112
+13 113
+)
+PREPARE
+y =. 2 3 $ 3 4 12   9 12 112
+PREPARE
+
+NB. =========================================================
+Lab Section The length of each vector in a table of vectors (solution)
+Given a table of vectors (y), where each vector is a row of (y), write a program (lengths) that produces a list of the lengths of the vectors.
+
+Solution:
+
+A perfectly valid solution is
+
+lengths =: length"1
+
+You have a verb (length) to find the length of a list; simply use ("1) to have it be applied to lists.
+
+If you are operating on lots of data, you will find that (lengths2), defined below, is faster.  Use Dissect to probe the two versions and explain why (lengths2) is faster.
+)
+]y =. 2 3 $ 3 4 12   9 12 112
+lengths =: length"1
+lengths y
+lengths2 =: %: @: (+/"1) @: *:
+lengths2 y
+
+NB. =========================================================
+Lab Section The length of each vector in a table of vectors (analysis)
+(lengths) operates on one row at a time.  If you try to look into its operation you see that you have to select an individual result-cell before you can see how it was calculated.  This tells you that each cell was calculated independently.
+
+Because J nouns can have any rank and shape, there is a small overhead every time a verb is executed.  (lengths) executes each of its 3 verbs on every row.
+
+Dissecting (lengths2) shows a different picture.  You can see the entire computation, because each verb is applied to the entire argument at each step.  There are only 3 verb overheads for the entire computation.
+
+If you are paying careful attention, you may say, "Ah yes, but (+/"1) runs the verb (+/) on each row, so there is an extra 1 overhead per row."  But I get the last "Ah yes", because most of the arithmetic primitives, including (+/), have Integrated Rank Support, which means ((+/)"r) has only one overhead no matter what (r) is.
+
+NB. =========================================================
+Lab Section Average of the digits
+Problem: Given an noun whose atoms are nonnegative integers, replace each number with the average of its digits.
+
+The verb (10&#.^:_1 y) converts an atom (y) into a list of its digits.  The verb ((+/ % #) y) takes the average of the items of (y).  Both of these verbs have infinite rank.
+
+   avgdigit 123 6576 91264
+2 6 4.4
+)
+
+NB. =========================================================
+Lab Section Average of the digits (solution)
+Given an noun whose atoms are nonnegative integers, replace each number with the average of its digits.
+
+Solution:
+
+avgdigit =: (+/ % #)@(10&#.^:_1)"0
+
+You must convert each number to digits, and average those digits, independently.
+
+Use Dissect to see the flaws in the other two attempts shown below.
+
+(avgdigitx) fails because it has infinite rank.  When (10&#.^:_1) is executed ont the list (y), it produces a table; and when (+/ % #) is applied to the table, it averages the ROWS of the table rather than each row separately.
+
+(avgdigitx2) attempts to fix that problem by explicitly averaging each row separately.  But it gets the wrong answer - do you see what happened?
+
+The execution of (10&#.^:_1) produced lists of varying lengths.  These rows were assembled into a table by padding the short rows.  The added zeros affected the average value.
+
+To get the correct answer you must keep the computations of each average completely separate.
+)
+avgdigit =: (+/ % #)@(10&#.^:_1)"0
+avgdigit 123 6576 91264
+avgdigitx =: (+/ % #)@(10&#.^:_1)
+avgdigitx 123 6576 91264
+avgdigitx2 =: (+/ % #)"1@(10&#.^:_1)
+avgdigitx2 123 6576 91264
+
+NB. =========================================================
+Lab Section Find the index of the number with the smallest digit
+Problem: Given a list of nonnegative integers, find the index of the number containing the smallest digit.
+
+The verb (<./ y) has infinite rank and gives the smallest value in the list (y).  The verb ((i. <./) y) has infinite rank and finds the index of the smallest atom of the list (y).
+
+   mindigit 999 4563 12
+2
+   mindigit 9 87 654 81 5
+3
+)
+NB. =========================================================
+Lab Section Find the index of the number with the smallest digit (solution)
+Given a list of nonnegative integers, find the index of the number containing the smallest digit.
+
+Solution:
+
+mindigit =: (i. <./)@:(<./@(10&#.^:_1)"0)
+
+Find the smallest digit of each number; then find the index of the smallest of all of them.
+
+It is important that the smallest digit in each word be found for each word individually.  If the digits are collected into a table, disastrous zero-fill will be added.  Once the smallest digit of each word is found, they must be collected into a single list where the index of the smallest can be found.
+
+Dissect the result until you understand it.
+)
+mindigit =: (i. <./)@:(<./@(10&#.^:_1)"0)
+mindigit 999 4563 12
+mindigit 9 87 654 81 5
+
+
+NB. =========================================================
+Lab Section The number of words in each phrase
+Problem: Given a list of boxes (y), where each box contains a phrase, produce a table, with one row for each word, giving the number of words in each phrase and the number of characters in the original phrase.
+
+The verb (;: y) converts a string into a list of boxed words, with spaces removed:
+
+   ;: 'we happy few'
+ +--+-----+---+
+ |we|happy|few|
+ +--+-----+---+
+
+A FORK ((f g h) y) can join the results of 2 verbs.  ((f g h) y) is ((f y) g (h y)); so ((f , h) y) is ((f y) , (h y)) which joins the results of (f) and (h) together.
+
+   ]y =: 'we happy few';'the unforgiving minute';'we must think anew'
++------------+----------------------+------------------+
+|we happy few|the unforgiving minute|we must think anew|
++------------+----------------------+------------------+
+   nwords y
+3 12
+3 22
+4 18
+)
+PREPARE
+y =: 'we happy few';'the unforgiving minute';'we must think anew'
+PREPARE
+
+
+NB. =========================================================
+Lab Section The number of letters and words in each phrase (solution)
+Given a list of boxes (y), where each box contains a phrase, find the number of words in each phrase.
+
+Solution:
+
+nwords =: (#@;: , #)@>
+
+The key is the use of (@) rather than (@:).  Using (@:>) would open each box and join them into a single value.  This is almost never used.  You can see why: if joining the contents of the boxes wouldn't damage them, why have the boxing in the first place?  By using (@>) you ensure that the boxed contents are kept separate.
+
+)
+nwords =: (#@;: , #)@>
+nwords y
+
+NB. =========================================================
+Lab Chapter Dyads (x u y)
+NB. =========================================================
+Lab Section Using (u@v) and (u@:v) as dyads
+Until now we have considered monadic compositions (u@v y) and (u@:v y).  The same forms have defined meanings when used as dyads.
+
+(x u@:v y) executes as (u (x v y)).  In words, (v) is executed as a dyad and takes the arguments (x) and (y).  After that, (u) is applied in the same way as in monadic (u@:v y).  (x u@:v y) has infinite rank.
+
+(x u@v y) follows the same pattern, but the verb has the ranks of (v).  The left and right rank may be different.  The effect is that (x) and (y) are diced into cells before being presented to (u@v), with each cell going through the operation separately and the result-cells assembled into a final result at the end.
+
+Dissect the examples below to see how the components are executed.  As before, with (u@v) you must look at an individual cell to get a full picture.
+)
+(100 * i. 5) +/@:+ (3 1 4 1 5)
+100 *:@- i. 10
+(100 * i. 5) +/@+ (3 1 4 1 5)
+
+NB. =========================================================
+Lab Section & and &:
+The conjunctions (&) and (&:) are used for a different form of dyadic composition.
+
+(x u&:v y) has infinite rank, and executes as ((v x) u (v y)).  In words, (v) is applied to each of (x) and (y) monadically, and (u) is applied dyadically between those results. 
+
+(x u&v y) follows the same pattern, but the left and rights verb are the monadic rank of (v).  (x) and (y) are diced into cells before being presented to (u&v), with each cell going through the operation separately and the result-cells assembled into a final result at the end.
+
+Dissect the examples below to see how the components are executed.
+
+Forms with (&) and (&:) can be used monadically, but the monadic case (u&:v y) executes exactly like (u@:v y), and (u&v y) like (u@v y).  For this reason monadic forms in (&) and (&:) are seldom used.
+)
+'three' +&:# 'four'
+('three';'seven') +@(#&>) ('two;'five')

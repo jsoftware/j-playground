@@ -61,7 +61,9 @@ code.addEventListener("keydown", (e) => {
         if(str == ")h") {
           window.out("\nREPL Help:"+
 "\n)cls - clears all text on screen."+
-"\n)play - code examples to play with."); 
+"\n)play - code examples to play with." +
+"\n)ctrl+> to advance a lab"
+); 
         window.out("   ", true)
 }
         else if(str == ")cls") { code.value = "   "; }
@@ -87,7 +89,11 @@ code.addEventListener("keydown", (e) => {
         } catch (obj) {
             window.out("ERROR: " + obj);
         } }
+    }  
+    if((event.ctrlKey && event.key == ".") || (event.ctrlKey && event.key == ">")) {
+      jdo1("labnext ''")
     }
+      
 });
 
 
@@ -215,6 +221,56 @@ document.onreadystatechange = function(){
         toggleEditor();
 
         checkPermalink()                  
-  });
+    });
+  }
 }
+
+var labs =[
+'system/special_searches',
+'general/towerofhanoi',
+'general/seqmachine',
+'general/huffman',
+'livetexts/coleman',
+'core/display',
+'core/jtaste2',
+'core/sparse',
+'core/monad',
+'core/intro',
+'core/compositions',
+'math/fntab',
+'math/shapley',
+'math/iter',
+'math/bestfit',
+'math/families',
+'math/pythag3',
+'math/averages',
+'math/bincoefs',
+'math/tables',
+'math/volume',
+'math/groups',
+'math/frame',
+'math/polynom',
+'math/mathroot',
+]
+let labMenu = document.getElementById('labMenu')
+document.getElementById("advanceLab").onclick = function() {
+  jdo1("labnext''")
 }
+labs.forEach(x=>{
+  //<a href="#toggle-editor" id="toggleEditor">Math/Averages</a>
+  var labLink = document.createElement("a")
+  labLink.setAttribute("href","#" + x);
+  labLink.innerText = x;
+  labMenu.appendChild(labLink);
+  labMenu.onclick = function(e) {
+    //load the labs utilities / doesn't hurt to reload each time
+    jdo1("(0!:0) <'labs/labs805.ijs'")
+    var labPath = e.target.getAttribute('href').slice(1); //drop the leading #
+    var lab = labPath.slice(labPath.indexOf('/')+1);
+    jdo1("lab 'labs/" + lab + ".ijt'")
+
+    document.getElementById("advanceLab").style.display='';
+    e.preventDefault();
+    return 0;
+  }
+})
