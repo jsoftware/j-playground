@@ -153,8 +153,7 @@ int invoke_vi(int, int, int, int, int) { }
 int invoke_vii(int, int, int, int, int) { }
 int invoke_ii(int, int, int, int, int) { }
 int invoke_iiiiii(int, int, int, int, int) { }
-
-
+int invoke_viiiii(int, int, int, int, int, int) {}
 void emscripten_notify_memory_growth() { }
 //int fd_close(int v) { return 0; }
 int getTempRet0() { return 0; }
