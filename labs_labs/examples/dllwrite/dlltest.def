@@ -1,0 +1,17 @@
+EXPORTS
+	incval
+	getval
+	incc
+	incs
+	inci
+	incf
+	incd
+	addi
+	addvi
+	incvi
+	incvs
+	getdata
+	getdatap
+	getdatapx
+
+	altinci

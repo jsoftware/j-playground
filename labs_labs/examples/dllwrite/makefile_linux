@@ -1,0 +1,8 @@
+CFLAGS= -fPIC -O3 -fvisibility=hidden
+FLAGS= -lm -shared -Wl,-soname,libdlltest.so  -o libdlltest.so
+
+libdlltest.so : dlltest.o
+	$(CC) dlltest.o $(FLAGS)
+
+clean:
+	rm -f dlltest.o

@@ -1,0 +1,372 @@
+Specification for RTF
+---------------------
+
+RTF text is a form of encoding of various text formatting properties,
+document structures, and document properties, using the printable ASCII
+character set. Special characters can be also thus encoded, although RTF
+does not prevent the utilization of character codes outside the ASCII
+printable set.
+
+The main encoding mechanism of "control words" provides a name space that
+may be later used to expand the realm of RTF with macros, programming, etc.
+
+1. BASIC INGREDIENTS
+
+Control words are of the form:
+	\lettersequence <delimiter>
+
+where <delimiter>. is:
+	. a space: the space is part of the control word.
+	. a digit or - means that a parameter follows. The following digit
+		sequence is then delimited by a space or any other
+		non-letter-or-digit as for control words.
+	. any other non-letter-or digit: terminates the control word, but is not
+		a part of the control word.
+
+By "letter:, here we mean just the upper and lower case ASCII letters.
+
+Control symbols consist of a \ character followed by a single nonletter.
+They require no further delimiting.
+
+	Notes: control symbols are compact, but there are not too many
+	of them. The number of possible control words are not limited.
+	The parameter is partially incorporated in control symbols, so that
+	a program that does not understand a control symbol can recognize
+	and ignore the corresponding parameter as well.
+
+In addition to control words and control symbols, there are also the braces:
+	{       group start, and
+	}       group end.
+The text grouping will be used for formatting and to delineate document
+structure - such as the footnotes, headers, title, and so on.
+The control words, control symbols, and braces constitute control information.
+All other characters in RTF text constitute "plain text".
+
+Since the characters \, {, and } have specific uses in RFT, the control
+symbols \\,\{, and \} are provided to express the corresponding plain
+characters.
+
+
+2. WHAT RFT TEXT MEANS (SEMANTICS)
+
+The reader of a RFT stream will be concerned with:
+	Separating control information from plain text.
+	Acting on control information. This is designed to be
+		a relatively simple process, as described below.
+                Some control information just contributes special
+                characters to the plain text stream.  Other information
+		serves to change the "program state" which includes
+		properties of the document as a whole and also a stack
+		of "group states" that apply to parts.
+                Note that the group state is saved by the { brace and is
+		restored by the } brace. The current group state specifies:
+		1. the "destination" or part of the document that the
+			plain text is building up.
+		2. the character formatting properties - such as bold or
+			italic.
+		3. the paragraph formatting properties - such as justified.
+		4. the section formatting properties - such as number of
+			columns.
+	Collecting and properly disposing of the remaining "plain text"
+		as directed by the current group state.
+
+In practice the RFT reader will proceed as follows:
+	0. read next char
+	1. if ={
+		stack current state. current state does not change.
+		continue.
+	2. if =}
+		unstack current state from stack. this will change the
+		state in general.
+	3. if =\
+		collect control word/control symbol and parameter, if any.
+		look up word/symbol in symbol table (a constant table)
+		and act according to the description there. The different
+		actions are listed below. Parameter is left available
+                for use by the action.  Leave read pointer before or after
+                the delimiter, as appropriate.  After the action, continue.
+	4. otherwise, write "plain text" character to current destination
+		using current formatting properties.
+
+Given a symbol table etry, the possible actions are as follows:
+	A. Change destination:
+		change destination to the destination described in the entry.
+		Most destination changes are legal only immediately after a {. Other restrictions
+		may also apply (for example, footnotes may not be nested.)
+	B. Change formatting property:
+		The symbol table entry will describe the property and
+		whether the parameter is required.
+	C. Special character:
+		The symbol table entry will describe the character code..
+		goto 4.
+	D. End of paragraph
+		This could be viewed as just a special character.
+	E. End of section
+		This could be viewed as just a special character.
+	F. Ignore
+
+3. SPECIAL CHARACTERS
+
+The special characters are explained as they exist in Mac Word. Clearly,
+other characters may be added for interchange with other programs. If
+a character name is not recognized by a reader, according to the rules
+described above, it will be simply ignored.
+
+	\chpgn          current page number (as in headers)
+	\chftn          auto numbered footnote reference
+			(footnote to follow in a group)
+	\chpict         placeholder character for picture
+			(picture to follow in a group)
+	\chdate         current date (as in headers)
+	\chtime         current time (as in headers)
+	\|              formula character
+	\~              non-breaking space
+	\-              non-required hyphen
+	\_              non-breaking hyphen
+
+	\page           required page break
+	\line           required line break (no paragraph break)
+
+	\par            end of paragraph.
+	\sect           end of section and end of paragraph.
+	\tab            same as ASCII 9
+
+For simplicity of opertation, the ASCII codes 9 and 10 will be accepted
+as \tab and \par respectively. ASCII 13 will be ignored. The control
+code \<10> will be ignored. It may be used to include "soft"
+carriage returns for easier readibility but which will have no effect
+on the interpretation.
+
+4. DESTINATIONS
+
+The change of destination will reset all properties to default.
+Changes are legal only at the beginning of a group (by group here
+we mean the text and controls enclosed in braces.)
+
+	\rtf<param>
+		The destination is the document. The parameter is the
+		version number of the writer. This destination preceded
+		by { the beginnings of RTF documents and the corresponding }
+		marks the end.
+		Legal only once after the initial {.
+                Small scale interchange of RTF where other methods for
+                marking the end of string are available, as in a string
+                constant, need not include this identification but will
+                start with this destination as the default.
+	\pict
+		The destination is a picture. The group must immediately
+		follow a \chpict character. The plain text describes
+		the picture as a hex dump (string of characters 0,1,...
+		9, a, ..., e, f.)
+		(Formatting properties to determine data interpretation,
+		size)
+	\footnote
+		The destination is a footnote text. The group must
+		immediately follow the footntoe reference character(s).
+	\header
+		The destination is the header text for the current section.
+		The group must precede the first plain text character
+		in the section.
+	\headerl
+		Same as above, but header for left-hand pages.
+	\headerr
+		Same as above, but header for right-hand pages.
+	\headerf
+		Same as above, but header for first page.
+	\footer
+		Same as above, but footer.
+	\footerl
+		Same as above, but footer for left-hand pages.
+	\footerr
+		Same as above, but footer for right-hand pages.
+	\footerf
+		Same as above, but header for first page.
+	\ftnsep
+		Same as above, but text is footnote separator
+	\ftnsepc
+		Same as above, but text is separator for continued footnotes.
+	\ftncn
+		Same as above, but text is continued footnote notice.
+	\info
+		text is information block for the document. Parts of the
+		text is further classified by "properties" of the text
+		that are listed below - such as "title". These are not
+		formatting properties, but a device to delimit and identify
+		parts of the info from the text in the group.
+	\stylesheet
+		text is the style sheet for the document.
+		More precisely, text between semicolons are taken to be
+		style names which will be defined to stand for the
+		formatting properties which are in effect.
+	\fonttbl
+		font table. See below.
+	\colortbl
+		color table. See below.
+	\comment
+		text will be ignored.
+
+5. DOCUMENT FORMATTING PROPERTIES
+
+(000 stands for a number which may be signed)
+
+	\paperw000      paper width in twips            12240
+	\paperh000      paper height                    15840
+	\margl000       left margin                     1800
+	\margr000       right margin                    1800
+	\margt000       top margin                      1440
+	\margb000       bottom margin                   1440
+	\facingp        facing pages
+	\gutter000      gutter width
+	\deftab000      default tab width               720
+	\widowctrl      enable widow control
+
+	\endnotes       footnotes at end of section
+	\ftnbj          footnotes at bottom of page     default
+	\ftntj          footnotes beneath text (top just)
+
+	\ftnstart000    starting footnote number        1
+	\ftnrestart     restart footnote numbers each page
+	\pgnstart000    starting page number            1
+	\linestart000   starting line number            1
+	\landscape      printed in landscape format
+
+(the "next file" property will be encoded in the info text )
+
+
+6. SECTION FORMATTING PROPERTIES
+	\sectd          reset to default section properties
+
+	\nobreak        break code
+	\colbreak       break code                      default
+	\pagebreak      break code
+	\evenbreak      break code
+	\oddbreak       break code
+	\pgnrestart     restart page numbers at 1
+
+	\pgndec         page number format decimal      default
+	\pgnucrm        page number format uc roman
+	\pgnlcrm        page number format lc roman
+	\pgnucltr       page number format uc letter
+	\pgnlcltr       page number format lc letter
+
+	\pgnx000        auto page number x pos          720
+	\pgny000        auto page number y pos          720
+	\linemod000     line number modulus
+	\linex000       line number - text distance     360
+
+	\linerestart    line number restart at 1        default
+	\lineppage      line number restart on each page
+	\linecont       line number continued from prev section
+
+	\headery000     header y position from top of page      720
+	\footery000     footer y position from bottom of page   720
+
+	\cols000        number of columns               1
+	\colsx000       space between columns           720
+	\endnhere       include endnotes in this section
+	\titlepg        title page is special
+
+
+7. PARAGRAPH FORMATTING PROPERTIES
+
+	\pard           dreset to default para properties.
+	\s000           style
+
+	\ql             quad left                       default
+	\ql             right
+	\qj             justified
+	\qc             centered
+
+	\fi000          first line indent
+	\li000          left indent
+	\ri000          right indent
+	\sb000          space before
+	\sa000          space after
+	\sl000          space between lines
+
+	\keep           keep
+	\keepn          keep with next para
+	\sbys           side by side
+	\pagebb         page break before
+	\noline         no line numbering
+
+	\brdrt          border top
+	\brdrb          border bottom
+	\brdrl          border left
+	\brdrr          border right
+	\box            border all around
+
+	\brdrs          single thickness
+	\brdrth         thick
+	\brdrsh         shadow
+	\brdrdb         double
+
+	\tx000          tab position
+	\tqr            right flush tab (these apply to last specified pos)
+	\tqc            centered tab
+	\tqdec          decimal aligned tab
+	\tldot          leader dots
+	\tlhyph         leader hyphens
+	\tlul           leader underscore
+	\tlth           leader thick line
+
+
+8. CHARACTER FORMATTING PROPERTIES
+
+	\plain          reset to default text properties.
+
+	\b              bold
+	\i              italic
+	\strike         strikethrough
+	\outl           outline
+	\shad           shadow
+	\scaps          small caps
+	\caps           all caps
+	\v              invisible text
+	\f000           font number n
+	\fs000          font size in half points        24
+
+	\ul             underline
+	\ulw            word underline
+	\uld            dotted underline
+	\uldb           double underline
+
+	\up000          superscript in half points
+	\dn000          subscript in half points
+
+9. INFO GROUP
+
+The plain text in the group is used to sepcify the various fields of
+the information block. The current field may be thought of as a
+particular setting of the "sub-destination" property of the text..
+	\title          following plain text is the title
+	\subject        following text is the subject
+	\operator
+	\author
+	\keywords
+	\doccomm        comments (not to be cofused with \comment )
+	\version
+	\nextfile       following text is name of "next" file
+
+The other properties assign their parameters directly to the info block.
+	\verno000       internal version number
+	\creatim        creation time follows
+
+	\yr000          year to be assigned to previously specified time field
+	\mo000
+	\dy000
+	\hr000
+	\min000
+	\sec000
+
+	\revtim         revision time follows
+	\printtim       print time follows
+	\buptim         backup time follows
+
+	\edmins00       editing minutes
+	\nofpages000
+	\nofwords000
+	\noofchars000
+	\id000          internal id number
+
+_

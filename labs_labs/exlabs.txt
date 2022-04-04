@@ -1,0 +1,88 @@
+# exlabs.txt
+#
+# These are labs excluded from lab selection lists,
+# e.g. because obsolete or designed for another platform.
+#
+# EXJHS  - excluded in JHS
+# EXJQT  - excluded in JQt
+# EXJNET - excluded in JNet
+# EXALL  - excluded everywhere
+#
+# The EXALL exclusions are labs that need updating for the current J release,
+# but are still appropriate.
+#
+# Any labs that are obsolete should be removed from the addons svn.
+#
+# lab filenames are relative to ~addons
+#
+# Note: to test a lab from the command line, ensure that
+# the labs addon is installed, then load the labs and call
+# lab_jlab_ with the lab filename. For example:
+#
+#    load 'labs/labs'
+#    lab_jlab_ '~addons/labs/labs/core/intro.ijt'
+#
+# In this file, lines beginning '#' are ignored.
+
+# ---------------------------------------------
+EXJHS=: 0 : 0
+graphics/fvj4/dwin.ijt
+graphics/fvj4/dwin_ja.ijt
+graphics/fvj4/raster.ijt
+graphics/fvj4/raster_ja.ijt
+labs/labs/core/jclick1.ijt
+labs/labs/core/jclickbeginners.ijt
+labs/labs/core/head.ijt
+labs/labs/debug/dissect1.ijt
+labs/labs/debug/dissect2.ijt
+labs/labs/debug/jig.ijt
+labs/labs/graphics/fractals.ijt
+labs/labs/graphics/graphut.ijt
+labs/labs/livetexts/candg.ijt
+labs/labs/livetexts/linearalgebra.ijt
+labs/labs/system/client_server.ijt
+labs/labs/system/debug.ijt
+labs/labs/system/pm.ijt
+labs/labs/system/sockcli.ijt
+labs/labs/system/sockinet.ijt
+labs/labs/system/sockserv.ijt
+)
+
+# ---------------------------------------------
+EXJQT=: 0 : 0
+labs/labs/graphics/d3.ijt
+)
+
+# ---------------------------------------------
+EXJNET=: 0 : 0
+labs/labs/graphics/d3.ijt
+)
+
+# ---------------------------------------------
+EXALL=: 0 : 0
+general/sfl/sfl.ijt
+graphics/fvj3/labs/bafrmid.ijt
+graphics/fvj3/labs/chaotica3.ijt
+graphics/fvj3/labs/dwin2.ijt
+graphics/fvj3/labs/owin3.ijt
+graphics/fvj3/labs/povkit2.ijt
+graphics/fvj3/labs/raster6.ijt
+graphics/jturtle/jturtleuser.ijt
+labs/labs/core/head.ijt
+labs/labs/general/jturtleuser.ijt
+labs/labs/general/nn1.ijt
+labs/labs/graphics/gl2.ijt
+labs/labs/graphics/opengl.ijt
+labs/labs/graphics/openglut.ijt
+labs/labs/graphics/plotjhs.ijt
+labs/labs/system/apps.ijt
+labs/labs/system/callback.ijt
+labs/labs/system/odbcinv.ijt
+labs/labs/system/odbcsap.ijt
+labs/labs/system/printer.ijt
+labs/labs/system/printutl.ijt
+labs/labs/system/regbuild.ijt
+media/image3/image3.ijt
+media/image3/image3html.ijt
+media/image3/image3movie.ijt
+)

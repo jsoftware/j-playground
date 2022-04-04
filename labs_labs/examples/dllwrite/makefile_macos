@@ -1,0 +1,8 @@
+CFLAGS= -fPIC -O3 -fvisibility=hidden
+FLAGS=  -dynamiclib -o libdlltest.dylib
+
+libdlltest.dylib : dlltest.o
+	$(CC) dlltest.o $(FLAGS)
+
+clean:
+	rm -f dlltest.o

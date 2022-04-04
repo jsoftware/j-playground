@@ -1,0 +1,316 @@
+NB. Lab: Shared Library (c) (dll/so/dylib) - writing a DLL
+
+0 : 0
+assumes you are already familiar with DLLS
+if not, see lab: Shared Library - intro
+
+see: https://code.jsoftware.com/wiki/Guides/DLLs/Calling_DLLs
+
+~addons/labs/labs/examples/dllwrite has prebuilt DLLs for this lab
+ windows -    dlltest.dll
+ linux   - libdlltest.so
+ macos   - libdlltest.dylib
+)
+
+0 : 0
+you can build for other platforms or play with changes
+
+linux/macos:
+ $ cd .../addons/labs/labs/examples/dllwrite
+ $ make -f makefile_linux (or makefile_macos)
+
+windows:
+ > cd .../addons/labs/labs/examples/dllwrite
+ > build.bat
+)
+
+'prebuilt DLLs are for J64' assert IF64
+
+[csrcfile=: '~addons/labs/labs/examples/dllwrite/dlltest.c'
+
+NB. open csrcfile and study the routines as they are used in the lab
+
+NB. a fully qualified DLL filename avoids search complications
+dll=: jpath '~addons/labs/labs/examples/dllwrite/'
+dll=: dll,;(('Linux';'Darwin')i.<UNAME){'libdlltest.so';'libdlltest.dylib';'dlltest.dll'
+[dll=: '"',dll,'" ' NB. "s allow blanks and trailing blank separates from procedure
+ 
+0 : 0
+procedure incval has no result and no parameters
+look at its definition in csrcfile
+
+CDPROC makes the name visible to callers
+__stdcall is the calling convention and is discussed later
+
+declaration has information from the C prototype
+ C - void incval()
+ J - n - no result and no parameters
+)
+
+(dll,'incval n') cd '' NB. (filename procedure declaration) cd parameters 
+
+0 : 0
+getval has an int result and no parameters
+ C - int getval()
+ J - i - int result and no parameters
+
+C int type is 32 bit and the J declaration for 32 bit is  i
+)
+(dll,'getval i') cd ''
+
+NB. for repeated use, define verbs with their arguments bound to cd
+cdm=: 1 : '(dll,m)&cd'    NB. cdm utility adverb
+incval=: 'incval n' cdm   NB. define verb incval
+getval=: 'getval i' cdm   NB. define verb getval
+
+incval''
+getval''
+incval''
+getval''
+
+0 : 0
+inci returns an int and has an int parameter
+ C - int inci(int i)
+ J - i        i
+
+cd result is a list of boxes
+1st is the procedure result and then copies of the parameters
+copies of parameters are returned as they can be modified by the procedure
+)
+inci=: 'inci i i' cdm
+
+0 : 0
+BE CAREFUL! - bad declaration or parameter can CRASH or CORRUPT MEMORY
+inci declaration MUST be i i to match its C prototype
+)
+inci 23   NB. scalar is treated as boxed parameter
+inci <123
+
+0 : 0
+incd has a float result and parameter
+ C - double incd(double d)
+ J - d           d
+)
+incd=: 'incd d d' cdm
+incd 123.5
+
+0 : 0
+addi returns the int sum of two int parameters
+ C - int addi(int x, int y)
+ J - i        i      i - int result and 2 int parameters
+)
+addi=: 'addi i i i' cdm
+addi 23;24
+
+0 : 0
+the C routine is working with 32 bit ints
+the parameter starts out in J as a 64 bit integer
+it will be cast to int (that is, info is discarded)
+)
+
+[3+<.2^35
+addi 2;<.3+2^35 NB. perhaps a surprising result - 64 bit -> 32 bit
+
+NB. cder returns information about the last cd: error number and additional info
+inci <23
+cder''      NB. 0 - no error
+NB. see Error Messages at: https://code.jsoftware.com/wiki/Guides/DLLs
+
+'notafile inci i i' cd <23
+cder''   NB. 1 - file not found
+cderx''  NB. extra error info (not always useful)
+
+'incix i i' cdm 23
+cder''   NB. 2 - procedure not found
+
+inci 12
+inci ''
+cder''   NB. 4 - parameter count doesn't match declarations
+inci 1;2;3
+cder'' 
+
+inci 23.5
+cder''   NB. 6 0 - 1st parameter is wrong type
+
+addi 123;23.5
+cder''   NB. 6 1 - 2nd parameter is wrong type
+
+datatype p=: 23.5 - 19.5
+addi 2;p  NB. p is treated as int 4
+
+addi 2;1 NB. boolean treated as an int
+
+0 : 0
+incc has a character result and parameter.
+ C - char incc(char c)
+ J - c         c
+)
+incc=: 'incc c c' cdm
+incc 'b'
+incc 'g'
+
+0 : 0
+addvi returns the int sum of a list
+1st parameter is count of the ints in the list
+2nd paramter is pointer to a list of ints
+ C - int addvi(int n, int* p)
+ J - i         i      *i
+)
+addvi=: 'addvi i i *i' cdm
+addvi 7;i.7
+addvi 5;5$1   NB. boolean converted to int
+
+0 : 0
+* declaration is a memory address
+*i means it must address 32 bit ints
+this helps avoid calling the procedure with bad parameters
+)
+addvi 4;'asdfasdfasdfasdf'
+cder''  NB. 6 1 - 2nd parameter wrong type
+
+0 : 0
+if you use just * in the declaration
+then any type can be used as the parameter
+declaration of * is analogous to C void*
+)
+addvix=: 'addvi i i *' cdm
+addvix 7;i.7
+addvix 3;'asdfasdfasdf'   NB. address of chars - treated as 4 byte ints
+
+0 : 0
+a procedure can modify data addressed by a pointer
+incvi returns no result
+parameters are an int count and a pointer to a list of ints
+the procedure increments each int in the list
+
+ C - void incvi(int n, int* p)
+ J - n          i      *i
+)
+incvi=: 'incvi n i *i' cdm
+incvi 7;i.7
+
+0 : 0
+addvi and incvi use memory addressed by a pointer
+in examples so far the addressed memory is allocated by J in nouns
+
+you can also work with memory that you explicitly allocate
+)
+
+toint=: _2&ic   NB. convert char data to integer (32 bit)
+tochar=: 2&ic   NB. convert integer data to char (32 bit)
+[a. i. tochar i.4
+
+NB. see Memory Management link at: https://code.jsoftware.com/wiki/Guides/DLLs
+
+[ptr=: mema 16                NB. allocate 16 bytes (4 ints (4 bytes each))
+toint memr ptr,0,16          NB. current contents
+(tochar i.4) memw ptr,0,16   NB. set memory
+toint memr ptr,0,16          NB. new contents
+
+0 : 0
+if a parameter declared as a pointer is a boxed integer scalar
+then that value is used as the pointer
+a NULL pointer is: <0
+)
+4;<<ptr  NB. boxed integer is memory address
+addvi 4;<<ptr  NB. sum 4 ints at ptr
+
+toint memr ptr,0,16
+incvi 4;<<ptr   NB. increment 4 ints at ptr
+toint memr ptr,0,16
+addvi 4;<<ptr   NB. sum 4 ints at ptr
+
+0 : 0
+getdata returns the string "static data"
+ C - void getdata(char* c)
+ J - n            *c
+)
+getdata=: 'getdata n *c' cdm
+getdata <'aaaaaaaaaaaaaaaaaaa' NB. note null after the text
+
+0 : 0
+getdatap returns the pointer to the string "static data"
+ C - char* getdatap()
+ J - *c
+)
+getdatap=: 'getdatap *c' cdm
+[z=:>{.getdatap ''
+memr z,0,12
+
+0 : 0
+getdatapx returns the pointer to the string in a parameter
+ C - void getdatapx(char** p)
+ J - n              *x
+
+a pointer will be stored in the parameter
+a pointer is an 64 bit integer so the parameter must be *x
+
+in general any type** prototype will be a *x declaration
+)
+getdatapx=: 'getdatapx n *x' cdm
+getdatapx <,0  NB. boxed integer list used as pointer
+
+0 : 0
+declaration types c x d and j are native J types
+of character, integer, float, and complex
+types c x d and j are respectively: 1 8 8 and 16 bytes
+
+J64 x type is 64 bit, type i is 32 bit, and type l is 64
+J32 x type is 32 bit, type i is 32 bit, and type l is invalid
+
+type s (2 byte short int) and f (4 byte float)
+these are not native J types and extra work is involved in using them
+result of s or f is converted to x or d
+an s or f parameter is converted from x or d for the call
+)
+incs=: 'incs s s' cdm
+incf=: 'incf f f' cdm
+incs 123
+incf 123.123
+
+0 : 0
+pointers to s and f data are more complicated
+they are not native J types and you have to use J character data
+if you want the pointer to address data in a J array
+)
+incvs=: 'incvs n s *s' cdm
+shorts=: 23 0 25 0 { a.  NB. intel byte order
+z=: incvs 2;shorts
+a. i. >2{z   NB. incremented shorts
+
+0 : 0
+(filename procedure [>] [+] [%] declaration) cd parameters
+
+> returns just the result
+
++ selects the alternate (__cdecl) calling convention for windows
+
+% does an fpreset (float state reset) after the procedure call
+some routines leave an invalid state that can cause a J crash
+rarely if ever necessary as most routines are now well behaved
+)
+addi 23 24
+addix=: 'addi > i i i' cdm
+addix 23 24
+
+0 : 0
+cd supports 2 calling conventions for windows
+__stdcall is the calling convention for windows API routines
+__cdecl is the standard C calling convention
+
+default calling convention in windows is __stdcall
+to get __cdecl you need to add + to the declaration
+
+non-windows systems have only only 1 convention and + has no effect
+)
+
+'altinci + i i' cdm 23 NB. crash in windows without +
+
+0 : 0
+a DLL is loaded when first used and it stays loaded
+a new version can't be used until the current one is unloaded
+)
+inci 23  NB. DLL is loaded
+cdf''    NB. unload all DLLs
+NB. build a new version
+inci 23  NB. load and use the new version

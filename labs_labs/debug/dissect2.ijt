@@ -1,0 +1,590 @@
+LABTITLE=: 'Dissect II'
+LABFOCUS=: 1
+
+NB. =========================================================
+Lab Chapter Intermediate Results: Expansion Blocks
+NB. =========================================================
+Lab Section Expansion Blocks
+NOTE: In this lab, parentheses are used to indicate J code.
+
+Many J primitives perform repeated or hidden calculations to produce the results you see.  Dissect allows you to look at these calculations.  When you select a result, a new block is created to show the extra information.  This block is called an 'expansion block'.
+
+The original block containing the result being expanded remains, with its display tagged as 'Final' to indicate that the expansion is active.
+
+There are 6 types of expansion blocks, which we will cover in turn.  They are:
+
+(u/ y)  This inserts the verb (u) between the items of (y), causing (u) to be repeatedly executed.  The expansion block allows you to select an application of (u) for examination.
+
+([x] u^:v y)  This executes (u) repeatedly, depending on the value of (v).  The expansion block allows you to select an application of (u) for examination.
+
+([x] u ::v y)  This is the same as executing (u), but if (u) fails, (v) is executed to provide the result.
+
+($:)  Recursion causes an entire verb to be reexecuted.  The expansion block allows you to select a single recursion level for examination.
+
+([x] u/. y)  [Here (/.) stands for any of the partitioning modifiers (/. \ \. ;.)]  (u) is repeatedly executed on subsets of (y) .  The expansion block shows the computation on a selected subset.
+
+([x] u@.v y)  Until a single result is selected, no verb (u) can be displayed.  When a result is selected, the expansion block shows the computation of the selected (u) .
+)
+PREPARE
+load 'debug/dissect'
+dissectoncect =: 1
+dissecthandle =: 0$a:
+dissectonce =: 3 : 0
+4!:55 <'dissect_base_'
+dissecthandle =: dissecthandle , 2 dissect y
+if. 0 < dissectoncect =: <: dissectoncect do.
+  dissect =: dissectonce
+end.
+0 0 $0
+)
+dissectclose =: 3 : 0
+for_l. dissecthandle do.
+  try.
+    destroy__l ''
+  catch.
+  end.
+end.
+dissecthandle =: 0$a:
+)
+dissect =: dissectonce
+PREPARE
+require 'debug/dissect'
+
+NB. =========================================================
+Lab Section Expansion of (u/ y)
+The initial display shows none of the intermediate results of the summation (+/) .
+
+Select [click] the result of (+/) . When you do:
+
+1) The (+/) verb in the sentence at the top of the display window is highlighted.
+
+2) A new block in the diagram appears, displaying the intermediate results of (+/) .
+
+3) The original block is tagged as 'Final'.
+
+Selecting a cell of the intermediate results highlights the addends that went into it.
+
+Initially the final result (10) is selected and the cells that were used to calculate it are highlighted - (0), the first item of the input, and (10), the previous intermediate result of (+/) .  Also, the wiring shows that a result of (+/) loops back to be an input to the next computation.
+
+Select the (7) in the expansion block. The (3) and (4) in the (+/) verb's input are highlighted.  The wiring is corrected to show that this first computation does not use a result of (+/) .
+
+Select the (9) . The (7) [the previous intermediate result in (+/)] is highlighted, along with the (2) in the input.
+)
+PREPARE
+dissect =: dissectonce
+PREPARE
+dissect '+/ i. 5'
+
+NB. =========================================================
+Lab Section Removing the Expansion
+Click again on the (10) in the Final block.
+
+The expansion block is removed.
+
+This is true for expansion blocks generally: when you click again on the result that is being expanded, the expansion block is removed.
+
+Clicking the < or << buttons is another way to remove the expansion block.
+)
+
+NB. =========================================================
+Lab Section u/ on 2
+Sometimes, when you know that (y) has exactly 2 items, you write (u/ y) so that you can refer to the first item of (y) as ([) and the second one as (]) .
+
+The diagram shows an example.  The verb ((> * *:@])/) means "the square of the second item of y, but 0 if the first item is not greater than the second".
+
+Click on a result atom to select it, and then click again to get an expansion block showing the computation.
+
+Does an expansion block seem a bit too extravagant when there are just 2 items?
+
+If so, select Preferences|show u/ on 2 items as dyad.  Dissect will suppress the expansion block.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+]t =: 3 2 $ 1 5 5 6 7 2
+dissect '(> * *:@])/"1 t'
+
+NB. =========================================================
+Lab Chapter Power (^:)
+NB. =========================================================
+Lab Section Power as an if statement
+In the Power conjunction form ([x] u^:v y), (y) is the argument for both the (u) verb and the (v) verb. The result of ([x] v y) is the number of times to execute (u) . Here, the (v) verb is ('.'~:{:), which will produce 0 if the last character of (y) is a period, and 1 if it is not.
+
+The (u) verb here is (,&'.'), whose function is to append a period.
+
+Thus this sentence can be read as 'If (y) does not end in a period, append one'.
+
+The displays show two examples, one that adds the final period and one that doesn't.  The computation of (v) decides what to do.  There is less to do when (v) produces (0) .
+
+In the Dissect displays, the (v) part of (u^:v) enters the block from the right, indicating that it is a control input and not part of the top-to-bottom data flow.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+dissectoncect =: 2
+PREPARE
+dissect ',&''.''^:(''.''~:{:) ''This is a sentence'''
+dissect ',&''.''^:(''.''~:{:) ''This is a better sentence.'''
+
+NB. =========================================================
+Lab Section Alternative dyad form
+If (u^:v) has a left argument, that argument is supplied to (u) and (v).
+
+We could use this form to rewrite the append-missing-period verb.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+dissect '''.'' ,~^:(~: {:) ''This is a sentence'''
+
+NB. =========================================================
+Lab Section Power as do-while
+(u^:_) causes (u) to be executed multiple times, with each result used for input to the next execution, stopping when the result doesn't change. It means "do while the result is changing". The overall result of (u^:_) is the final stable result of (u) .
+
+The expression ((1&= + 2&|)) returns (0) for even numbers, (1) for odd numbers >1, and (2) for the number 1.
+
+So the agenda (@.) will choose a verb from the gerund (-:`(>:@(3&*))`1:) which will halve even numbers, triple and increment odd numbers > 1, and return 1 if the input is 1.
+
+The Collatz conjecture states that if you start with any integer and do this operation often enough, you will end up at 1.
+
+This display tests the Collatz conjecture for a starting value of 9.
+
+The computation does indeed end up at 1.
+
+But how?
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+dissect '(-:`(>:@(3&*))`1: @. (1&= + 2&|))^:_ (9)'
+
+NB. =========================================================
+Lab Section The expansion block for (^:)
+Select the result to raise an expansion block with the intermediate results. This block shows the results of each application of the verb, in order.  Note that execution stopped when a result of 1 caused the next execution to return the same result.
+
+The selection line in the expansion block, just beneath the shape line, tells the iteration number of the result whose computation is detailed.  The first result in the expansion block, iteration number 0, is the original (y).
+
+When the expansion block comes to life it selects iteration number 0.  Because this is the original (y), there is no computation at all to show.
+
+Now, in the expansion block, select the result whose value is (26).  The computation of this value is detailed.  Note the following features:
+
+1. The result (26) is computed from the previous result of (u), which is (52).  The (52) is highlighted to show that it is the input to the computation of the next power.
+
+2. The wiring shows the result of the power block looping back into the computation of the next power.
+
+3. Because a single result is selected, the agenda gets an expansion block of its own.  The result of agenda is tagged 'Final'.  Feeding in at its right is the computation of the gerund index [0 here], and feeding into it from above is the computation of that gerund, which is simply (-:) .
+
+4. The selection line shows that this is the 9th application of the verb (u) .
+)
+
+NB. =========================================================
+Lab Section The expansion block for ^: c't'd
+Select the result (40).  Now the previous power produced an odd result, so the second gerund is selected, and its display is shown.
+
+To remove the expansion block, click again on the result (1) of the Final block.
+)
+
+NB. =========================================================
+Lab Chapter Expansion of 
+NB. =========================================================
+Lab Section Adverse (u :: v)
+(u :: v) executes the verb (u) first.  If (u) succeeds, its result is used.  If (u) fails, (v) is executed to produce the result.
+
+In the dissected sentence, you will see whichever result was used.  If (v) was used, and you want to see why (u) failed, click on the result to see the computation of (u) .  The computation of (v) will be shown in an expansion block, with the overall result of (u ::v) tagged as Final.
+
+If (u :: v) was applied with a rank, so that the displayed result has more than one cell, you must first select a cell before examining its computation.
+
+In the example, click on the (a) result in the final block.  That selects it.  Then click again to see that (u) failed trying to increment the character value.  When (u) failed, (#) made a second copy of the character.
+
+Next, select the (4) result in the final block.  Try clicking again.  You see the tooltip message indicating that no further selection can be made, because (v) was not executed and (4) is the entire result.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+dissectoncect =: 1
+PREPARE
+dissect '>: :: (2&#) &.> 1;''a'';3'
+
+NB. =========================================================
+Lab Chapter Recursion
+NB. =========================================================
+Lab Section Factorial
+The verb (1:`(] * $:@<:)@.*) computes the factorial of (y) using the recursive definition of factorial: If n=0, n!=1; if n>0, n!=n*(n-1)!.
+
+The result shown is the result of the original sentence.  The execution of the sentence performs operations both before and after the recursion, which occurs at the execution of the ($:) block.
+
+The display shows the topmost level of recursion.  This means that you see the overall inputs to the sentence and the final result.  The ($:) block shows the result that is returned by the recursive execution.  Of the several recursive executions of the overall verb (1:`(] * $:@<:)@.*), this is the first recursion to start and the last to finish.
+
+To see other recursion levels, select the result of the ($:) block.  This creates an expansion block showing the results of each recursion, and initially selects the recursion level that produced the result of ($:) that you selected.  The display shows the recursion level that led to the selected result, including the inputs to that recursion level and the computation before and after any recursions performed by that level.
+
+To remove the expansion block, click on the result of 'Result after all recursions'.  This is the only time when an expansion block is removed by clicking on a different result from the one that created it.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+dissect '1:`(] * $:@<:)@.* 5'
+
+NB. =========================================================
+Lab Section Examining recursion
+The sentence in this example performs recursion, opening each box of the input until it gets to a leaf node [where the test (0<L.) produces (0)], at which point it increments the value of the leaf.
+
+[(>:L:0) is an easier way to write this but our interest is in the recursion.]
+
+In this case the recursion failed because one of the leaves had a nonnumeric value, and as always Dissect starts us off looking right at the error.
+
+The block labeled Recursions shows the results of all the recursions.  These results are listed in the order in which the recursive verb started.  Because of the error, not all the recursions that started actually finished.  In fact, only two did.
+
+The failure point, indicated by double-crosshatching, is the last recursion that started, number 6.  The block at the top shows the input to the recursion level being examined.
+
+Click around the other recursion levels, both those that finished and those that didn't.  Use the crosshatching to see the error path, and note that the inputs to each recursion level are shown when you select a result.
+
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+t =: 1 2 3;<4 5;<<'a';6 7
+dissect '>:`($:&.>)@.(0<L.) t' 
+
+NB. =========================================================
+Lab Chapter Partitions
+NB. =========================================================
+Lab Section Infix (x u\ y)
+This sentence uses the infix modifier to box each adjacent pair of items of the list.  It is an example of expansion blocks for partitions.
+
+Select the cell (1 4) of the result of (<\) .  Immediately
+
+1) The block containing the result of (<\) is tagged as 'Final'.
+
+2) An expansion block is created showing the calculation of the selected result-cell.
+
+3) The inputs that contributed to the selected result are highlighted.
+
+An expansion block for a partition shows the calculation of a single result-cell.  Selecting a different cell of the same result will leave the expansion block, showing the newly-selected computation.
+
+Select the cell (4 1) of the result of (<\) . Observe the change to the highlighting and selection.
+
+Clicking on the result-cell that is currently being expanded will remove the expansion block.  Click again on the cell (4 1) of the result of (<\) to remove the expansion block.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+dissect '2 <\ 3 1 4 1 5 9'
+
+NB. =========================================================
+Lab Section Other partitions
+The other partitioning modifiers are similar to (u\) .  Here are examples of several of them.  Click around in the results to see how the individual partitions are calculated.
+
+The highlighting, which shows the portions of the arguments that contribute to each selected result, is especially illuminating.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+dissectoncect =: 4
+PREPARE
+dissect '</. i. 3 4'   NB. box diagonals
+dissect '3 <\. i. 6 3'   NB. box outfixes
+dissect '1 0 0 1 0 <;.1 ''abcde'''  NB. Box using frets
+dissect '''banana'' </. 1 2 3 4 5 6' NB. Box partitions
+
+NB. =========================================================
+Lab Section Infix in a more complex sentence
+The displayed sentence inserts between each opened box of (q) a verb that reduces the right argument by taking the largest number in each infix of length 2, then adds that reduced argument to the left argument, then boxes the result.
+
+Only the final result (23) is shown at first. Its value in bold italics alerts you to the fact that it has a leading unit axis. Note the shape (1); the result of the sentence is a one-element list.
+
+Select the (23) result. Now select, in the expansion block, the box containing (10 13 15) . Click again to select the list in the box. Its highlighted addends are (2 4 6) from the original argument and (8 9 9) which are the largest numbers in each of (8 5), (5 9), and (9 3), the length-2 infixes of (8 5 9 3) .
+
+Now click once more to select the (13) . The addends that produced (13) are highlighted - they are the (4) in (q) and the middle (9) in the result of ((>./\)&.>) .
+
+Now click on that (9) to raise another expansion block to display it as an intermediate result, and to highlight the length-2 partition in the last box of (q) that produced it.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+q=: 3;7 4;2 4 6;8 5 9 3
+dissect '(+ 2&(>./\))&.>/ q'
+
+NB. =========================================================
+Lab Section How many of each kind of cookie did we sell?
+Here is a table of sales by Girl Scout and cookie type.
+The Dissected sentence uses that table to produce a table of sales by cookie type. 
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+table =: ".&.>@;:;._2 (0 : 0)
+'Alice' 'Thin Mint' 20
+'Alice' 'Samoas'  7
+'Betty' 'Samoas' 32
+'Betty' 'Shortbread' 21
+'Clara' 'Thin Mint' 5
+'Clara' 'Samoas' 12
+'Debbie' 'Shortbread' 54
+'Debbie' 'Samoas' 21
+'Debbie' 'Shortbread' 23
+'Emma' 'Thin Mint' 14
+) 
+PREPARE
+table
+dissect '(1 {"1 table) (~.@[ ,. +/&.:>/.) 2 {"1 table'
+
+NB. =========================================================
+Lab Section Explanation
+(~.@[ ,. +/&.:>/.) is a fork. Its arguments are the boxed list of cookie types from the table (1 {"1 table) and the boxed list of corresponding sales numbers, also from the table (2 {"1 table).
+
+The fork stitches (,.) the nub of cookie types (~.@[) to the sum of corresponding sales (+/&.:>/.) .
+
+The verb (+/&.:>/.) is the sum (+/) under open (&.:>) of partitions of sales numbers with the same cookie type (/.).
+
+Select a result cell of the verb (+/&.:>/.) to highlight the inputs that produced it. For example, select (72) to highlight all the 'Samoas' cells in its left argument and the corresponding sales numbers in its right argument.
+)
+ 
+NB. =========================================================
+Lab Chapter Operations Inside Boxed Structures
+NB. =========================================================
+Lab Section (L:) - operate inside the structure
+A leaf of (y) is a noun inside (y) that itself has no nested contents.
+
+A leaf is always either empty or unboxed.
+
+(u L:0 y) creates a copy of (y) in which each leaf has been replaced by the result of applying (u) to the leaf.
+
+Here we have a gradebook for two classes.  There are two nouns, students and grades.
+
+The display shows the operation of averaging each student's grades.  The students' names are not used in this display.
+
+Select 84.7 to see the division that resulted in it.
+Now select 254 to see the intermediate summation results.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+]students =: ('Fred';'Joe');<('Alice';'Bob';'Charlie')
+]grades =: (90 72;80 85 89);<(100 98;70;60 65 60)
+dissect '(+/ % #)L:0 grades'
+
+NB. =========================================================
+Lab Section (S:) collect results into an array
+(u S:0 y) applies verb (u) to each leaf of (y), creating an array whose items are the results of the leaves, with framing fill added as needed.
+
+This result is like the previous one using Level At (L:), except that the results are brought out into an array rather than replacing the leaves in the boxed structure.
+
+Note that the (S:) line is inserted into the rank stack at the beginning of the computation it applies to.  That computation doesn't finish until the (<) block.
+
+Hover over the (<) blocks. The tooltip explains that the (S:) verb completes there.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+dissect '(< S:0 students),.<@(+/ % #)S:0 grades'
+
+NB. =========================================================
+Lab Section Students
+We applied a fork to grades to obtain an average. To collect the students' names, we just use (S:0) to remove the boxing.
+
+Note the spaces added as fill to make each row the same length.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+PREPARE
+dissect ']S:0 students'
+
+NB. =========================================================
+Lab Chapter Hook
+NB. =========================================================
+Lab Section Hooks and NVV forks
+The sequence noun-verb-verb, not followed by a noun, produces a NVV fork which is like a regular fork except that the noun simply produces its value regardless of the arguments to the fork.
+
+The NVV fork ((2 <. #) y) gives the lesser of (2) and the number of items in (y) .
+
+Then the hook ({.~ (2 <. #)) takes that number of items from y. 
+
+The hook ((f g) y) evaluates as (y f g y) . Here, (f) is take ({.) and (g) is the fork (2 <. #).
+
+Note that the words fork and hook do not appear in the diagram, but the inputs to each verb are as described.
+)
+PREPARE
+dissectclose''
+dissect =: dissectonce
+labopenchapter_jlab_^:(0 = {.".'IFQT') 2 + CHAPTERNDX_jlab_
+PREPARE
+dissect '({.~   2 <. #) ''abcd'''
+
+NB. =========================================================
+Lab Chapter Debugger
+NB. =========================================================
+Lab Section The J Debugger
+J Debug is described in its own Lab.  It is part of the J IDE.
+This discussion assumes you understand how to use Debug.
+
+To start Debug, you press Ctrl+K which brings up the Debug Menu.
+)
+PREPARE
+dissectclose''
+load 'debug'
+jdb_open_jdebug_ 0
+PREPARE
+require 'debug'
+NB. we have simulated pressing Ctrl+K
+
+NB. =========================================================
+Lab Section Debug Menu
+Two debugger buttons use Dissect.  They have pictures reminiscent of Dissect's display.  To see their titles, first click in the top bar of the Debug Menu to give it focus, and then hover over the buttons.  The two Dissect buttons are titled
+
+Dissect current/cursor line
+
+and
+
+Automatically dissect on stop
+)
+NB. Find the Dissect buttons in the Debug Menu
+
+NB. =========================================================
+Lab Section A Buggy Program
+To see the debugger in action, we need a program with a bug in it.
+)
+testcode =: 3 : 0
+name =. ;: 'able baker charlie'
+ynames =. ;: y
+ysort =. /:~ ynames
+yinname =. (ysort e. name) # name
+#yinname
+)
+NB. =========================================================
+Lab Section Debug Stop
+When we run the program, it fails.  The debugger springs into action.  It shows us which line failed.  But why did it fail?
+)
+NB. When the debug window pops up, press the Dissect current/cursor line button
+testcode 'john baker'
+
+NB. =========================================================
+Lab Section Dissect current/cursor line
+When you pressed the Dissect current/cursor line in the Debug Menu, the debugger launched Dissect on the current line, which is the line that failed.  You can see what went wrong:
+
+(ysort e. name) 
+
+calculated a Boolean value for each name in (ysort), but the you used that to select from (name), which has the wrong length.
+
+NB. =========================================================
+Lab Section Dissect current/cursor line ctd
+We clear the debug window for you, and then we
+fix the program as follows:
+)
+PREPARE
+jdb_clear_jdebug_ ''
+PREPARE
+testcode =: 3 : 0
+name =. ;: 'able baker charlie'
+ynames =. ;: y
+ysort =. /:~ ynames
+yinname =. (ysort e. name) # ysort
+#yinname
+)
+
+NB. =========================================================
+Lab Section Automatically dissect on stop
+Rather than running your program till it breaks, you can follow it step by step and see the execution of each line.  To automate this process, press the Automatically dissect on stop button on the Debug Menu.
+
+Automatically dissect on stop is a mode setting.  You can see when it is engaged from its sunken shading.
+)
+NB. Make sure you have turned on Autodissect mode on the Debug Menu
+
+NB. =========================================================
+Lab Section Set a stop on the first line
+When Automatically dissect on stop is engaged, Dissect will run automatically every time the debugger is activated.  To get a first activation of the debugger, set a Debug Stop at the beginning of testcode.
+
+So we keep our focus on Dissect, we will set this stop for you.
+)
+PREPARE
+1 jdb_stopsetone_jdebug_ 'testcode';0;0
+jdb_stopwrite_jdebug_ ''
+PREPARE
+NB. We have simulated setting a stop at line 0 of testcode
+
+NB. =========================================================
+Lab Section Run the program and take the first stop
+Now we run the program.  See that it stops on the first line, and that it automatically runs Dissect on that line.  The line has not yet been executed when the debugger is entered.
+
+Dissect is showing you what will happen when the line IS executed.
+)
+testcode 'john baker'
+
+NB. =========================================================
+Lab Section Single-step through the program
+Repeatedly press 'Step Over' on the Debug Menu [it's the third button from the left].
+
+Every time you press Step Over, one line is executed and the debugger is reentered.  Every time the debugger is reentered, Dissect shows the line to be executed.
+
+When Autodissect is engaged, Dissect is run whenever the debugger is entered, whether because of error, or single-step, or running to a stop.
+)
+
+NB. =========================================================
+Lab Section Assignment statements
+Did you notice anything unusual in the Dissect displays as you were single-stepping through the program?
+
+When Dissect is called from the debugger, assignment statements are ignored.  The Dissect display is informational only.  The dissected line will be executed when the program resumes.  Therefore, side-effects such as assignments should be avoided.
+
+Side-effects in verbs called by your sentence cannot be avoided; you should avoid dissecting lines that have side-effects.
+)
+PREPARE
+jdb_clear_jdebug_ :: 0: ''
+PREPARE
+
+NB. =========================================================
+Lab Chapter Using Dissect to Drill Down Into Execution
+NB. =========================================================
+Lab Section Dissecting Inside Named Verbs
+Dissect shows the result of each verb.  If a verb is a named verb, it may do a lot of processing to get its result.
+
+Dissect allows you to look inside the execution of named verbs.  You do so by selecting a single result-cell of the verb, and then right-clicking on the name of the verb.
+
+What happens then depends on whether the verb is an explicit definition or a tacit one.
+)
+
+NB. =========================================================
+Lab Section Clicking a Tacit Verb: sub-Dissect
+When you right-click on the name of a tacitly-defined verb, Dissect reexecutes the verb, recreating the execution that produced the result-cell you selected.  Dissect creates a new dissection window showing the execution on that cell.
+
+In this example, the sentence refers to the library verb (taketo).  Hover over the name of the verb, just above the final result: Dissect informs you that you can right-click to dissect the execution of this verb.
+
+Now right-click on the name (taketo).  A new Dissect window lets you see what (taketo) was doing.
+)
+PREPARE
+dissect =: dissectonce
+PREPARE
+dissect '''cad'' taketo ''abracadabra'''
+
+NB. =========================================================
+Lab Section Clicking an Explicit Verb: Debug
+When you right-click on the name of an explicity-defined verb, Dissect also reexecutes the verb, recreating the execution that produced the result-cell you selected; but instead of dissecting the verb, it starts the Debugger.
+
+Before the verb is executed, a stop is placed on every line of the verb.  The verb will therefore stop before it executes its first sentence, and you can probe around, change stops, and see what the verb does.  You can even engage the Autodissect facility to dissect the sentences of the verb one by one as they are executed!
+
+Because the Debugger is not reentrant, you may have only one Debug session at a time.  Right-clicking on an explicit name closes any outstanding Debug session before starting the new one.
+
+In this example, the sentence refers to the library verb (toupper).  Right-click on the name to launch the debugger.  Debug to your heart's content.
+)
+PREPARE
+dissect =: dissectonce
+PREPARE
+dissect 'toupper ''George III'''
+
+NB. =========================================================
+Lab Chapter Mapping Dissect to PF Keys
+NB. =========================================================
+Lab Section J Wiki
+The J Wiki has instructions for mapping Dissect to PF keys at http://code.jsoftware.com/wiki/Vocabulary/Dissect#Labs
+near the end of the page.
+
+The intructions for J6.02 are different from the instructions for J8.03 and later.
+)

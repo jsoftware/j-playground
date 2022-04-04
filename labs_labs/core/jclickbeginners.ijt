@@ -1,0 +1,1394 @@
+LABTITLE=: 'J As Your First Computer Language'
+LABFOCUS=: 1
+
+NB. =========================================================
+Lab Chapter Getting Started
+NB. =========================================================
+Lab Section Talking to your computer
+This window is where you talk to your computer and it talks back.  Size this window vertically so it goes all the way up and down the screen.
+
+Actually, you can't talk directly to your computer, because the machine understands a very weird language: stuff like
+
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, str
+    mov edx, str_len
+    int 80h
+
+and who wants to talk like THAT!?
+
+You need an interpreter - someone who can translate your sentences into machine language.
+
+You're in luck.  You have an interpreter.  Its name is Roger*.
+
+Type Ctrl+j (command+j if you have a Mac) whenever you are ready to move to the next section of this lab.
+
+*Roger (the program) was written by Roger Hui, one of the world's finest programmers.  He doesn't call it Roger, but we will, to keep in mind that great code exists only because of great programmers.
+)
+PREPARE
+NB. Check the Qt and library versions
+
+(3 : 0) (0 : 0) ; (0 : 0)
+Your base library is out of date.  Before running this lab, go to Package Manager, update the base library, and restart J.
+)
+Your Qt system is out of date.  To refresh it, follow the instructions at
+http://code.jsoftware.com/wiki/Guides/Qt%20IDE/Install#Upgrade.  Don't forget to
+update the ide\qt addon!
+)
+libver =. _3 {. 0&".;._2 '.' ,~ LF taketo 'Library:' takeafter JVERSION
+qtver =. _3 {. 0&".;._2 '.' ,~ 's' -.~ '/' taketo 'Qt IDE:' takeafter JVERSION
+if. \: qtver ,: 1 4 3 do. res =. 0 {:: y
+elseif. \: libver ,: 8 4 6 do. res =. 1 {:: y
+elseif. do. res =. ''
+end.
+if. #res do. smoutput LF,LF,'***** Warning *****',LF,res end.
+0 0$0
+)
+
+require 'debug/lint'
+load '~addons/labs/labs/core/jpcfmt.ijs'
+
+NB. Fix up user's config file
+desiredkeyvals =: ';'&(taketo ; takeafter);._2 (0 : 0)
+F2;0;Dissect Line;dissect&.finddissectline_dissect_ 0
+F3;0;Dissect Last Error;dissect&.finddissectline_dissect_ 1
+F4;0;Lint;lintwindow_lint_''
+)
+'dissectfkey dissecterrorfkey lintfkey' =: 3 : 0''
+fkeyinfo =. 0$a:
+fkeyassigned =. 0 2$a:
+cfiled =. 1!:1 cfile =. < jpath '~config/userkeys.cfg'
+if. LF ~: {:cfiled do. cfiled =. cfiled , LF end.
+NB. Cut to lines
+lines =. <;._2 cfiled -. CR
+NB. discard comments
+lines =. (#~  ('NB.' -.@-: 3 {. deb)@>) lines  
+NB. get delimiter for each line
+delims =. (,&';' {~ 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+' i.&0@:e.~ deb)@> lines
+NB. get existing keyname;values
+keynameval =. delims (taketo ; takeafter)&> lines
+NB. for each desired value, get the key assigned currently
+keyassigns =. keynameval i.&:(1&{"1) desiredkeyvals
+NB. For the values not yet assigned, see if the keys are
+NB. available
+if. +./ assignedmask =. keyassigns < #keynameval do.
+  fkeyinfo =. fkeyinfo , (fk =. (0 {"1 keynameval) {~ assignedmask # keyassigns) ('You can use ' , [ , ' for ' , ])&.> fkact =. ';' ([ taketo takeafter)&.> assignedmask # 1 {"1 desiredkeyvals
+  fkeyassigned =. fkeyassigned , fk ,. fkact
+end.
+
+keysneeded =. (keyassigns = #keynameval) # (0 {"1 desiredkeyvals)
+if. #availkeys =. keysneeded -. 0 {"1 keynameval do.
+  NB. Get the string to use for the new keys
+  newvals =. (availkeys e.~ 0 {"1 desiredkeyvals) # desiredkeyvals
+  NB. Get strings to add to config
+  newconfigs =. ; (0&{ , ';' ; (<LF) ,~ 1&{)"1 newvals
+  NB. Get prompt string to use
+  select. #newkeys =. {."1 newvals
+  case. 1 do.
+    keystg =. 'key ', ; newkeys
+  case. 2 do.
+    keystg =. 'keys ' , (>{. newkeys) , ' and ' , (>{: newkeys)
+  case. do.
+    keystg =. _2 }. 'keys ' , ; (}: , (<'and ') , {:) (,&', '&.> newkeys)
+  end.
+  if. 'yes' -: wd 'mb query mb_yes mb_no "May I change configuration?" "I would like to define function ',keystg,'.  Is that OK with you?',LF,LF,'If so, I will stop J and you will need to restart it."' do.
+    NB. Rewrite config file
+    (cfiled , newconfigs) 1!:2 cfile
+    NB. Kill J to allow restart with new keys
+    2!:55 (0)
+  end.
+end.
+fka =. 1 {"1 fkeyassigned
+fkn =. 0 {"1 fkeyassigned
+(fkn,<'') {~ fka i. ';' ([ taketo takeafter)&.> (1&{"1) desiredkeyvals
+)
+PREPARE
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Talking to Roger
+In this window, you type to Roger.  Roger asks the machine to do what you want and tells you what happened.
+
+Since Roger is all you ever talk to, we'll never think about the machine again, and just concentrate on how to talk to Roger.
+
+Roger doesn't know English.  The trouble with English is that it is not precise.  For example:
+
+  Did you hear about the blind carpenter who picked up his hammer and saw?
+
+Computer programs, even including Roger, just can't be sure what you mean.
+
+Roger understands a language invented for describing computation.  The name of that language is:
+
+J.
+
+NOTE: In this lab, parentheses are used to indicate words in the J language.
+
+Every lab section is split into two parts.  The first part is
+explanatory test, which you should read.  The text ends with a line
+containing a single ) character.  Any lines following the ) line
+are executable lines of J.  Whenever you like, you may execute your
+own lines by typing them.
+)
+   100  NB. This is an executable line following the ) line
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section J sentences; words; numbers
+You talk to Roger by typing "sentences".  When you press ENTER, Roger executes whatever you typed.
+
+[In this lab, a name in double-quotes, like 'sentence' in that last line, is a special J word whose meaning you need to learn.]
+
+Sentences are made up of "words", which can be "numbers", "names", "primitives", and "string constants".
+
+Spaces and TAB characters are sometimes required to separate words, but otherwise they are ignored.
+
+Any word that begins with a numeral [0-9] or an underscore [_] can only be a "number".  If it doesn't follow the rules for defining numbers, Roger will say "spelling error".
+
+The rules for defining numbers are lengthy - they let you define all sorts of numbers - but for the time being, anything that you think of as a number is a valid J number.
+
+A leading underscore [_] is a negative sign, making the number negative.
+
+Underscore by itself (_) represents infinity.  (__) is negative infinity.
+
+In a J sentence, you can make notes to yourself.  When Roger encounters the word NB. he stops listening until you press ENTER.  Everything after the NB. is for your eyes only.
+)
+100   NB. Roger executes your sentence and types the result
+100 + 2   NB. + means add
+20 + 2 * 5   NB. * means multiply
+.5 + 2  NB. .5 doesn't begin with a numeral!
+NB. Notice how Roger points out the error using spacing
+
+0.5 + 2   NB. better
+4 + _2
+_ + 1  NB. Infinity plus one remains infinity
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Primitives
+A "primitive" is a word that has a predefined meaning in J.  You have to look up the meaning.
+
+Primitives can be:
+
+0. Any single character that is not a numeral, a letter, a space, a single-quote, or an underscore, for example + * / "
+
+1. A single-digit number (may be negative) followed by a colon, for example 0: _2: 9: _:
+
+2. Any letter or primitive followed by a period or colon, for example +. i. {:: &.:   
+
+The tacked-on period(s) and colons(s) at the end of a primitive are called "inflections".
+
+There must not be any spaces in a primitive.  (+ .) is not the same as (+.)
+
+Not every word that follows the rules above is a legal primitive.  Only the combinations that have meanings defined in J are allowed.  If you use an undefined primitive-like name, Roger will call it a "spelling error".
+
+There is one other set of primitives called "control words".  These are names that have an added inflection.  Control words are only allowed inside J programs, so we won't see them for a while.
+
+
+
+You can guess the meaning of some of the primitives: + and -, say.  But the inflected forms are totally different, and you would have no chance of guessing what (+.) or (-.) mean.  They're the vocabulary of J, and you have to learn them.
+
+There are around 250 primitives in J.  Fortunately you can get by knowing about 30 of them.
+)
++..   NB. follows the primitive rules, but is not defined
+4 +. 8
+7 +. 8
+NB. Can you figure out what +. does?
+NB. You will have to experiment by typing sentences for
+NB. Roger to execute.
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Names
+So far Roger looks like a pocket calculator: you type in a mathematical expression, and he types back the answer.
+
+One thing Roger has that a calculator doesn't is a fabulous memory.  Roger will remember any value you want him to.  You just "assign" the value to a "name".  When you refer to the same name later, Roger replaces the name with the value he remembers.
+
+A "name" is any sequence of letters and numerals, as long as it starts with a letter.  Uppercase and lowercase letters are treated as different letters.
+
+A name can contain underscore characters, but there are some restrictions.  For the time being make sure you don't end a name with an underscore or have two underscores in a row.
+)
+
+
+
+
+NB. =========================================================
+Lab Section Assignment
+You assign a value to a name by having the name appear to the left of the (=:) primitive.  See the examples below.
+
+Once you have assigned a value to a name, you can use the name in later sentences and it will be replaced by its value.
+
+To see what the value of a name is, type a sentence that contains only the name.
+
+Commit that to memory:
+
+TO SEE WHAT THE VALUE OF A NAME IS, TYPE A SENTENCE THAT CONTAINS ONLY THE NAME.
+
+Roger will type back the value of the name.  If the name has not been assigned, Roger will say "value error".
+
+When you assign a value to a name, any previous value assigned to the name is lost.
+
+You should read that again too.
+)
+4 * 3   NB. 4 multiplied by 3
+product =: 4 * 3   NB. save value under the name 'product'
+sum =: 4 + 3   NB. save the sum
+sum5num =: 1+2+3+4+5  NB. A name can contain a numeral,
+                      NB. it just can't start with one
+product   NB. Roger, what is the value of this name?
+2 * product  NB.  The name can be used in sentences
+smu   NB. Roger, what is the value of this name?
+NB. Value error?  Oops, I misspelled it
+
+sum5num   NB. What is the value of this name?
+enigma =: +/ i. 6  NB. ???
+
+NB. Now tell me, what is the value of (enigma)?
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Assignments and display
+If you were eagle-eyed, you noticed that when you typed an assignment, Roger didn't type anything back.  [You can look back to verify this.]
+
+This is because J sentences quite often produce very large values, and if you're assigning the value to a name you don't really need to see it all.
+
+If you want to assign a value to a name and display it at the same time, fix things so the assignment is not the last thing that happens in the sentence.  The easiest way is to apply the (]) primitive to the result of the assignment.  (]) is a do-nothing that just keeps the value unchanged.
+)
+enigma   NB. to find the value of a name, type the name
+array =: i. 5 6  NB. Create the array but don't display it
+]array =: i. 5 6  NB. Create the array and display
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Assignments are not mathematics
+Many beginners make the mistake of thinking that assignments do more than they really do.
+
+An assignment simply associates a value with a name.  If the value is a number, only the number is assigned to the name.
+
+Follow the next few sections carefully and make sure you answer each question correctly.  We'll start with an easy one.
+)
+minutes =: 5
+seconds =: 60 * minutes
+
+NB. What is the value of (seconds) now?
+
+NB. How would you find out for sure?
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section
+To find the value of a name, type the name by itself.
+)
+seconds
+minutes =: 8
+NB. What is the value of (seconds) now?
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section
+Assigning a new value to (minutes) didn't change the value of (seconds).
+
+In other words, the original line
+
+   seconds =: 60 * minutes
+
+DID NOT establish an ongoing relationship between the names 'seconds' and 'minutes'.  It was not like the definition of a mathematical function.
+It was simply an assignment, giving a numeric value to the name 'seconds'.
+)
+seconds   NB. new value of (seconds), same as the original
+
+NB. How would you make the value of (seconds)
+NB. correspond to the current value of (minutes)?
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section
+To update the value in (seconds), assign a new value to the name.  The old value is forgotten, replaced by the new.
+)
+seconds =: 60 * minutes
+seconds
+minutes =: minutes + 10
+NB. What is the value of (minutes) now?
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section
+Let's think about what the sentence
+
+   minutes =: minutes + 10
+
+is doing.
+
+It's certainly not a mathematical statement about the value of (minutes).  There's no way a value could be equal to itself plus 10.
+
+No, it's just an instruction for how to UPDATE the value of (minutes).  It says, First compute
+
+   minutes + 10
+
+The value of (minutes) was 8, so this calculates 18.
+
+Then assign that value to the name 'minutes', with
+
+   minutes =: 18
+
+so the resulting value of (minutes) is 18.  The previous value is gone.
+)
+PREPARE
+ascore =: 85
+PREPARE
+minutes   NB. see the new value
+
+NB. Exercise: given that there is a name
+ascore
+NB. that contains the score for player A,
+NB. write a sentence to perform the following action:
+
+NB. "Add 10 to player A's score to indicate that the
+NB. target was hit."
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section
+The key thing to see is that the line
+
+   ascore + 10
+
+would not get the job done.  This line does indeed add 10 to the value of (ascore), but it does nothing with the result of that computation, so it has no effect.
+You want to update the value in (ascore), so you must assign the new value to (ascore).
+
+A geek looking at the line
+
+   ascore =: ascore + 10
+
+would say "you are incrementing the value of ascore by 10".
+)
+ascore =: ascore + 10   NB. Increment the value in (ascore)
+ascore   NB. display the new value
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Coding break
+Solve the following problems:
+
+0. Write a sentence to convert 30 degrees Celsius to Fahrenheit.  (Google the formula if you need to).  It will help you to know that in J,
+ (+) means add
+ (-) means subtract
+ (*) means multiply
+ (%) means divide
+
+1. Assign the value 30 to the name 'celsius'.
+
+2. Write a sentence to convert the value of (celsius) to Fahrenheit.  NOTE: J does not follow the standard mathematical order of operations, so you'd better put parentheses around every part of the calculation.
+
+3. Change the value of (celsius) to 40.
+
+4. Reexecute the sentence that converts (celsius) to Fahrenheit.  There are two fast ways to do this:
+
+a.  Use Ctrl+Shift+uparrow to bring back lines you recently typed.
+
+b.  Put your cursor on a line in the term window and press ENTER.  That will bring the line to the bottom of the term window.  Then press ENTER again to execute it.  In other words, put your cursor on a line and press ENTER twice.
+
+Verify that your executions of the sentence produce different and correct results.
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section String constants
+The last type of word in a J sentence is the "string constant".  This is any characters that appear between a pair of single-quote characters:
+)
+'Mr. Rich'  NB. A string: 8 characters including the space
+fullname =: 'Henry Rich'  NB. A string can be assigned
+fullname   NB. Roger types the value of the name
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section
+The contents of a string constant can be anything.  The string constant is treated as a single word.  The word (Mr.) would be a spelling error as a J word, but it was OK inside a string constant.
+)
+Mr.  NB. Not a primitive
+'Mr. Rich'   NB. OK in a string constant
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section The single-quote is not part of the value
+Observe that the value of the string constant DOES NOT include the single-quote symbol ['].  When Roger types the value back, the single-quote is gone.
+
+The single-quote is something you have to add when you are typing a J sentence, to tell Roger to treat the enclosed characters not as words but as a string constant.
+
+Since most of the words you use will be numbers, names, and primitives, it makes sense to be able to type those words without any extra characters, reserving the single-quotes for the relatively rare string constants.
+)
+Fred   NB. Without quotes, Roger thinks it's a name...
+NB. ... but there is no such name.
+NB.  That's what 'value error' means
+
+'Fred'   NB. Quotes make it a string constant.
+NB. Notice that the quotes are not part of the value.
+NB. Once Roger has used them to find the string constant,
+NB.  he discards the quotes.
+
+'exact   characters'   NB. spaces matter inside a string.
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Escaped quotes
+Suppose you wanted a string that contained the single-quote character???
+
+There's a special exception: To get a single-quote character, write two single-quotes in a row.
+
+As the contents of the string constant are scanned, starting with the character after the leading single-quote that starts a string, two back-to-back single-quotes produce one single-quote in the string constant and the scan continues looking for more characters.
+)
+'Margaret (Meg) O''Hertz'   NB. ' inside string constant
+''  NB. NOT a single-quote.
+NB. It was the string constant with no characters.
+
+''''   NB. A single-quote character.  Roger types it back
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Chapter Execution of a sentence
+NB. =========================================================
+Lab Section Nouns and Verbs; Monads and Dyads
+Every word in a sentence has a "part of speech".  For the moment we will focus on the two most important parts of speech, "nouns" and "verbs".
+
+A "noun" represents data.  It is something tangible, either numbers or a character string.  Examples of nouns are (32.5) and ('Fred').
+
+A "verb" is a program.  It represents an action to be performed on nouns.  Examples of verbs are (+) and (%:).
+
+When a verb has a noun to its right, the verb is "executed".  There are two possibilities:
+
+0.  If the verb also has a noun at its left, the two nouns surrounding the verb both become "arguments" [i. e. inputs] to the verb.
+The "dyadic" version of the verb is executed, and we say that it was executed as a "dyad".
+
+1.  If the verb does not have a noun at its left, the noun to its right becomes the sole "argument" to the verb.
+The "monadic" version of the verb is executed, and we say that it was executed as a "monad".
+
+"Valence" is the word we use to mean 'which way the verb is executed'.  The valence of an execution is either "monadic" or "dyadic".
+
+In each case the verb produces a "result" which must be a noun.  The verb and its arguments are replaced in the sentence by the result.
+)
+2 * 5   NB. This executes dyadic (*) which means multiply
+* 5  NB. This executes monadic (*).
+
+NB. Can you figure out what monadic (*) does?
+NB. Try executing it on a variety of arguments.
+NB. Try negative as well as positive!
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Order of execution; result of a sentence
+A J sentence is executed starting at the right-hand end.  The last words of the sentence are inspected to see if they contain a verb that can be executed monadically or dyadically.
+If they do, the verb is executed, and the verb and its arguments are replaced by the result of the verb [which is a single word].  Then the process is repeated.
+
+Since each execution of a verb makes the sentence shorter, the process must come to an end eventually.  If there is just one word left, that word is the "result" of the sentence.  If there is more than one word left, you did something wrong, and Roger calls it a "syntax error".
+)
+2 * 5  NB. A single execution, producing 10...
+NB. ...which becomes the result.
+
+2 'a'  NB. Two words, but no verb!
+NB.  Execution ended with two words, error
+'a' 2 * 5  NB. This sentence also ends with two words
+10 + 2 * 5  NB. First (2 * 5) is executed, then (10 + 10)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Order of operations
+Mathematical notation has an order of operations: parentheses, then exponents, then multiply/divide, then add/subtract.  Many computer languages preserve this operator priority during evaluation of expressions; some even add to it, with over a dozen levels of what gets executed before what.
+
+You'd go crazy if J, with its 200 primitives, used operator priority.  Instead, J follows the simple rule we mentioned earlier: it executes verbs starting at the right.  Parentheses can be used to change this order.
+
+This means that you have to be careful when you write mathematics in J, and not let your old habits trick you.
+
+Especially remember that the negative sign for a number is (_).  (-) is a verb and is executed, as a monad or dyad, in the right-to-left execution order.
+)
+2 * 5 + 3  NB. (5 + 3), then (2 * 8)
+(2 * 5) + 3   NB. (2 * 5) then (10 + 3)
+-5 + 6   NB. (5 + 6) then (-11)
+_5 + 6  NB. (_5 + 6).  The _ is part of 'negative five'
+
+NB. In math class, 6+4-5-3-2=0, right?   In J, it's not.
+NB. Exercise 0: Before asking Roger, figure out what Roger
+NB. will think 6+4-5-3-2 equals.
+NB.   Then check your answer with Roger.
+
+NB. Exercise 1: using just the numbers 6, 4, 5, 3, and 2
+NB. IN THAT ORDER, and the symbols + and -, write a
+NB. J sentence whose result is 0.
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section The sentence, not the verb, sets the valence
+   6+4-5-3-2
+6
+   6+4-5+3+2
+0
+
+Whether a verb is executed monadically or dyadically depends on how the verb is used in the sentence.  If it has a noun to its left, it is executed dyadically.
+
+This means that it really makes little sense to discuss 'the verb (*)', because (*) has two totally different meanings depending on which valence is executed.
+It would make sense to discuss 'the dyad (*)' or 'the monad (*)'.
+
+Some verbs don't allow both dyadic and monadic valence.  ({:), for example, has no dyadic valence.  But there's nothing to stop you from writing a sentence that
+executes ({:) as a dyad.  If you do, Roger will signal "domain error".
+
+"domain error" means that you gave a verb arguments that it doesn't know what to do with, in other words arguments that are not in the verb's domain.  Executing a verb with a valence it's not designed for is also a "domain error".
+)
+2 + 'a'  NB. what would THAT mean?
+{: 'abc'  NB. we'll learn what this does eventually
+2 {: 'abc'  NB. no dyadic valence
+
+NB. Exercise: write a J sentence that uses only the symbols
+NB. (-) and (2) and whose result is 8.
+ 
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section x and y
+    2--2--2--2
+ 8
+    2 - - 2 - - 2 - -2  NB. easier to read
+ 8
+
+Q. What does the dyad (*) do?
+
+A. The result of dyad (*) is its left argument times its right argument.
+
+You can see that in any definition like this, the phrases 'monad', 'dyad', 'left argument', and 'right argument' are going to occur a lot, using lots of syllables and interfering with understanding.
+
+Since a verb always has just 1 or 2 arguments, we will give them names.
+
+The right argument of a verb - that is, the noun that is to the right of the verb when the verb is executed - will be called (y).
+
+The left argument of a dyadic execution will be called (x).
+
+To say 'the verb (v) executed monadically', we will write (v y) representing (v) executed on one argument.
+
+To say 'the verb (v) executed dyadically', we will write (x v y) representing (v) executed on two arguments.
+
+Q. What does (x * y) do?
+
+A. (x * y) is (x) times (y).
+
+Q. What does (x ^ y) do?
+
+A. (x ^ y) is (x) raised to the power (y).
+
+Q. What does (*: y) do?
+
+A. (*: y) is (y ^ 2).
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Dissect, the sentence visualizer
+J has a nifty tool that lets you see the execution of an entire sentence at once.  It is called Dissect.
+
+To run it, you should have a PFkey set up to run dissect.  Look below to see what your dissect key is.  Then put your cursor on a line and press the dissect key.
+A window will pop up showing the execution of your sentence.
+
+Each block represents an input value or a result.  Arguments to a box come in at the top, and the result of the sentence is the contents of the last box.
+
+Try dissecting this sentence:
+
+   3 + 5
+
+Then try writing your own sentences and dissecting them.
+
+If you move the dissect window, subsequent executions of dissect will remember where you put it.
+)
+PREPARE
+3 : 0 dissectfkey
+if. #y do.
+  smoutput 'Your dissect key is ',y
+else.
+  smoutput 'You do not have a dissect key, or its definition is nonstandard.'
+end.
+0 0 $0
+)
+PREPARE
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section What part of speech does a word have?
+As we have seen, numbers and character strings are nouns.
+
+To find the part of speech of a primitive, you have to look at its definition.  Most are verbs, but some are nouns, and many are "adverbs" and "conjunctions" which we will learn about later.
+
+Parentheses and (NB.) are "punctuation".
+
+That leaves names.  A name has the part of speech of the value that was assigned to it.
+
+That means a name can have any part of speech, even a verb!
+)
+plus =: +  NB. assign the name (plus) to be the verb (+)
+2 plus 4  NB. The name functions just like (+)
+times =: *
+celsius =: 25
+32 plus celsius times 9 % 5
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Chapter Nouns
+NB. =========================================================
+Lab Section Type and Precision
+Every noun has a "type" and a "precision".
+
+The "type" tells what general kind of information is stored in the array.  The options are "numeric", "character", and "boxed".  [We'll discusses boxes later.]
+
+The "precision" tells how the information for the type is represented.  For numeric information, the options are "Boolean", "integer", "floating-point" [i. e. scientific notation], "complex", "extended", and "rational".
+Each of these categories is a subset of the concept of 'number'.
+
+For character information, the choices are "ASCII", "short unicode", and "long unicode".  ASCII is old-fashioned American characters, while unicode supports characters from the rest of the world.  ASCII will be all we'll need.
+
+You usually don't have to worry much about the precision of your nouns.  Roger will choose the precision that is best for your data.  If it is necessary to convert from one precision to another, Roger will do so without involving you.
+
+On the other hand, you have to be keenly aware of the type of your nouns.  There's a world of difference between the character ('2') and the numeric (2).
+)
+3   NB. an integer
+1 % 3  NB. a floating-point number
+3 * (1 % 3)  NB. mixed precision: no problem
+'a' + 'b'   NB. add characters?  Impossible...
+NB. ...What would it mean?
+
+'3' + '2'  NB. Even if the characters are numerals,
+NB. ...you can't add...
+'Ƽ'  NB. ...because a character is just a picture.
+NB. Look closely: this is not the numeral 5.
+NB. It is a letter used in the Zhuang alphabet
+NB. from 1957 to 1986 to indicate its fifth tone.
+NB. Side-by-side with 5:
+'Ƽ5'
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Atoms and Arrays
+A noun can be a single number, as we have seen, or it can be an "array" of numbers where each number is identified by its position in the array.
+
+Likewise, a noun can be a single character, or an array of characters.
+
+A noun that is not an array is called an "atom".
+
+An array can contain any number of atoms, including zero and one.  It's not the number of atoms that makes an array, but the fact that the array has components that can be addressed.
+)
+5  NB. An atom
+i. 5  NB. 5 numbers arranged in a row
+i. 3 5  NB. 15 numbers arranged in 3 rows of 5 each
+
+NB. Exercises:
+NB. 0. create an array of 4 rows of 2 numbers each;
+NB. 1. an array containing 3 tables, each one having
+NB.   3 rows of 6 numbers each
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section The vocabulary of arrays
+The simplest array is a "list of atoms", also called simply a "list".  The array contains zero or more values, distinguished by a number called the "index".  The index of the first atom is 0.  The atoms must have the same type.
+
+Next there is a "list of lists", also called a "table".  The lists are distinguished by an index, must have the same type and must all have the same length.
+
+Then there is the "list of tables", also called a "brick".  The lists are distinguished by an index, must have the same type and must all have the same shape.
+
+And so on... arrays can be grouped into larger arrays as long as they have the same type and shape.
+)
+NB. (x , y) joins (x) and (y) into an array.
+1,2,3,4  NB. here, joins the 2 lists into a single list
+l4 =: 1,2,3,4
+l4,5  NB. Appending an atom to a list extends the list
+NB. The verb (i. y) creates arrays of sequential integers
+i. 5  NB. A list of 5 numbers
+i. 2,5   NB. A table, 2 rows of 5 numbers each
+i. 1  NB. A list of 1 number (it displays like an atom)
+i. 0  NB. An empty list - blank line with no numbers
+i. 0,0  NB. 'quiet empty' - 0 lines, 0 numbers each...
+NB. ...so no blank line
+
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Numeric-list notation
+As you might have noticed, a list of numbers, such as what (i. 5) produced, is displayed as a sequence of numbers separated by spaces.
+
+This same notation is used when you are writing a J sentence: a sequence of numbers separated only by spaces is treated as a single word which denotes the list of numbers.
+
+The reason for this treatment is that lists are extremely common in J.  You will soon appreciate the ease of writing
+
+   0 1 + 2 3
+
+rather than
+
+   (0,1) + 2,3
+
+This notation applies only to numbers, NOT to names that have numeric values.  A common beginning error is to write
+
+   zero =: 0
+   one =: 1
+   zero one + 2 3
+
+It doesn't work!  (0 1) is recognized as a single word, but (zero one) is two words and requires a verb, such as (zero,one).
+)
+zero =: 0
+one =: 1
+zero one + 2 3
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section More vocabulary for arrays: axis, item, rank, shape
+We say that a list of things [atom, list, etc.] is "arranged along an axis", and each individual thing is called an "item" of the array.
+
+[IMPORTANT DEFINITION] The number of axes is called the "rank" of the array.  A list has 1 axis, a table has 2 axes, a brick has 3, and so on.
+
+An atom has no axes and its rank is 0.  An atom is considered to have one item, which is the atom itself.
+
+[IMPORTANT DEFINITION] The "shape" of an array is the list of the lengths of all the axes.
+
+A 2x5 table has shape (2 5), while a list of 6 numbers has shape (6).
+
+The verb ($ y) gives the shape of (y).  The verb (# y) gives the number of items in (y).
+)
+]table =: i. 2 5   NB. a 2x5 table
+$ table  NB. its shape
+# table  NB. it has two items
+# $ table  NB. it has rank 2.  rank = length of the shape
+
+]list =: 'abcdef'   NB. A 6-atom list
+$ list  NB. Shape
+# list  NB. Number of items
+# $ list  NB. rank
+
+]atom =: 'x'   NB. A single character
+NB. Find its rank, shape, and number of items.
+NB. These are very important
+
+NB. Exercises:
+NB. 0. What is item 0 of the array produced by (i. 3 4)?
+NB. 1. What is item 2 of the array produced by (i. 6)?
+NB. 2. What is item 4 of the array produced by (i. _6)?
+NB. 3. What is item _2 of the array produced by (i. 5 3)?
+NB. 4. What is item 1 of the array produced by (i. 6 2 3)?
+ 
+ 
+ 
+NB. =========================================================
+Lab Section How to look up the definition of a primitive
+J has verbs to operate on arrays, and we need to learn some of them.
+
+To get to the page that describes all of J, press Shift+F1 now.  That will launch your browser toward the J Wiki, which has all the J documentation.
+You will start at NuVoc, which shows you all the primitives of J with a link to the description of each.  Click on a primitive to see its description page.
+
+If you are dissecting a line, you can get documentation on any J primitive by clicking on the primitive [in the main display, not in the title].
+
+The next section gives a list of some verbs we will use.  You aren't expected to remember them all [yet], but you need to know that they exist so that you will be able to ask a question like 'What was that verb that takes the first item again?'
+)
+
+NB. =========================================================
+Lab Section Verbs for arrays
+(i. y) creates an array whose shape is (y), containing consecutive integers.
+
+($ y) gives the shape of (y), which is always a list
+
+(# y) gives the number of items in (y), which is always an atom
+
+(x $ y) creates an array of items of (y), whose shape is (x)
+
+(x # y) creates an array whose rank has the rank of (y), but contains (x) copies of each item of (y)
+
+(x , y) joins (x) and (y) into a single array.  If (x) and (y) are atoms or lists, the result is a list.  If one of them has higher rank, you'll need to read the details to see how the arrays are joined.
+
+(, y) runs the atoms of (y) into a list.  The result is always a list.
+
+(x { y) gives item number (x) of (y).  Remember, the first item is item number 0.
+
+({. y) gives the first item of (y)
+
+(}. y) discards the first item of (y)
+
+({: y) gives the last item of (y)
+
+(}: y) discards the last item of (y)
+
+(x -: y) is 1 if (x) and (y) are identical, 0 otherwise
+
+(/:~ y) sorts (y) into ascending order
+)
+'ab' , 'cd'
+0 1 , 2
+0 1 , 'a'
+2 3 $ 'abc'
+2 3 $ 'ab'
+2 # 'Henry'
+0 0 0 1 0 # 'Henry'
+, i. 2 5
+NB. Experiment with the others yourself
+
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Verbs for atoms
+We will also use the following primitive verbs.  These verbs operate atom-by-atom.  If you apply them to arrays, they operate on atoms one at a time to produce an array with the same shape as the original array.
+
+The dyads operate on corresponding atoms of (x) and (y).  If one argument is an atom and the other is an array, the atom corresponds to each atom of the array.
+
+(x = y) gives 1 if (x) and (y) are equal, 0 otherwise
+
+(x > y) gives 1 if (x) is greater than (y), 0 otherwise
+
+(x < y) gives 1 if (x) is less than (y), 0 otherwise
+
+(x >: y) gives 1 if (x) is greater than or equal to (y), 0 otherwise
+
+(x <: y) gives 1 if (x) is less than or equal to (y), 0 otherwise
+
+(x % y) is (x) divided by (y)
+
+(| y) is the absolute value of (y)
+
+(x | y) is the remainder when (y) is divided by (x)
+
+(x ^ y) is (x) to the power (y)
+
+(<. y) is (y) rounded down to an integer
+
+(>. y) is (y) rounded up to an integer
+)
+'any' = 'and'  NB. This gives 3 results, one per atom
+'any' -: 'and'  NB. This compares for total equality
+'a' = 2  NB. they're not equal
+'a' > 2  NB. but don't try to rank them!
+'ab' = 'cde'   NB. The number of atoms of arrays must match
+'c' = 'cde'  NB. If one argument is an atom, it is repeated
+NB. Experiment with the others yourself
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Chapter Writing Programs 
+NB. =========================================================
+Lab Section Scripts
+So far all we've done is type sentences into Roger and see the results.  When we close J, all our work is gone.
+
+Now that we're about to write programs, that has to change.  We need to be able to save our work for later use.
+
+The work you want to save will be kept in "scripts", which are files with a file extension of '.ijs'.  Scripts live in a separate window, called the "edit window".  [The window you are looking at now is called the "term window"].
+
+When you want to run your code, you "load" the script, which gives the lines of the script to Roger one by one, as if you had typed them into the term window.
+
+You will type all the code you want to keep into scripts, never into the term window.
+
+That way, your code is always saved in files.  You do have to remember to load the script before you execute the programs in it.
+
+To create a script, go to File>New temp in the Menu.  You will be prompted for a filename; give one [I suggest 'quadratic'].  The '.ijs' extension will be added automatically.
+
+Then the "edit" window will appear.  This is a tabbed window that allows you to have easy access to several scripts at the same time.
+
+From now on, you will do your creative work in the edit window, and will type into the term window only to test individual sentences, or to run or debug the program you have written.
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Our first program
+Time to write our first program!  We will write a program to solve a quadratic equation using the quadratic formula.
+
+[I know that's boring, but it's the best I could come up with.]
+
+What is a program, anyway?
+
+It's a set of instructions that will produce a desired result.
+
+To produce that result, the program usually needs some "input" that tells the program what result to produce.
+
+For this program, what is the result?  What form should this information take in J?
+
+And what is the input, and what form should it take?
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Result and Input
+The result will be the solutions to the quadratic equation, a list of 2 numbers.
+
+The input will be the equation to be solved.  The equation is
+
+ax^2 + bx + c = 0
+
+and we will need the three values a, b, and c.  That sounds like it should be a numeric list in J.
+
+As an example we will use the equation
+
+x^2 - 3x - 10 = 0    with solutions x=5, x=-2
+
+What would the input to the program be, for this equation?
+
+What would the result be?
+)
+ 
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Valence
+The input would be the list (1 _3 _10), and the result would be the list (5 _2) or (_2 5) since we haven't specified that we care about the order of the result.
+
+In J, a program is a verb, and the input is the argument[s] to the verb.
+
+We will write the verb, but first you have to decide: will the verb be used as a monad or a dyad?
+)
+ 
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Execution of a verb always requires an argument
+The verb takes a single argument, the list (1 _3 _10), so the verb will be used as a monad.
+
+We will name the verb (solvequad).
+
+To use the verb (solvequad), we need to execute it in a sentence, with proper arguments.
+
+What will be the sentence that executes (solvequad)?
+)
+ 
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Definition of a verb
+   solvequad 1 _3 10
+
+You need to make sure you see what will happen.  In this sentence you have the verb, (solvequad), followed by its argument, (1 _3 _10).
+Since that is a verb followed by a noun, the verb will be executed.  Since there is no noun to the left of the verb, the verb (solvequad y) will be executed, with (y) equal to (1 _3 _10).
+)
+
+NB. =========================================================
+Lab Section Edit window and term window
+From now on you will be using two windows into J.  Roger's window, where you type sentences for Roger to execute, is officially called the "term window" [short for 'terminal', because it display a session log as if it came off a teletype].
+
+The other window is the place where you write and polish your programs.  It is called the "edit window".  The edit window has tabs so that you can be working on several programs at once.
+
+What you type into the edit window doesn't go to Roger, at least not directly.  It goes to Chris, who saves it for you and writes the window contents out as files when you ask.  Files created by the edit window are called "scripts" and have file extension of .ijs.
+
+When you think your program is ready for Roger, you ask Chris to send the whole program to Roger, all at once, and Roger remembers it, just as if you had typed it in line by line.  This is called "loading your script".
+
+Remember: just changing your program in the edit window doesn't change anything for Roger until you load the modified script.
+
+Remember: the edit window is for modifying scripts.  To give Roger a sentence to execute, you still use the term window.
+)
+
+NB. =========================================================
+Lab Section Writing the verb
+Finally, we write the verb.  Use File>New temp in the J menu to create a new script.  This creates the edit window if one doesn't exist already.  In the edit window, select File|Save As from the menu.  Give the name quadratic.  You program will be saved in the file quadratic.ijs.
+
+Use cut and paste to put the following verb into the script:
+
+ NB. Solve quadratic equation
+ NB. y is (a,b,c) for the quadratic ax^2 + bx + c = 0
+ NB. Result is the 2 solutions
+ solvequad =: monad define
+ NB. Extract a, b, and c from the input
+ a =: 0 { y
+ b =: 1 { y
+ c =: 2 { y
+ NB. Calculate sqrt of discriminant
+ discrimsqrt =: %: (b^2) - 4*a*c
+ NB. Calculate first result
+ res0 =: ((-b) + discrimsqrt) % 2*a
+ NB. Calculate second result
+ res1 =: ((-b) - discrimsqrt) % 2*a
+ NB. Return both results
+ res0,res1
+
+
+
+
+The first line,
+
+solvequad =: monad define
+
+is the special sequence that starts the definition of a verb. (monad define) means 'I am starting to define a monadic verb, and the lines of the definition follow'.
+
+The result of the (monad define) is a verb, which is then assigned to the name 'solvequad', so that (solvequad) becomes a verb that you can execute.
+)
+ 
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section lint
+Now we want to run the verb.
+
+First you have to load the script, to send it to Roger.  Do this by clicking on your script in the edit window and pressing your Lint function key, which is named below.
+
+Oh, look, you have an error.  [Welcome to the world of the programmer.]  Every verb has to end with a line that has just one character, a right-parenthesis ) in the first column.  This ending line comes after the last line of the definition.
+We left it out.
+
+Put in the missing ) line, after the line (res0,res1), and rerun lint.  You should see (No errors found) typed in the term window.
+)
+PREPARE
+3 : 0 lintfkey
+if. #y do.
+  smoutput 'Your lint key is ',y
+else.
+  smoutput 'You do not have a lint key, or its definition is nonstandard.'
+end.
+0 0 $0
+)
+PREPARE
+
+ 
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Running a verb you wrote
+Now that the verb is loaded into Roger, let's run it.  We run it by typing a sentence into Roger's term window, as done for you below.
+)
+PREPARE
+3 : 0 ''
+if. _2 5 -.@-: /:~ solvequad :: 0: 1 _3 _10 do.
+smoutput '**** Wait a minute ****'
+smoutput 'Your (solvequad) verb doesn''t produce the correct result!'
+smoutput 'Fix it and then run the sentence:'
+smoutput 'solvequad 1 _3 _10'
+end.
+) 
+PREPARE
+solvequad 1 _3 _10
+ 
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section How arguments are passed
+Now that you see that the program works, understand HOW it works.
+
+The hard thing to grasp is that when you write a program, you are building a machine to solve problems.
+
+If you just have one problem to solve - if the only thing you ever cared about was solving
+
+x^2 - 3x - 10 = 0
+
+you wouldn't bother writing a program for it - you'd just type the sentences in to Roger and write down the answer.
+
+Here you're writing a program to solve ANY quadratic equation.  You're saying,
+'Yeah, I can solve a quadratic.  You tell me a, b, and c, and I'll follow my steps and the answer will come out'.
+
+When you think about it, that's what the quadratic formula means.
+
+The sentences in your program are exactly the sentences you would type in to Roger to get the answer, except that they don't include the numbers for any specific equation.
+When the program is executed for a specific quadratic equation, the numbers for that equation are plugged into the sentences of the program to make the program execute the correct sentences for that equation, ending with the result.
+
+So here's the big question: how do the values of a, b, and c get into the sentences of the program?  I haven't told you yet, but I think that if you look at the program you can figure out what must be happening.
+)
+ 
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section 
+Look at the first line of the program, which is
+
+a =: 0 { y
+
+This is setting the name (a) to the value of item 0 of (y).
+
+Wait a minute - what's this (y) business?
+
+Bingo!  (y) is the connection between the program, which doesn't know about a specific a, b, and c, and the execution of the program, which does.
+
+When you execute
+
+   solvequad 1 _3 _10
+
+The first thing Roger does is to set the name (y) to the value (1 _3 10).  Then it starts executing the sentences of the verb one by one.
+
+Describe in you own words what the first three executable sentences of (solvequad) [ignoring the NB. lines] do when you execute
+
+   solvequad 1 _3 _10
+
+and then continue this lab.
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section The debugger
+They set (a) to (1), (b) to (_3), and (c) to (_10).
+
+When you have a long verb you might get confused about what all the names are set to, at different points in the verb.  There's a tool to help with that.
+
+Follow these steps exactly:
+
+Type Ctrl+k [Command+k if you have a Mac].  This brings up a little window at the upper-right of the screen.  This window is the Debugger.
+
+Click on the top bar of the debugger to activate it.  Then hover over the buttons to see the tooltips describing them.  The one with the pencil is the Stop Manager, and four buttons to the right of that is Automatically dissect on stop.
+Also find the Step Over button.
+
+Click Automatically dissect on stop.  The button should show that it is selected.
+
+The click the Stop Manager.  In the pulldown list on the left [titled Name:], find 'solvequad' and click on it.  Then click the 'Stop All' button towards the top of the window.
+
+You have set it up to stop on each line of the program, and dissect the line just before it is executed.  Now you can follow what's going on.
+
+Type
+
+   solvequad 1 _3 _10
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Single-stepping through your verb
+You have "hit a stop" and triggered the debugger, which lets you see into the program.  First look at the debugger window.  The top pane shows that it about to execute the first line.
+
+The middle pane shows all the lines that are being executed.  When you get more advanced you will have one verb calling another, which calls another... and this is where you see everything that's active.
+
+The bottom pane shows the names that are referred to in the sentence about to be executed.  Look at (y): see, it's been set with the value for the equation you are working on.
+
+Finally, look at the dissect window.  This shows you what's going to happen when the sentence is executed.
+
+Here, you see that the first item of (y) is going to be selected and stored as (a).
+
+Next, press the Step Over button.  Look at all the windows and see that you are about to execute the next sentence, and see what it does.
+
+Continue to your heart's content.  When you get to the end of the program, the debugger will fold up into the small bar.
+
+If you want to see it happen again, execute (solvequad) again.  Experiment with different arguments to (solvequad), representing different quadratic equations.
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Points worth mentioning
+1. You don't have to single-step to use the debugger.  Click on the rightmost debugger button, which looks like a broom.  That will clear the debugger.
+Then open the Stop Manager and select (solvequad).  Notice that it still has stops set on every line.
+Press Stop All to clear the stops, then Close.  Now type
+
+   solvequad 'abc'
+
+Whenever your program has an error, the debugger will spring to life if it is enabled.  That lets you see what caused the error.
+
+2. If you want to define a verb for use dyadically, use (dyad define) instead of (monad define).  The name (x) will be assigned the value of the left argument before the verb starts execution.
+
+It is possible to define a verb with both dyadic and monadic valences but we won't learn that here.
+
+3. Notice that every line of the verb except the last is an assignment.  This is normal.
+If you don't assign the result of a sentence to a name, the result is discarded, so why run the sentence at all?
+
+4. The result of the last executed sentence becomes the result of the verb.  The last sentence doesn't have to be an assignment to be useful.
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Enhancing the program
+Add the following verbs to your script using cut & paste.
+
+ NB. y is a number
+ NB. result is a string (x-y) representing a term
+ dispfactor =: monad define
+ NB. Get string form of absolute value of y
+ stringy =: ": | y
+ NB. Get the sign to use for -y
+ dispy =: (*y) { ' -+'
+ NB. Format the term
+ if. y = 0 do.
+   NB. 0 is special
+   'x'
+ else.
+   '(x',dispy,stringy,')'
+ end.
+ )
+
+
+ NB. x is the degree of a term (2 for x^2, 1 for x,
+ NB.   0 for constant) 
+ NB. y is  the coefficient of a term
+ NB. Result is the string form of the term, always
+ NB.  including a leading sign (unless the
+ NB.  coefficient is 0)
+ dispterm =: dyad define
+ if. y = 0 do.
+   ''  NB. If a term is 0, it has no display
+ else.
+   NB. get sign, + for positive, - for negative
+   sign =: (*y) { ' +-'
+   NB. get the string to use for the number:
+   NB.  y, unless it's +-1
+   if. 1 = |y do.
+     numstring =: ''
+   else.
+     numstring =: ": | y
+   end.
+   NB. Create the display of the x part, which
+   NB. depends on degree
+   if. x = 0 do.
+     xstring =: ''  NB. constant: no x part
+   elseif. x = 1 do.
+     xstring =: 'x'  NB. no power
+   elseif. do.
+     xstring =: 'x^' , ":x  NB. A power
+   end.
+   NB. Put it all together
+   sign,numstring,xstring
+ end.
+ )
+
+
+ NB. y is a,b,c for a quadratic
+ NB. Result is the quadratic, factored
+ factor =: monad define
+ NB. Pull out a, b, c
+ fa =: 0 { y
+ fb =: 1 { y
+ fc =: 2 { y
+ NB. Create format for quadratic.  Join terms together,
+ NB. delete leading sign if it's '+'
+ qstring =: (2 dispterm fa),(1 dispterm fb),(0 dispterm fc)
+ if. '+' = {. qstring do.
+   qstring =: }. qstring  NB. remove first char if +
+ end.
+ NB. Solve the quadratic
+ results =: solvequad y
+ NB. format the terms
+ fstring =: (dispfactor 0 { results),(dispfactor 1 { results)
+ NB. Display the equation and the factored form
+ qstring,' = ',fstring
+ )
+
+
+Make sure you can load the enlarged script using lint.
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Single-step through the program
+Your goal is to understand how all those verbs work.  You have to, because they have small errors that you're going to have to fix!
+
+Start by figuring out (dispfactor) and (dispterm).  For each verb, start by running the verb with various arguments until you see what the verb is TRYING to do.
+Then use the debugger to put stops in the verb, and single-step to see exactly what the verb is doing on each line.
+
+The if. control word runs the part between the if. and do., and if the result doesn't start with 0 Roger then runs the part between the do. and the end./else./elseif.  If the result of the if. starts with 0
+Roger skips over the part following the do.
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Verbs can call other verbs
+Now execute
+
+   factor 1 _3 _10
+
+Pretty cool, eh?  But how did it do it?
+
+Put a stop at the beginning of each of the verbs (factor), (solvequad), (dispterm), and (dispfactor).  Execute the sentence above again to hit the stop.  Then single-step all the way to the end.  Observe as you run the verb (dispterm) 3 times,
+(solvequad) once, and (dispfactor) twice.
+
+Stop at take a look around when the first sentence in (dispterm) is about to be executed.  Look at the value of (y): it has been changed from the value it had when (solvequad) started.  EVERY TIME Roger starts running a verb, he sets (y) [and (x), for dyads] to the value of the argument.
+
+Are you wondering if that will mess up the value of (y) when (dispterm) finishes and (factor) starts back up again?  Well, keep stepping through until (factor) gets control again.  What is (y) then?
+
+It's been set back to (1 _3 _10), just like it was before the call to (dispterm)!  That means that (factor) and (dispterm) don't mess each other up!
+
+Every executing verb has a separate copy of (x), (y), and any other names that are assigned "privately".
+Professional programmers make most of their names private so verbs won't interfere with each other.
+We won't follow this practice because it makes debugging a little harder.
+But we will be grateful that (x) and (y) are always assigned privately.
+
+After you understand what's going on, try some other equations, such as
+
+   factor 1 5 4
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section Trouble
+Try the sentence
+
+   factor 2 _6 _20
+
+Uh-oh.  The typed statement isn't true.  Figure out what went wrong, and fix it.
+)
+ 
+ 
+ 
+ 
+NB. =========================================================
+Lab Section More trouble
+Find some other arguments that make (factor) fail.  Think about why (factor) fails, and come prepared to discuss it.  Don't fix the problem unless you really want to.
+)

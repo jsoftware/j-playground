@@ -1,0 +1,7 @@
+directory:  examples/data
+
+This directory contains various data files referenced in the User
+Manual, and by some of the example scripts.
+
+The data file orders.prn is taken from the Northwind sample
+database distributed with Microsoft Access.

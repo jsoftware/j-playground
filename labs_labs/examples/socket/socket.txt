@@ -1,0 +1,73 @@
+Directory: examples/socket
+
+This directory contains scripts to use J as a socket server,
+and as a client to the J socket server. The scripts are:
+
+client.ijs      - socket client
+server.ijs      - socket server
+serverw.ijs     - socket server showing commands in a window.
+
+Utility scripts:
+clifns.ijs      - client
+servfns.ijs     - server
+servfnsw.ijs    - window server
+
+You can invoke these files as the initial file specified
+in the command line. No other scripts are required.
+
+If using J.DLL as the server, you should run server.ijs
+
+Method
+------
+Load J and run either server.ijs or serverw.ijs
+  (you can set up an icon/shortcut to do this)
+
+Load another copy of J and run client.ijs
+
+Client Verbs
+------------
+  sockopen ''      open socket (this is run automatically
+                                when client.ijs is loaded)
+
+Verbs that communicate using J's internal data structure:
+
+  sockcmd          send command, get response
+  sockdo           send command, ignore response
+  sockget          get value of name (noun)
+  sockset          set value of name (noun)
+
+Verb that communicates using text only, with result in
+clipboard format (useful for prototyping a non-J program
+as the client):
+
+  socktext         send command, get response
+
+Special commands (arguments to sockcmd or socktext), e.g.
+sockcmd 'show' :
+
+  'close'          close socket
+  'exit'           terminate J server
+  'show'           display server
+  'hide'           hide server
+
+By default, the window server is shown, while the
+non-window server is hidden.
+
+For example, try:
+
+  sockcmd 'i.2 3 4'
+  socktext 'i.2 3 4'
+
+  sockdo 'AA=: ?#~10'
+  sockget 'AA'
+
+  'AA' sockset i.5
+  sockget 'AA'
+
+  sockcmd 'show'
+  sockcmd 'hide'
+
+  sockcmd 'close'
+  sockopen ''
+
+  sockcmd 'exit'

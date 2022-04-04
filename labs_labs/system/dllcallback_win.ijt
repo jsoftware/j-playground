@@ -1,0 +1,209 @@
+NB. Lab: Shared Library (d) (windows only) - callback
+
+0 : 0
+this lab assumes you are already familiar with DLL callback
+if not, see lab: Shared Library (b) (dll/so/dylib) - callback
+)
+
+assert UNAME-:'Win' NB. windows only
+assert IF64         NB. requires J64
+
+0 : 0
+EnumWindows uses a callback to enumerate top-level windows
+by passing each window handle, in turn, to a callback function
+
+EnumWindows continues until all are done or the callback returns 0
+
+Enumwindows prototype:
+
+BOOL EnumWindows(WNDENUMPROC lpEnumFunc, LPARAM lParam);
+
+ lpEnumFunc - address of callback function
+ lParam - application-defined value
+
+callback function prototype:
+
+BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
+
+ hwnd - window handle
+ lParam - app-defined value (same as from EnumWindows call)
+
+to continue enumeration, the callback returns 1
+)
+
+0 : 0
+  J calls EnumWindows ->
+                          EnumWindows runs
+                      <-  calls callback in J
+  J callback runs
+  J returns 1         ->
+                          ...
+                          EnumWindows calls J for
+                          each window or until the
+                          J callback returns 0
+                          ...
+                      <-  EnumWindow returns
+  J runs
+)
+
+0 : 0
+EnumWindowsProc has two parameters and both are passed as integers
+we need a callback that takes two integer arguments
+
+cdcb returns the address of a compiled C routine that handles
+the number of integers in the cdcb argument
+
+cdcb callbacks return an integer result
+all C data types can be returned in an integer
+)
+[cdcb2=: cdcb 2 NB. cdcb2 is a C callback with 2 integer args
+
+EnumWindows=: 'user32 EnumWindows x x x'&cd
+
+0 : 0
+EnumWindows has 2 args:
+
+  cdcb2 - address of callback with 2 args
+  app-defined value - unused in this example, use 123
+)
+erase'cdcallback' NB. be sure not to use one that was not intended
+EnumWindows cdcb2 ; 123 NB. gets cdcallback value error
+
+0 : 0
+the C routine called J verb cdcallback with 2 args
+the 1st is the window handle and the second is the app-defined value
+
+an error in the callback returns 0 to the dll
+in this case the 0 result causes EnumWindows to stop enumeration
+)
+
+0 : 0
+we need to define cdcallback
+we can collect the results of the enumeration in a global
+)
+cdcallback=: 3 : '1[callbackr=:callbackr,y'
+callbackr=: i.0 0       NB. empty global result
+EnumWindows cdcb2 ; 123 NB. results in global callbackr
+$callbackr
+10{.callbackr
+
+0 : 0
+window titles will make the example more interesting
+gettext calls GetWindowText to get the window title
+format formats the window handle with its title
+)
+
+GetWindowText=: 'user32 GetWindowTextA x x *c x'&cd
+gettext=: 3 : '(>{.r){.>2{r=.GetWindowText y;(30$'' '');30'
+
+0 : 0
+enumtop is defined to return top-level handles and titles
+cdcallback is defined locally just before it is used.
+global callbackr is erased and result is returned
+)
+ewcallback=: 3 : 0
+callbackr=: callbackr,(12":{.y),' ',gettext {.y
+1
+)
+
+enumtop=: 3 : 0
+callbackr=: i.0 0
+cdcallback=. ewcallback
+EnumWindows cdcb2;123
+r[erase'callbackr'[r=.callbackr
+)
+r=. enumtop''
+20{.r
+
+0 : 0
+EnumChildWindows enumerates child windows of a window
+we can call EnumChildWindows from within the EnumWindows callback
+
+local definitions of cdcallback allow each dll call to call
+the appropriate cdcallback definition
+)
+
+0 : 0
+EnumChildWindows is similar to EnumWindows
+but has an extra arg of the window
+)
+EnumChildWindows=: 'user32 EnumChildWindows x x x x'&cd
+
+0 : 0
+EnumChildWindows is called in the EnumWindows callback
+and how cdcallback is set before each call so that the
+appropriate one is used
+)
+enumall=: 3 : 0
+callbackr=: i.0 0
+cdcallback=. ewcallback NB. EnumWindows callback
+EnumWindows cdcb2;23
+r[erase'callbackr'[r=.callbackr
+)
+
+ewcallback=: 3 : 0 NB. EnumWindows callback
+callbackr=: callbackr,(12":{.y),' ',gettext {.y
+cdcallback=. ecwcallback NB. EnumChildWindows callback
+1[EnumChildWindows ({.y);cdcb2;321
+)
+
+ecwcallback=: 3 : 0 NB. EnumChildWindows callback
+1[callbackr=:callbackr,'      ',(12":{.y),' ',gettext {.y
+)
+
+all=: enumall'' NB. enumerate all windows
+#all
+20{.all
+
+0 : 0
+EnumDateFormats enumerates date formats
+it takes: LCID and type
+
+LCID 0 is the default language
+type 1 is short formats and 2 is long
+
+the callback has a single argument - the address of a C string
+
+(cdcb 1) is the address of the C callback with 1 arg
+)
+NB. LCID dateformats type
+dateformats=: 4 : 0
+callbackr=: i.0 0
+'kernel32 EnumDateFormatsA x x x x'&(15!:0) (cdcb 1);x;y
+r[erase'callbackr'[r=.callbackr
+)
+
+0 : 0
+cdcallback is called with 1 integer arg that is an address
+memr reads the string from the address
+1 result continues the enumeration
+)
+cdcallback=: 3 : '1[callbackr=: callbackr, memr y,0,_1'
+0 dateformats 1 NB. default language, short formats
+0 dateformats 2 NB. default language, long formats
+
+0 : 0
+many callbacks are called with an app-defined value
+this value was given as an arg to the dll
+and then is used as an arg to the callback
+this value can be used by the callback to get state information
+
+J callbacks have state established by the cdcallback verb
+you will usually not need to use the app-defined value for this
+)
+
+0 : 0
+a dll with multiple callbacks will call the same cdcallback verb for
+each callback and cdcallback needs to distinguish between them.
+this is easy if there are a different number of args
+if there are the same number of args, distinguish by:
+ arg values (e.g., app-defined values),
+ or by sequence info (e.g., callback A always called before B)
+)
+
+0 : 0
+J callbacks are defined for 0 through 9 args
+
+J callbacks return an integer result
+this covers no result and all types represented in 64 bits
+)

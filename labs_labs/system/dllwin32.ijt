@@ -1,0 +1,192 @@
+NB. Lab: Shared Library (e) (windows only) - file examples
+
+0 : 0
+this lab assumes you are familiar with DLLs
+if not, see lab: Shared Library (b) (dll/so/dylib) - intro
+
+this lab assumes you know some C and have an overview of the WIN32 API
+
+the lab uses procedures CreateFile, WriteFile, ReadFile etc. from DLL kernel32
+
+internet search "msdn win32api CreateFile" for CreateFile info
+
+routines often require constants declared in C header files
+internet search "msdn win32api XXXX" can help find the value XXXX
+or track it down through the windows header fileapi.h
+)
+
+assert UNAME-:'Win' NB. windows only
+assert IF64         NB. requires J64
+
+0 : 0
+a bad declaration or parameter can CRASH or CORRUPT MEMORY
+cd checks declaration and parameter types as best it can
+scalar declaration (x) must have a scalar parameter
+a pointer declaration (*x) must have a non-scalar parameter,
+or a boxed scalar(used as a memory address)
+)
+
+0 : 0
+J provides file functions with the 1!:x family
+that are wrappers for standard C library functions
+and are similar on all platforms
+
+in addition to the C library file functions,
+windows has win32api facilities
+)
+
+0 : 0
+some procedures with character parameters come in two flavors:
+...A for 8 bit chars and ...W for 16 bit (wide) chars
+)
+deletefile=: 'kernel32 DeleteFileA > x *c'&cd
+closehandle=: 'kernel32 CloseHandle > x x'&cd NB. close file handle
+
+cleanup=: 3 : 0
+if. 0=nc<'fh' do. closehandle fh end.
+erase<'fh'
+ferase'~temp/test.jnk'
+)
+cleanup'' NB. clean state from earlier runs
+
+0 : 0
+CreateFile creates a file handle - a kernel object used to access a file
+
+CreateFile prototype:
+
+HANDLE CreateFile
+  LPCTSTR lpFileName,           // pointer to name
+  DWORD dwDesiredAccess,        // access
+  DWORD dwShareMode,            // share
+  LPSECURITY_ATTRIBUTES lpSA,   // security - unused
+  DWORD dwDisposition,          // disp - how to create
+  DWORD dwFlagsAndAttributes,   // attributes - normally 0
+  HANDLE hTemplate              // template - unused
+
+  dwDesiredAccess - GENERIC_READ  GENERIC_WRITE
+  dwShareMode     - FILE_SHARE_READ  FILE_SHARE_WRITE
+  dwDisposition   - CREATE_NEW  CREATE_ALWAYS  OPEN_EXISTING
+                    OPEN_ALWAYS  TRUNCATE_EXISTING
+
+result -1 for failure
+)
+
+0 : 0
+you need to convert the C prototype to a J declaration
+to do this you need to know that, for example, HANDLE and DWORD types
+have declarations x - most C parameters can be declared as x or *x
+)
+
+0 : 0
+result name access share security disp attributes template
+x      *c   x      x     *        x    x          x
+
+security is unused and must be the NULL pointer (<<0)
+template is unused and must be 0
+
+in our examples we use access GENERIC_READ+GENERIC_READ,
+share 0, and attributes 0
+)
+
+createfile=: 4 : 0
+'kernel32 CreateFileA > x *c x x * x x x'cd y;(GENERIC_READ+GENERIC_WRITE);0;(<0);x;0;0
+)
+
+GENERIC_READ=: _2147483648
+GENERIC_WRITE=: 1073741824
+CREATE_NEW=: 1
+
+[fh=: CREATE_NEW createfile jpath '~temp/test.jnk' NB. fh is handle - _1 for failure
+
+0 : 0
+many API functions return an integer result
+where 0 is failure and non-0 is success
+GetLastError has extra information for most errors
+cderx returns the GetLastError information
+)
+deletefile <jpath '~temp/test.jnk'
+cderx''
+closehandle fh
+erase'fh' NB. don't use it again after it is closed
+deletefile <jpath '~temp/test.jnk'
+[fh=: CREATE_NEW createfile jpath '~temp/test.jnk' NB. fh is handle - _1 for failure
+
+0 : 0
+BOOL WriteFile
+  HANDLE hFile,           // file handle
+  LPCVOID lpBuffer,       // pointer to data to write
+  DWORD nBytesToWrite,    // bytes to write
+  LPDWORD lpBytesWritten, // pointer to integer
+  LPOVERLAPPED lpOverlapped
+
+lpBytesWritten parameter is a pointer to an integer set
+as the number of bytes written
+lpOverlapped parameter should be the NULL pointer
+)
+writefile=: 4 : 0 NB. handle writefile string
+'kernel32 WriteFile > x x * x *x *' cd x;y;(#y);(,0);<<0
+)
+
+fh writefile 'testing 1 2 3'
+
+getfilesize=: 3 : 0
+''$>{:'kernel32 GetFileSizeEx x x *x'cd y;,0 NB. want a scalar result
+)
+getfilesize fh
+
+0 : 0
+WriteFile and ReadFile both access bytes at the file pointer in the file
+and update the file pointer when they finish
+)
+
+FILE_BEGIN=:   0
+FILE_CURRENT=: 1
+FILE_END=:     2
+
+setfilepointer=: 4 : 0
+'kernel32 SetFilePointerEx > x x x *x x'cd x;y;(,0);FILE_BEGIN
+)
+
+readfile=: 3 : 0 NB. readfile filehandle
+y setfilepointer 0
+count=.getfilesize y
+;2{'kernel32 ReadFile x x * x *x *'cd y;(count#' ');count;(,0);<<0
+)
+readfile fh
+
+fh setfilepointer 3
+fh writefile '   abcdef and more data'
+readfile fh
+closehandle fh
+erase'fh' NB. don't use it again after it is closed
+
+createdirectory=: 3 : 0
+'kernel32 CreateDirectoryA > x *c *'cd y;<<0
+)
+createdirectory jpath '~temp/junklab'   NB. 0 is failure
+
+NB. BOOL MoveFile(LPCTSTR lpExistingName,LPCTSTR lpNewName);
+movefile=: 3 : 0
+'kernel32 MoveFileA > x *c *c'cd y
+)
+movefile jpath each '~temp/test.jnk';'~temp/junklab/test.jnk'
+
+0 : 0
+CopyFile copies an existing file to a new file.
+ BOOL CopyFile(
+  LPCTSTR lpExistingFileName,
+  LPCTSTR lpNewFileName,
+  BOOL  bFailIfExists);
+
+bFailIfExists - if 1 and new file exists, function fails
+)
+copyfile=: 3 : 0
+'kernel32 CopyFileA > x *c *c i'cd y
+)
+copyfile (jpath each'~temp/junklab/test.jnk';'~temp/junklab/xxx.jnk'),<0
+
+deletefile <jpath '~temp/junklab/test.jnk'
+deletefile <jpath '~temp/junklab/xxx.jnk'
+
+RemoveDirectory=: 'kernel32 RemoveDirectoryA >x *c'&cd
+RemoveDirectory <jpath '~temp/junklab'

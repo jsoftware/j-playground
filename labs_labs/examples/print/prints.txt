@@ -1,0 +1,4 @@
+directory: examples/print
+
+This directory contains various print examples
+and demo text files.

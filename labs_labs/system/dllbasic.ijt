@@ -1,0 +1,110 @@
+NB. Lab: Shared Library (a) (dll/so/dylib) - intro
+
+0 : 0
+J can call procedures in a shared library file
+
+windows shared library has .dll extension (dynamic link library)
+linux has .so extension (shared object)
+macOS has a .dylib extension (dynamic library)
+
+for convenience we use the term DLL for all platforms
+
+see: https://code.jsoftware.com/wiki/Guides/DLLs/Calling_DLLs
+
+WARNING:
+calling DLLS with incorrect declaration or parameter
+can cause crashes or corrpted memory!
+)
+
+0 : 0
+A simplified pattern for calling a DLL routine is:
+'filename procedure declaration' cd parameters
+
+filename    - DLL file name
+procedure   - routine name
+declaration - describes result and parameters
+cd          - J foreign to call a DLL
+parameters  - J parameters to pass to the DLL
+)
+
+NB. this lab shows how to use the C library unlink to delete a file
+
+NB. first we need the filename of the DLL with the C library routines
+[libc=: ' ',~>(-.UNAME-:'Win'){'msvcrt';unxlib'c'
+
+[U=: IFWIN#'_' NB. some routines need a _ prefix in windows
+
+0 : 0
+unlink routine deletes a file
+unlink declaration is: i *c
+i indicates 32 bit int and *c indicates a character string
+
+i is the result type (unlink success or failure)
+*c is file name to delete
+) 
+
+f=. jpath'~temp/junk'
+'foo' fwrite f NB. file to delete
+
+(libc,U,'unlink i *c') NB. filename procedure declaration
+
+(libc,U,'unlink i *c') cd <f NB.  0 - success
+(libc,U,'unlink i *c') cd <f NB. _1 - failure
+
+0 : 0
+knowing some C helps in getting the declaration from library docs
+
+linux/macos:
+... $ man 2 unlink
+...
+      int unlink(const char *pathname);
+...
+
+windows:
+web search: msdn _unlink
+...
+int _unlink(
+   const char *filename
+);
+...
+
+int is the result (i in the declaration for 32 bit int)
+const char * is the parameter (*c in the declaration)
+)
+
+('bad',libc,U,'unlink i *c') cd <f NB. domain error - cd failed
+cder'' NB. get error info - 1 indicates filename not found
+cderx'' NB. get extended error info
+
+NB. see: https://code.jsoftware.com/wiki/Guides/DLLs/Error_Messages
+
+(libc,U,'badunlink i *c') cd <f NB. domain error - cd failed
+cder'' NB. 2 indicates procedure not found
+
+(libc,U,'unlink i Q') cd <f NB. domain error - cd failed
+cder'' NB. 5 1 indicates position 1 in declaration is bad
+
+(libc,U,'unlink i *c') cd <2 NB. domain error - cd failed
+cder'' NB. 6 0 indicates position 0 in parameter list is bad
+
+0 : 0
+unlink example passes the parameter as the contents of a J noun
+DLLs can require working with memory at a low level
+see: https://code.jsoftware.com/wiki/Guides/DLLs/Memory_Management
+)
+
+[address=: mema 200 NB. allocate 200 bytes of memory
+(f,{.a.) memw address,0,(1+#f) NB. write null terminated filename to address
+
+'abc'fwrite f
+(libc,U,'unlink i *c') cd <<address NB. memory address
+(libc,U,'unlink i *c') cd <<address NB. _1 indicates file did not exist
+
+0 : 0
+unlink is a very simple example
+
+see ~addons/api/jc/jc.ijs for more complicated (and perhap useful)
+examples of calling C library routines from J
+
+for more examples see lab: Shared Library - writing a DLL
+)

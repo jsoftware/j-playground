@@ -1,0 +1,2204 @@
+LABTITLE=: 'J By Point & Click I'
+LABFOCUS=: 1
+LABWIDTH=: 80
+
+NB. =========================================================
+Lab Chapter The J Session
+NB. =========================================================
+Lab Section Term window
+To see the Table of Contents for this lab, go to Help|Studio|Chapters in the menu for this window.
+
+In this lab you will teach yourself J by watching J code run and by exploring the documentation.
+
+You will have five windows into your J session.  The first is the window you are looking at now.  It is called the term window.  You type sentences here to have them executed, and the results are typed back here.
+
+Sentences to be executed must always be in the last line of the term window.  J types a prompt of 3 spaces so that you can see what you typed and what J replied.
+
+For a sentence to be executed, it must be in the last line of the term window AND you must press ENTER somewhere in the line.  Just copying text into the term window doesn't execute it.  To execute multiple lines, use Run|Clipboard.
+
+Type the string
+
+   1+2+3+4+5
+
+into the last line of this window and press ENTER.  The result will be typed below your input.
+
+To advance to the next section, press ctrl+J in any of the main lab windows [the term window, the debug window, or the dissect window].  On a Mac, use Cmd+J.
+
+NOTE: In this lab, parentheses are used to indicate J code.
+)
+PREPARE
+NB. Check the Qt and library versions
+
+(3 : 0) (0 : 0) ; (0 : 0)
+Your base library is out of date.  Before running this lab, go to Package Manager and
+update the base library.
+)
+Your Qt system is out of date.  To refresh it, follow the instructions at
+http://code.jsoftware.com/wiki/Guides/Qt%20IDE/Install#Upgrade.  Don't forget to
+update the ide\qt addon!
+)
+libver =. _3 {. 0&".;._2 '.' ,~ LF taketo 'Library:' takeafter JVERSION
+qtver =. _3 {. 0&".;._2 '.' ,~ 's' -.~ '/' taketo 'Qt IDE:' takeafter JVERSION
+if. \: qtver ,: 1 4 3 do. res =. 0 {:: y
+elseif. \: libver ,: 8 4 6 do. res =. 1 {:: y
+elseif. do. res =. ''
+end.
+if. #res do. smoutput LF,LF,'***** Warning *****',LF,res end.
+0 0$0
+)
+
+
+load '~addons/labs/labs/core/jpcfmt.ijs'
+
+NB. Fix up user's config file
+desiredkeyvals =: ';'&(taketo ; takeafter);._2 (0 : 0)
+F2;0;Dissect Line;dissect&.finddissectline_dissect_ 0
+F3;0;Dissect Last Error;dissect&.finddissectline_dissect_ 1
+F4;0;Lint;lintwindow_lint_''
+)
+fkeystatus =: 3 : 0''
+fkeyinfo =. 0$a:
+cfiled =. 1!:1 cfile =. < jpath '~config/userkeys.cfg'
+if. LF ~: {:cfiled do. cfiled =. cfiled , LF end.
+NB. Cut to lines
+lines =. <;._2 cfiled -. CR
+NB. discard comments
+lines =. (#~  ('NB.' -.@-: 3 {. deb)@>) lines  
+NB. get delimiter for each line
+delims =. (,&';' {~ 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+' i.&0@:e.~ deb)@> lines
+NB. get existing keyname;values
+keynameval =. delims (taketo ; takeafter)&> lines
+NB. for each desired value, get the key assigned currently
+keyassigns =. keynameval i.&:(1&{"1) desiredkeyvals
+NB. For the values not yet assigned, see if the keys are
+NB. available
+if. +./ assignedmask =. keyassigns < #keynameval do.
+  fkeyinfo =. fkeyinfo , ((0 {"1 keynameval) {~ assignedmask # keyassigns) ('You can use ' , [ , ' for ' , ])&.> ';' ([ taketo takeafter)&.> assignedmask # 1 {"1 desiredkeyvals
+end.
+
+keysneeded =. (keyassigns = #keynameval) # (0 {"1 desiredkeyvals)
+if. #availkeys =. keysneeded -. 0 {"1 keynameval do.
+  NB. Get the string to use for the new keys
+  newvals =. (availkeys e.~ 0 {"1 desiredkeyvals) # desiredkeyvals
+  NB. Get strings to add to config
+  newconfigs =. ; (0&{ , ';' ; (<LF) ,~ 1&{)"1 newvals
+  NB. Get prompt string to use
+  select. #newkeys =. {."1 newvals
+  case. 1 do.
+    keystg =. 'key ', ; newkeys
+  case. 2 do.
+    keystg =. 'keys ' , (>{. newkeys) , ' and ' , (>{: newkeys)
+  case. do.
+    keystg =. _2 }. 'keys ' , ; (}: , (<'and ') , {:) (,&', '&.> newkeys)
+  end.
+  if. 'yes' -: wd 'mb query mb_yes mb_no "May I change configuration?" "I would like to define function ',keystg,'.  Is that OK with you?',LF,LF,'If so, I will stop J and you will need to restart it."' do.
+    NB. Rewrite config file
+    (cfiled , newconfigs) 1!:2 cfile
+    NB. Kill J to allow restart with new keys
+    2!:55 (0)
+  end.
+end.
+fkeyinfo
+)
+PREPARE
+
+NB. =========================================================
+Lab Section Edit window
+Your second window into J is the edit window, shown here.
+
+The edit window is a tabbed text editor for J source code.
+
+In normal use you will open a tab for a file using the File|Open menu.  This lab will manage the tabs for you as you progress.
+
+Read the text in the edit window.
+)
+PREPARE
+'editinfo.ijs' opendebscript 0 : 0;0 0
+NB. Since J is interpreted, there is no compilation step for J
+NB. programs.  If you have program definitions that you want to
+NB. execute, you load them by pressing the green arrow above the NB. definition [or by pressing Ctrl+L [Cmd+T on Mac]].
+
+NB. A file containing J sentences, like this one, is called a
+NB. "script".  All the sentences in this script are comments,
+NB. which start with NB.
+
+NB. Loading a script feeds the lines of the script one by one
+NB. into the term window, where they are executed as if you had
+NB. typed them in by hand.
+
+NB. Each tab in the edit window is associated with a file, whose
+NB. name can be seen in the tab.  Loading a tab first writes the
+NB. contents of the tab to the file, then loads the file.
+)
+PREPARE
+NB. =========================================================
+Lab Section Debug window
+The third window is the debug window.  Right now it's just a little bar in the upper-right of your screen.  It will get bigger when it has something to say.
+
+In normal use you summon up the debug window by pressing ctrl+K.  This lab will manage the debugger for you.
+
+To begin with the debug window is set to remain on top of the display at all times.  With a display as busy as this lab's, which has several windows open at once, you might want to revert the debug window to normal priority so that other windows can cover it.
+
+Ctrl+T toggles the display priority for the debug window. Click on the debug window and then press Ctrl+T [on a Mac, use Cmd+T].
+
+The display priority is remembered between invocations of the debugger.
+)
+PREPARE
+jdb_open_jdebug_ ''
+PREPARE
+NB. =========================================================
+Lab Section The debug window at a stop
+We have loaded a script into the edit window, and set a stop in the debugger.  Then we ran a program, which executed until it hit the stop.
+
+Look again at the debug window.  It has come to life.  It has three panes now.
+
+The top pane shows the lines of the definition that is running.  The > shows the next line to be executed.  The * shows that there is a stop on that line.
+
+The middle pane shows the "call stack": the programs that were called on the way to the line being debugged.  In this case, most of them are in the Labs Manager.
+
+The bottom pane shows the values of names that will be referred to in the sentence.
+)
+PREPARE
+'shortname.ijs' opendebscript 0 : 0
+NB. Find shortest name
+NB. y is a list of boxes, each containing a string
+NB. Result is (unboxed ) shortest string
+findshortestname =: monad define
+NB.~stop shortname
+NB.~title 3	Find Shortest Name
+NB.~title1 0	Get lengths
+NB.~link1 0	Assignment	http://code.jsoftware.com/wiki/Vocabulary/Assignment
+NB.~link2 0	Arrays	http://code.jsoftware.com/wiki/Vocabulary/ArrayProcessing
+NB.~link3 0	Modifiers	http://code.jsoftware.com/wiki/Vocabulary/Modifiers
+NB. get length of each string
+lengths =. #@> y
+
+NB.~stop
+NB.~title1 0	Get smallest length
+NB. Find smallest length
+smalllen =. <./ lengths
+
+NB.~title1 0	Find position of smallest length
+NB.~link1
+NB. Find position of smallest length
+smallindex =. lengths i. smalllen
+
+NB.~title1 0	Select smallest string
+NB.~link1
+NB. Extract that string to give the result
+smallindex {:: y
+))
+) 
+PREPARE
+findshortestname 'Jeb';'Hillary';'George';'Bill'
+
+NB. =========================================================
+Lab Section Dissect window
+Hitting the stop also brought up the colorful dissect window.
+A single sentence in J can do an enormous amount of computation, so much that you need to see it all laid out at once to understand it.
+
+The dissect window shows you the execution of a single sentence, with the inputs coming in at the top and the results going out at the bottom.  By clicking and hovering over parts of the dissect display, you can learn what a sentence is doing.
+
+Start by going through the dissect menu line, choosing the options you want.  Beginners often like to set the tooltip delay to 'immediate' and the tooltip detail to 'tutorial'.
+
+Take a minute to hover over different blocks, and to click them.  Also note that you can move the display around within its window by clicking on an empty area and dragging the display, like you would with Google Maps.
+
+Now size and arrange your windows into comfortable positions.  The dissect window will vary in size depending on the sentence.
+
+You can dissect your own sentences too.  Normally you will do this by clicking on the line [in either the term or edit window] and pressing the function key that has been assigned the Dissect Line function.
+
+Or, you can press the Dissect Last Error function key to dissect the last failing sentence, without having to click on it.
+
+When the dissect window is automatically triggered at a stop, it shows you what will happen when the sentence is executed.  [The debugger has to have been put into Autodissect mode, which we have done for you in this lab.]
+)
+PREPARE
+smoutput@>^:(*@#) fkeystatus
+PREPARE
+
+NB. =========================================================
+Lab Section Your browser
+You will be getting most of your information about J through your browser.  The dissect window has fields that you can click on to get more information:
+
+At the top-left of the dissect display is a list of links on topics relevant to the example.  Click to read.
+
+In the display of the executing sentence, the top of each block shows what is executed in the block, in white type on a burgundy background.  If you click on these blocks your browser will show you the relevant documentation.
+
+Click around in the dissect window to see what you can bring up in your browser.
+
+You are now ready to explore J.  To watch execution, use the leftmost debugger button (Run) to run to the next stop, or the third-from-left button (Step Over) to run one line.
+
+The sequence (NB.) starts a comment.  The (NB.) and everything following it on the same line are documentation and ignored during execution.
+
+When you advance to the next section we will turn off the debugger and run the verb to completion.
+)
+
+NB. =========================================================
+Lab Section A true story
+A man goes to a tailor for a suit. The tailor takes his measurements and says "OK, come back in a week, I'll have the suit ready." 
+
+In a week the man returns to the tailor shop. "Here's your suit," says the tailor. 
+
+"Well, I'd like to try it on," says the customer. So he goes into the dressing room.  It's all but impossible to get into the thing!  Finally, he has it on, comes out, and looks in the mirror.
+
+He complains to the tailor, "This suit is terrible! Look at this! The jacket sleeves are so long they're flopping! But the shoulders are so narrow I can't even breathe! The pants legs are baggy! But at the same time, the pants squeeze my hips!..."
+
+"Wait a minute," says the tailor, interrupting him. "There's nothing wrong with the suit, you just have to wear it right".  And the tailor shows him how to hold in his sleeves, hunch up his shoulders, tuck in the baggy pants with one hand, all at the same time.
+
+A few minutes later the man emerges from the shop onto the street. He's hobbling down the sidewalk, trying to walk while still holding his sleeve, hunching his shoulders, tucking the pants, etc, etc. 
+
+Two old ladies waiting for a bus across the street notice him as he struggles along. 
+
+"Dear me!!" says one of the ladies, shaking her head in pity. "Look at that poor crippled man!" 
+
+"Sad," says her companion.  "But doesn't his suit fit him nice!"
+)
+0 debugchangestops 'shortname'
+debugrunstop''
+
+NB. =========================================================
+Lab Section Why learn J?
+You need a new suit.
+
+You wanted to use a computer to solve problems.  They taught you a "computer language", but it wasn't a way for you to describe your problem to a computer - it was a way for you to control a computer down at its lowest level, perhaps gingered up a bit by the latest buzzword such as "object-oriented programming".
+
+Then you spent years learning how to take problems, tear them apart, and reimagine from the point of view of a machine that only knows how to add, fetch, and store.  Even if you perfectly well knew what you wanted to do, it was a challenge to tell the computer how to do it.
+
+And the saddest thing of all is, now you think these languages "fit you nice."  No.  You fit them.  You've twisted yourself so tight we could pack you into a 32-bit integer.  You've spent so much effort denaturing your thought processes into loops and array indexes that you've lost sight of what you were trying to do: describe computation.
+
+It's time for you to stand up straight!  Learn a language that describes what you want to do, not the bit-by-bit details of how to do it.  J.
+
+
+Ken Iverson put it this way: In J, when you want to move the army from Philadelphia to New York, you say just that: move the army from Philadelphia to New York.  In a scalar language, you say, Go to every soldier, and move that soldier to New York.
+
+If you want to move the army from Philadelphia to New York, and put the two leading divisions in the rear for rest, in J you say that (it takes 5 characters).  In a scalar language you have to haul out loops, counters, and indexes.  There's a better way!
+)
+
+NB. =========================================================
+Lab Section Expert J
+When you're learning J, you pick it up little by little.  You add a primitive, see a new trick, start stretching your mind to see programs as a whole rather than as a bunch of assignment statements.
+
+Eventually, when you become an expert, you can put your new knowledge and your new mindset together to produce extremely concise programs.
+
+Just so you can see what you have to look forward to, this lab will show you the complete expert versions of the programs we write.  Some of them are very short.  You may analyze them if you like, but that's up to you.  Our reason for including them is to keep you interested in learning J.
+
+Yes, that one line is the whole program!
+)
+NB. y is list of boxed names, result is unboxed shortest name
+fsname =: {::~   (i. <./)@:(#@>)
+
+fsname 'Jeb';'Hillary';'George';'Bill'
+
+NB. =========================================================
+Lab Chapter The Distinct-Birthday Problem
+NB. =========================================================
+Lab Section The Problem and the program
+In a roomful of n people, what is the probability that two people will share a birthday?  Plot the result for several values of n.
+
+The problem is solved by calculating the complementary probability, the chance that all the birthdays are unique.
+
+For a single person, this probability is 1.  A second person has a 364/365 chance of having a different birthday; a third person a 363/365 chance; and in general for n people, the probability is the product of such fractions.
+
+The program to calculate the probabilities is shown in the edit window.
+)
+PREPARE
+'birthdays.ijs' opendebscript 0 : 0
+NB. Distinct Birthdays
+NB. y is the number of people we want to calculate for
+NB. Result is y probabilities, with item i giving the
+NB. probability that i people will have distinct birthdays
+NB. We ignore Feb 29 and assume uniform distribution of birthdays
+birthdayprob =: monad define
+NB.~stop birthday
+NB.~title 3	Probability of distinct birthdays
+NB.~link3 0	Birthday Problem	http://en.wikipedia.org/wiki/Birthday_problem
+NB. Calculate running product of probabilities; this is the result
+-. */\ (365 - i. y) % 365
+))
+) 
+PREPARE
+
+NB. =========================================================
+Lab Section Running the program
+In J, we don't start by thinking about how to build up the result one value at a time.  We think about the whole problem.
+
+The result for n people will depend on the result for [n-1] people, and the probability for the nth person.  If we calculate for each person the probability that they will have a distinct birthday, we can just take the running product of those probabilities to solve the problem.
+
+(y) is the name given to the input the the verb: the number of calculations we want.
+
+(i. y) is a list of integers from (0) to (y-1).
+
+(365 - list) subtracts that list from 365, so we get a list of integers 365, 364, ...
+
+(list % 365) is division giving the list of fractions 365/365, 364/365, ...
+
+(*/\ list) calculates the "running product" of (list).  The first result is 365/365, the second is [365/365]*[364/365]; and so on.  This gives the probability, for each number of people, that those people have distinct birthdays.
+
+(-. product) is (1 - product) and computes the desired result. 
+)
+birthdayprob 50
+
+NB. =========================================================
+Lab Section Completion
+We let the verb run to completion.  The result of the verb, which is a list of probabilities, is typed.
+)
+0 debugchangestops 'birthday'
+debugrunstop''
+
+NB. =========================================================
+Lab Section Plotting the result
+We can plot the results as a function of n.
+
+J includes a package to create plots.
+
+To learn about it, run the Lab titled 'Plot Package'
+)
+require 'plot'
+'title Probability of distinct birthdays' plot (>: i. 50);birthdayprob 50
+
+NB. =========================================================
+Lab Section Plotting the result
+We will close the plot window to get it out of the way.
+)
+wdpclose 'plot'
+
+NB. =========================================================
+Lab Chapter Word, Character, and Line Count
+NB. =========================================================
+Lab Section The Program
+Here is a program to count characters, words, and lines in a file.
+
+Before you try to analyze it, learn the essential terms of J.  Click on the link in the first dissect screen.
+
+In J, a "noun" is a piece of data, and a "verb" is a function that operates on one or two nouns.
+
+Nouns have "shape" - corresponding to dimensions in other languages.  In the dissect display, the shape of a noun appears above its value.
+
+Nouns have "type" - numeric, character, and boxed.  The special boxed type is a container that holds other nouns.  [Note that you don't have a worry about whether a number is integer or floating-point.  J will pick whichever is better.]
+
+An "atom" is a noun that is not an array.  It can be of any type: a single number, a single character, or a single box.
+
+As you step through this lab using ctrl-J, the lab will give a brief discussion of each line and automatically move the debugger through the lines.  Your job is to click around the dissect window and develop an idea for what's going on.
+)
+PREPARE
+'wc.ijs' opendebscript 0 : 0
+NB. Word Count
+
+NB. y is a filename
+NB. Result is a list:
+NB. (#bytes),(#words),(#lines)
+NB. where a word is defined as a non-whitespace preceded
+NB.  by a whitespace
+wc =: monad define
+NB.~stop 1
+NB.~title 3	Word Count
+NB.~title1 0	Read the file
+NB.~link3 0	Essential Terms	http://code.jsoftware.com/wiki/Vocabulary/AET
+NB.~link0 0	Assignment	http://code.jsoftware.com/wiki/Vocabulary/Assignment
+NB.~link1 0	Files	http://code.jsoftware.com/wiki/Vocabulary/Foreigns#m1
+NB.~datasize 10 10
+NB. Box the filename and Read the file
+filedata =. 1!:1 <y
+NB.~title1 0	Count bytes
+NB.~link1
+
+NB. Count characters
+cc =. #filedata
+NB.~title1 0	Count lines
+NB.~link2 0	Arrays	http://code.jsoftware.com/wiki/Vocabulary/ArrayProcessing
+
+NB. Count lines
+lc =. +/ LF = filedata
+NB.~title1 0	Classify whitespace
+ws =. 1 , filedata e. ' ',TAB,CR,LF
+NB. Count nonwhite preceded by white
+NB.~title1 0	Count words
+
+NB. Classify each character as whitespace or not
+NB.  add a whitespace to the beginning to ensure first word counted
+wc =. +/ ws > 1 |. ws
+NB.~title1 0	Result
+NB.~link0
+NB.~link2
+
+NB. Return results
+cc,wc,lc
+))
+) 
+PREPARE
+wc jpath '~addons/labs/labs/core/lorem.txt'
+NB. This executes jpath first, when wc.  Read this as: count
+NB. words on the file whose name inside J is
+NB. '~addons/labs/labs/core/lorem.txt'
+
+NB. =========================================================
+Lab Section Monads and dyads
+Before we examine (wc) we need to handle one important bit of terminology.
+
+In J, as in most languages, a primitive verb such as (*) or (-) has two different meanings depending on whether it is applied "monadically" [with only one noun argument, which is to its right] or "dyadically" [with two arguments, one to its left and the other to its right].
+
+J is unusual in that this treatment is precisely the same for user-defined named verbs.
+
+It makes no sense, then, to discuss 'the verb (*)' without indicating whether we are talking about the monadic or dyadic use.
+
+Rather than say 'the verb (*) when used monadically' we will use the more compact form '(* y)'.  We will use '(x * y)' to denote the dyadic form.
+
+In this notation we are simply generalizing normal J usage.  Within any user-defined verb the right argument is referred to as (y) and the left, if any, as (x).  Our (x * y) notation uses the same names for the arguments to primitives.
+)
+
+NB. =========================================================
+Lab Section Invoking wc
+The program was started by executing the sentence
+
+wc jpath '~addons/labs/labs/core/lorem.txt'
+
+In this sentence, the quoted string is a noun and the names (wc) and (jpath) are verbs.  [(wc) is the verb we are analyzing; (jpath) is a library verb that translates the '~addons' to the path to your Addons directory.]
+
+All J sentences are executed right-to-left.  A verb is executed by giving its name followed by a noun on its right.  The noun becomes an argument to the verb - and if there is a noun to the verb's left, that noun becomes a second argument to the verb.  [A verb always takes one or two arguments.]
+
+In this case, (jpath) does not have a noun to its left, so it is executed with the string as its sole argument.  The result from (jpath y) then becomes the sole argument of (wc y) which is executed next.
+)
+
+NB. =========================================================
+Lab Section Read the file
+Executing (wc) means reading the sentences of its definition one by one and executing them.
+
+Before execution starts, the value of the noun that appeared to the right of (wc) is assigned to the name (y).  If there had been a noun to the left of (wc), its value would also have been assigned to the name (x).
+
+[Since there are only one or two arguments to a J verb, there is no need for a declaration of parameters: the arguments just go by the names (x) and (y).]
+
+In the first line, the contents of the file are read and assigned to the name (filedata).
+
+(=.) performs assignment to a private name, i. e. a name used only inside the verb.
+
+(1!:1 y) is a verb that reads a file.  It requires that the filename be boxed.
+
+(< y) is a verb that puts its argument into a box.
+
+When the line finishes, (filedata) is a noun that contains a one-dimensional array of characters.
+
+A one-dimensional array is called a "list".  (filedata) is a list of characters.
+)
+
+NB. =========================================================
+Lab Section Count bytes
+(# y) is a verb that tells how many items are in its argument.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Count lines
+Every line ends with a linefeed [LF character], so the number of lines is the number of LFs.
+
+The J way to find this is to compare each character of filedata against LF: this produces a Boolean value, 0 or 1, for each character; then add up the numbers to see how many 1s there were.
+
+(+/ y) is a verb that adds all the items of its argument.
+
+Note that the Boolean value for a true comparison is the number 1; false is 0.  The results of comparisons can be added and multiplied just like any other number.
+
+[Treating Boolean values as integers simplifies many expressions.  Computer scientists call it the "Iverson bracket" after its inventor Ken Iverson, also the inventor of J.]
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Classify whitespace
+Whitespace is any of space, TAB, LF, and CR.  We create a list containing those characters, and then check each character of (filedata) to see if it is whitespace.  Again, the result is a Boolean list, 1 if the character is whitespace.
+
+Since we are going to recognize a word as a whitespace followed by a non-whitespace, we prepend a 1 to the list so that if the first character is non-whitespace it will be recognized as starting a word.  [Observe in the dissect screen that the length of the list grows by 1.]
+
+The name (ws) holds the whitespace information.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Count words
+A word is whitespace followed by a non-whitespace.  We create a rotated list, where each whitespace value is moved one position towards the beginning of the list.  The start of a word is a place where the whitespace list is 1 and the rotated list is 0, in other words when the whitespace list is greater than the rotated list.  Then we add up the number of word-starts.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Result
+The result of the last line of the verb becomes the result of the overall verb.
+
+Here we combine the counts to produce the desired result.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section completion
+The program finishes, displaying its result.
+)
+debugrunstop''
+
+NB. =========================================================
+Lab Section the expert version
+Again we show you the expert version of the program.
+)
+NB. y is filename; result is (#bytes),(#lines),(#words)
+WS =: ' ',TAB,CR,LF  NB. whitespace
+wc =: (# , +/@:=&LF ,~ +/@(}: > }.)@(1 , e.&WS) )@:(1!:1)@<
+
+wc jpath '~addons/labs/labs/core/lorem.txt'
+
+NB. =========================================================
+Lab Chapter Where are the loops?  (Answer: implied by rank)
+NB. =========================================================
+Lab Section The Zen of J
+The J programs we wrote above were very different from the corresponding programs in a scalar language.  The J programmer thinks about the problem as a whole, rather than immediately considering individual characters, counters, and loops.
+
+For example, when counting words, to find the places where words start we didn't say, "look at every position and see if there is whitespace before and non-whitespace after."  Instead, we said, "create a value for each character that indicates whitespace; create another that indicates following whitespace; words start where the first is 1 and the second is 0."
+
+Both of those approaches imply loops, but the first is more customized than the second.  The first approach is a loop over the concept of "position" which requires a specific computation at each position, and it really requires a loop index to keep the computation straight.
+
+The second approach doesn't depend on "position".  It splits the data into sections [individual characters in this case], and performs the same operation on each.  The J programmer specifies the operation and the size of the sections; the iteration is implied. 
+
+This is the J way of programming.  Say what to do and what to do it on, and let the interpreter worry about the details.
+
+Ken Iverson, in the culmination of a lifetime of thinking about computation, selected a set of ways of looking at data that allow succinct yet complete descriptions of how to view, arrange, and manipulate data.  That's J.
+)
+
+NB. =========================================================
+Lab Section The organization of nouns: array, axis, index, rank, shape, list, table, brick
+The most important way data is organized is as an "array", along coordinate "axes".
+All the values in an array must have the same type [numeric, character, or boxed], but you do not need to worry about floating-point versus integer - J will choose whichever is needed.
+
+All the rows of a table must have the same length - ragged arrays are not allowed [use boxing to achieve the effect].
+
+The position of an item along its axis is called the "index".  The index of the first item is 0.
+
+An atom of an array can be identified by giving all its indexes, which taken together are called the "index list".
+
+The list of lengths of coordinate axes is called the "shape" of a noun.  The verb ($ y) produces the shape of its argument.
+
+The number of axes is called the "rank" of the noun.  The rank is therefore the length of the shape, and (# $ y) gives the rank of the noun (y).
+
+The verb (i. y) produces a noun whose shape is (y) and whose values are consecutive integers starting at 0.
+
+Important vocabulary words:
+
+A "list" is a one-dimensional array [nothing to do with linked lists].  Its rank is 1.
+
+A "table" is a two-dimensional array.  Its rank is 2.
+
+A "brick" is a three-dimensional array, with rank 3.
+
+)
+PREPARE
+'rankshape.ijs' opendebscript 0 : 0
+rankshape =: monad define
+NB.~stop 1
+NB.~title 3	Noun Nomenclature
+NB.~title0 0	($ y) gives the shape of y
+NB.~title1 0	The rank is the length of the shape
+$ $ i. 4 7
+NB.~title0 0	(+/ y) totals the items of y
+NB.~title1
++/ +/ i. 4 7
+NB.~title0 0	3-, 2-, 1-, and 0-cells
+|."0 |."1 |."2 |."3 (3 2 4) $ 'abcdefghijklmnopqrstuvwx'
+NB.~stop
+0 0$0
+))
+)
+PREPARE
+rankshape''
+
+NB. =========================================================
+Lab Section The organization of nouns: items, list of X
+Verbs like ($ y) apply to the entirety of (y), but most verbs apply to subarrays of their nouns.  The most important of these subarrays are the smallest and largest: atoms and items.
+
+An "atom" is an indivisible value: a single number, a single character, or a box.  Numeric operations like (x + y) apply to corresponding atoms of (x) and (y).
+
+An "item" of an array is a subarray with rank one less than the rank of the array.  The items of a list are its atoms, and the items of a table are its rows [which are lists].
+
+To be precise, an item of an array is a subarray comprising all the atoms that have the same index in the first axis.  Thus, the columns of a table are NOT items.
+
+The first axis is privileged in that many verbs operate on items, which makes it easy to break an array into subarrays along the leading axis.  Generally you should arrange the order of axes with this fact in mind.
+
+Because so many verbs operate on items, it is useful to have the phrase "list of X" to mean "an array whose items are X".  Thus, a plain 'list' is a list of atoms [or of numbers, characters, or boxes], while a table is a list of lists and a brick is a list of tables.
+
+For completeness we declare that an atom is itself a single item.
+
+Phrases to remember:
+
+The shape is a list giving the length of each axis.
+
+The shape of an atom is an empty list.
+
+The rank is the length of the shape.
+
+An array is a list of its items.
+
+An atom has one item, itself.
+
+
+
+The example shows the verb (+/ y), which totals the items of its argument (y).  When we apply this verb to a table, it totals the rows.  When we apply this verb to a list, it totals the atoms.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section The organization of nouns: cells
+Similar to the way an array can be viewed as a list of its items, it can be split up into subarrays of other rank.
+
+A "k-cell" of an array is a subarray of rank k, taking a slice along the last k axes.
+
+For example, a 1-cell of a table is a row of the table: a list taken by a slice along the last axis.
+
+A 2-cell of a 3-dimensional array is a table.
+
+A 1-cell of a 3-dimensional array is a row of one of the tables that make up the array.
+
+A 0-cell is always an atom.
+
+An array can be thought of as an array of its cells, in different ways: A 3x2x4 array can be thought of as a single brick, or as 3 tables, each 2x4 [i. e. a list of tables]; or as a 3x2 array of lists, each of length 4 [i. e. a table of lists]; or as a 3x2x4 array of atoms.
+
+The k-cell concept is extended to negative k.  A "(-k)-cell" is a subarray whose rank is k less than the rank of the array.
+A _1-cell is the same thing as an item.  A _2-cell of a table is an atom.
+
+The dissect display shows these different interpretations.  The verb (|.) reverses the order of the items of its argument.  (|."3) reverses the order inside the 3-cells, that is, it reverses the order of the 2-cells [tables]; (|."2) reverses the order of lists within each 2-cell; (|."1) reverses the order of atoms in each list; (|."0) does nothing because reversing an atom doesn't change anything.
+
+As the processing flows from top to bottom you can see the action of the different verbs.  Click in a result to see what the argument- and result-cells were.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section The rank of verbs
+To recap:
+
+Every noun has a rank - the number of axes.
+
+An array can be construed as an array of cells of lower rank.
+
+An operation on an array may apply to the array as a whole, for example "how big is the array?",
+or to parts of the array, for example "add array A to array B" which is performed number by number.
+
+Consider the concept "compare two strings".  Depending on what you want, this could be a whole-array operation, returning a Boolean result telling whether the two strings are identical; or it could be an operation on individual characters, returning a Boolean result for each character.
+
+In J you would use the compare-whole-arrays verb (x -: y) to generate one Boolean value for the arrays, or the compare-atoms verb (x = y)
+to get a Boolean value for each pair of corresponding atoms of (x) and (y).
+
+
+You can control how a verb is executed by specifying the rank of the cells it will operate on.  You do this by following the verb with ("n) where (n) is the rank of the cells you want the verb to be applied to.  (u"n) is a "derived verb" that operates like (u), but it is applied to n-cells.
+
+(n) is said to be the "rank" of the verb (u"n).  The word "rank" has different meanings when applied to nouns and verbs.
+
+We used (|."n y) to create the display of cells.  Cells of different ranks were reversed, depending on the value of (n).
+)
+
+NB. =========================================================
+Lab Section Left and right rank
+If a verb takes two arguments, a rank can be specified for each.  (u"1 2) means that (u) is applied between 1-cells [i. e. lists] of (x) and 2-cells [i. e. tables] of (y).
+
+Exercises:
+Experiment with the verb (x |. y).  It rotates the array (y) left/up (x) positions.  Use the array (c) defined below.
+
+Then, use (c), (|.), and (") to create the array shown below.
+)
+PREPARE
+smoutput 'Desired result:'
+smoutput 'toti'
+smoutput 'emul'
+smoutput 'esto '
+PREPARE
+debugrunstop''
+]c =: 3 4 $ 'otitlemustoe'
+
+NB. =========================================================
+Lab Section Assembly of results
+Here's the solution.  Click on results to see how result-cells were generated.
+
+The execution of a verb automatically implies execution on multiple cells, depending on the rank of the verb.  These cells will have been ordered as an array, and the results of the execution are ordered the same way.  This ordering, which is taken from the leading axes of the argument-shape and becomes the leading axes of the result-shape, is called the "frame".
+
+In the example shown, the verb (x |. y) is executed 3 times, with a frame of (3).  Each result is a list [of 4 characters], so the overall result is a list of lists, with shape (3 4).
+
+The verb (+/ y) takes the total of the items of its argument.  What verb would add up the items in each row of an array?  What would be the shape of the result if (+/) were applied to the array (d) shown below?
+)
+dl =: 2 dissect '3 1 3 |."0 1 c'
+]d =: i. 4 5
+
+NB. =========================================================
+Lab Section Implicit verb rank
+The argument had 4 rows, and each is totaled to produce an atom, so the shape of the result is (4).
+
+Every J primitive has an "implicit rank" - the rank that is used if the verb is not modified by ("n).  You need to learn the rank when you learn a new verb, just as you need to learn the gender of a new Latin or German noun.
+
+When a verb is applied to a noun whose rank exceeds the implicit rank, the verb is automatically applied - separately - to cells with the implicit rank, and the results are assembled.  It's like writing
+
+for (each cell of the noun) {
+  apply verb to cell, creating a cell of the result
+}
+
+but it all happens automatically.
+
+A verb can have infinite implicit rank, which means that it always applies to its argument in its entirety.  Verbs created by (define) have infinite rank.
+
+In general, a verb is responsible for handling any argument whose rank is less than or equal to the implicit rank.  Thus, the (%. y) verb, which operates on tables [as matrices], has implicit rank 2 and is defined to operate on lists too.  The arithmetic verbs such as (+) have rank 0, i. e. they operate on atoms, and their application to larger arrays is entirely through the rank mechanism discussed above.
+
+Verbs that operate on an entire array, such as ($ y) which gives its shape or (|. y) which reverses the order of items, have infinite rank.
+)
+PREPARE
+destroyy dl
+PREPARE
+dl =: 2 dissect '+/"1 d'
+
+NB. =========================================================
+Lab Section Choosing a rank for your verb
+The rank is an important part of a verb.  When you write a verb, you should assign it the proper rank so that it naturally operates on objects of the correct size.
+
+Suppose we want a small statistical verb that will return the number of observations, mean, and sample standard deviation for a list of numbers.
+
+What should its rank be?  The key is that it operates on a list of numbers.  That means it should have rank 1.
+
+The verb is shown.  See in the edit window that we defined the verb with
+
+stats =: monad define"1
+
+to indicate that the verb works on lists.
+
+We ran the verb on a 3-line table of numbers, but as you can see J automatically broke up the table and feeds the numbers into (stats) one list at a time.
+
+Observe, as we stop at the first execution of (stats), that the (y) argument is just the first list from (data).
+)
+PREPARE
+destroyy dl
+'simplestats.ijs' opendebscript 0 : 0
+NB. Create count, mean, and sample standard deviation for a list
+stats =: monad define"1
+NB.~stop stats
+NB.~title 3	Stats
+NB.~title1 0	Calculate n
+NB. Get number of observations
+count =. #y
+NB.~title1 0	Calculate mean
+
+NB. Calculate mean
+mean =. (+/y) % count
+NB.~title1 0	Calculate sample standard deviation
+NB.~link0 0	Standard deviation	http://en.wikipedia.org/wiki/Standard_deviation#Corrected_sample_standard_deviation
+
+NB. Calculate sample standard deviation
+stddev =. (%: +/ *: (y - mean)) % (count - 1)
+NB.~title1 0	Return results
+NB.~link0
+
+NB. Return results
+count,mean,stddev
+))
+) 
+PREPARE
+]data =: 3 5 $ 50 64 8 99 92 86 19 75 96 37 50 92 41 33 35
+stats data
+
+NB. =========================================================
+Lab Section Calculate mean
+We are stepping through the calculation for the first list.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Calculate sample standard deviation
+We are stepping through the calculation for the first list.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Return result
+We are stepping through the calculation for the first list.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Execute on the second list
+Now J automatically starts the verb (stats) running on the second list.  See that (y) has changed to be the second list of (data).
+
+When you advance the lab, we will remove the debug stops and let the sentence run to completion.  You can see that the results from the 3 executions are assembled into the result table.
+)
+debugstep''
+
+
+NB. =========================================================
+Lab Section completion and display of final result
+)
+0 debugchangestops 'stats'
+debugrunstop''
+
+NB. =========================================================
+Lab Section expert version
+This expert version is more expert than the previous ones.
+)
+NB. y is a list, result is count,mean,samplestddev
+stats =: (( #@[ , ] , (+/&.:*:@:- % <:@#@[) ) +/ % #)"1
+
+stats data
+
+NB. =========================================================
+Lab Section Other loops
+The rank mechanism provides way of matching computation to data: by applying a verb to cells of the appropriate size.
+
+J has about a dozen other ways to rearrange data for computation.  We will examine these in later chapters, and with examples as we go along.
+)
+
+NB. =========================================================
+Lab Chapter Show Parenthesis Nesting
+NB. =========================================================
+Lab Section The Problem
+We want a program that will examine a line of code and indicate which parentheses match.  The desired display is shown below.  Note that parentheses inside quoted strings do not participate.
+
+Think about how you would write this program.
+)
+PREPARE
+smoutput 0 : 0
+Sample display:
+((+/)\) ((((=/)\)@(''''&~:)) * (('()' i. ])))
+           └──┘
+          └─────┘ └───────┘     └─────────┘ 
+ └──┘    └─────────────────┘   └───────────┘
+└─────┘ └───────────────────────────────────┘
+)
+PREPARE
+
+NB. =========================================================
+Lab Section The Program
+We observe that each character can be assigned a nesting level n, depending on how many pairs of parentheses enclose it; 
+and that each column ends with n nonblank characters, which are horizontal lines except that the topmost one is replaced by an angle if the character is a parenthesis.
+
+We can write a program to do that pretty directly.  The characters to use for the graphics are J's "box-drawing characters", which can be queried by the verb (9!:6).
+
+The program is shown in the edit window.
+)
+PREPARE
+'matchparens.ijs' opendebscript 0 : 0
+NB. Show Parenthesis Nesting
+
+NB. y is a string
+NB. Result is an array of characters: the first row is the string; subsequent rows
+NB. show the scope of each pair of parentheses
+showparen =: monad define
+NB.~title 3	Show Parenthesis Nesting
+NB.~stop parens
+NB.~title1 0	Box-drawing characters
+NB.~link3 0	Essential Terms	http://code.jsoftware.com/wiki/Vocabulary/AET
+NB.~link0 0	Assignment	http://code.jsoftware.com/wiki/Vocabulary/Assignment
+NB.~link1 0	Boxing Characters	http://code.jsoftware.com/wiki/Vocabulary/Foreigns#m9
+
+NB. Read the box-drawing characters
+'langle rangle vert' =. 6 8 10 { 9!:6 ''
+NB.~title1 0	Classify characters
+NB.~link0
+NB.~link1
+
+NB. Classify characters: _1 0 1   for   ) other ( .  If in character string, force 0 (=other)
+charclass =. (-. 2 | +/\ y = '''') * ('()' i. y) { 1 _1 0
+NB.~title1 0	Calculate nesting level
+
+NB. Calculate nesting level for each position.  Give ) the same level as matching (
+level =. (charclass = _1) + +/\ charclass
+NB.~title1 0	Create display array
+NB.~datasize 20 30
+
+NB. Get the starting character, extend it with vert to nesting level.  Then put into correct position
+NB. and prepend the original string to create the final result
+y , |. |: (-level) {.!.vert"0 charclass { vert,langle,rangle
+))
+) 
+PREPARE
+
+NB. =========================================================
+Lab Section Fetch box-drawing characters
+)
+string =: 0 : 0
+((+/)\) ((((=/)\)@(''''&~:)) * (('()' i. ])))
+)
+showparen string
+
+NB. =========================================================
+Lab Section Classify characters
+We classify each character as 1 if it is ('('), _1 if it is (')'), or 0 if it is neither.  We do this by using ('()' i. y), which returns, for each character of (y), its position in the list ('()'): this will be 0 or 1 for a parenthesis, or 2 for other characters.
+
+Then we use (x { y) to translate the 0, 1, or 2 value to 1, _1, or 0.
+
+But if the character has been preceded by an odd number of quote characters, it is inside a literal constant and is not a parenthesis for matching.
+We count the number of quotes before each position [using (+/\ y)], then see if the value is odd (2 | y), and create a 1 if the value is even (-. y).
+
+By multiplying the character class by this not-in-string value, we force the character class to 0 for all points inside a string. 
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Calculate nesting level
+The parenthesis nesting depth at each point is the running total of the character class, going up 1 when we encounter ( and going down one when we encounter ).
+Since we want to give the trailing ) the same level as the corresponding (, we need to increase the level by one at those positions.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Final result
+We calculate each COLUMN of the final result-matrix as one ROW  of an intermediate value.
+First we calculate the top character, which depends on the class of the character, using (x { y).
+
+Then we create the characters for the column, by using (x {. y) to take as many characters as the nesting level.
+We do this independently for each character [because of the ("0)].  We fill the extra characters with vertical bars (!.vert) and we leave the top character on the right [because the shift value is negative].
+
+The resulting array has the information we want.  We just have to interchange the vertical and horizontal axes (|: y), flip vertically top and bottom (|. y), and join the original string (x , y).
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Completion
+When we release the program it displays the result.
+)
+0 debugchangestops 'parens'
+debugrunstop''
+
+NB. =========================================================
+Lab Chapter Searching, Selection, Sorting, and Grading
+NB. =========================================================
+Lab Section Searching an array; selecting from an array
+Searching an array for a matching item is performed by (x i. y) which finds the items of (x) that match cells of (y).
+
+The result, for each cell of (y), is the index of the first matching item.  If no item matches a cell, the index is (#x), the number of items of (x), which is one more than the last valid index into (x).
+
+(x) is treated as a list of its items, and (y) as an array of cells whose rank is the rank of an item of (x).
+
+(x { y) produces item number (x) from (y).  If (x) is an array, the result is an array of items of (y).
+
+Selection using (x { y) is much less common in J than in scalar languages.  Most operations are done on entire arrays rather than subarrays.
+
+In the example we have a list of boxed words and another list of the corresponding numbers of syllables, and a second list of words.  We find the number of syllables in each word in the second list.
+Note that we append a 0 to the list of syllable-lengths to provide a syllable count for words that are not in the dictionary.
+)
+] dict =: ;: 'a able bravo carousel dog evanescent filigree'
+] sylls =:    1  2     2      3      1     4          4
+dl =: (2;<'title';'3',TAB,'Searching and selection') dissect '(dict i. ;: ''filigree a b dog'') { sylls,0'
+
+
+NB. =========================================================
+Lab Section Sorting and Grading
+J programmers use sorting more than scalar programmers, partly because it's so easy to do, partly because they're used to thinking about arrays as a whole.
+
+(y /: y) sorts (y) into ascending order, and (y \: y) sorts into descending order.  These can also be written in the shorter form (/:~ y) and (\:~ y).
+
+(y /: y) is a special case of the more general "Sort Using" verb (x /: y) which treats (y) as a list of keys for the items of (x), and sorts the items of (x) into ascending order of the key (y).
+
+(x /: y) in turn uses the yet more general (/: y) which calculates the "grading permutation" of (y): the list that gives, for position (i), the index of the (i)th largest item of (y).
+
+The formal definition of (x /: y) is ((/: y) { x).  In words, figure out the permutation that would put y into order, and they apply that permutation to x.
+
+Sort Using and Grading are very powerful but they seem exotic to scalar programmers.
+Take a minute to look at this display and verify that (/: y) is the grading permutation, and that the definition of (x /: y) is correct.
+The purpose of the program is to order a rack of Scrabble letters in ascending order of score.
+)
+destroyy dl
+scrabbleletters =: 'peccary'
+letterscore =: 3 1 3 3 1 1 4
+dl =: (2;<'title';'3',TAB,'(/: y) and (x /: y)') dissect '(scrabbleletters /: letterscore) -: ((/: letterscore) { scrabbleletters)'
+
+NB. =========================================================
+Lab Section Exercise
+We want a program that will give, for each item of (y), the number of identical previous items in (y).  An example output is shown.
+
+Decide how you would write program 
+)
+PREPARE
+itemordinals =: i.~   (] - {)   /:@/:
+PREPARE
+destroyy dl
+] words =: ;: 'a man a plan a canal another plan another canal Panama'
+itemordinals words
+
+NB. =========================================================
+Lab Section Solution: ordinals
+[this program comes from Roger Hui]
+
+The program is in the edit window.  It uses two useful J idioms.
+
+(/: /: y) - the grading permutation of the grading permutation - generates the ordinal number for each position of (y): the index that that item of (y) would have if the items were sorted into order.
+
+In this example the three "a"s have ordinals 0, 1, and 2, and the two "plan"s have ordinals 9 and 10.
+
+Study this computation to convince yourself that it properly computes the ordinals.
+) 
+PREPARE
+'itemordinals.ijs' opendebscript 0 : 0
+NB. Item ordinals
+NB. y is any array
+NB. Result is a list, giving, for each item of y, the number of earlier items that match y
+itemordinals =: monad define
+NB.~title 3	Item Ordinals
+NB.~stop itemords
+NB.~title1 0	Calculate ordinal position in (y)
+NB. Calculate ordinal position for each item of y
+ordinal =. /: /: y
+
+NB.~title1 0	Find index of each first matching item
+NB. For each item, find the index of the first matching item
+NB. position of the item
+firstmatch =. y i. y
+
+NB.~title1 0	Find ordinal within matching items
+NB. For each item, subtract the ordinal position of the first matching item from the ordinal
+NB. position of the item.  This is the result.
+ordinal - firstmatch { ordinal
+))
+) 
+PREPARE
+itemordinals words
+
+NB. =========================================================
+Lab Section Solution: self-index
+We have learned that (x i. y) finds indexes in (x) of items of (x) that match cells of (y), producing the smallest such index, i. e. the index of the first match.
+
+(y i. y) is a special case of (x i. y).  For each item of (y), it finds the index of the first occurrence of that item in (y).  It is often the first tool to use when comparing items of (y) against other such items.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Solution: item ordinals
+We subtract the ordinal position of the first matching item from the ordinal position of the item, for each item.  Since all the matching items will be sorted into a contiguous block of ordinals, this will give the desired item ordinals.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Solution: completion and final result
+We run the program to completion and see the result.
+)
+0 debugchangestops 'itemords'
+debugrunstop''
+
+NB. =========================================================
+Lab Section Expert version
+The expert version does the same job but fits in one line.
+)
+NB. y is any array
+NB. Result is a list, giving, for each item of y, the number of earlier items that match y
+itemordinals =: i.~   (] - {)   /:@/:
+
+itemordinals words
+
+NB. =========================================================
+Lab Chapter Perfect Shuffles
+NB. =========================================================
+Lab Section Out-shuffles and In-shuffles, and the problem
+[the idea behind this program comes from Raul Miller]
+
+A pack containing an even number of cards can be "perfectly shuffled" by splitting the pack into two equal halves and
+interleaving the cards of each half.
+
+[This type of shuffle is called a "faro shuffle", "weave shuffle", or "riffle shuffle" and is described at
+https://en.wikipedia.org/wiki/Shuffling#Riffle]
+
+Two types of perfect shuffle are possible: the "out-shuffle", in which each card of the top half comes before the corresponding card of
+the bottom half; and the "in-shuffle", in which the card from the bottom half comes first.  In an out-shuffle the top and bottom cards stay in place; in an in-shuffle they move one position toward the center of the pack.
+
+Performing a perfect shuffle repeatedly will eventually return the pack to its original order!
+
+How many perfect in-shuffles are required to put a 52-card pack back in order, and how many perfect out-shuffles?
+)
+
+NB. =========================================================
+Lab Section Permutations and cycle form
+The key is to view the shuffle as a permutation.  Repeated applications of the same permutation eventually bring the pack back to its original order.
+
+How many applications?  The easiest way to find out is to express the permutation in "cycle form", which breaks the permutation into "cycles".  A "cycle" is a sequence of positions
+p0, p1, ... pn for which the permutation moves value p1 to position p0, value p2 to position p1, and so on, ending by moving value p0 to position pn. 
+
+In J the verb (C. y) converts a permutation between cycle form and "direct form" in which each position indicates which item of input is moved to that position by the permutation.
+
+See the examples below.
+)
+NB. A permutation:
+p =. 2 1 3 4 0
+NB. See it work:
+p { 'abcde'
+NB. Express it in cycle form:
+C. p
+NB. The cycle form says that item 1 does not move (it is in
+NB. a cycle by itself), and that item 0 moves to position 4, item 2 to
+NB. position 0, item 3 to position 2, and item 4 to position 3.
+
+
+NB. =========================================================
+Lab Section The program
+The original position will be restored when each cycle has come back to its starting position.
+This will be a common multiple of the lengths of the cycles; the least common multiple will be the first repeat.
+
+Fortunately, J has the verb (x *. y) for finding the least common multiple of (x) and (y), and (*./ y) by analogy with
+(+/ y) to find the LCM of a set of numbers.
+
+So, the program will
+
+1. Express the perfect shuffle as a permutation
+
+2. Put the permutation into cycle form
+
+3. Find the LCM of the cycle lengths.
+
+The program is shown in the edit window.
+)
+PREPARE
+'shufflecount.ijs' opendebscript 0 : 0
+NB. Perfect shuffles
+NB. x is the size of the pack
+NB. y is 0 1 for an out-shuffle, 1 0 for an in-shuffle
+NB. Result is the number of shuffles needed to restore order
+shufflecount =: dyad define"0 1
+NB.~stop shuffle
+NB.~title 3	Perfect Shuffles
+NB.~title1 0	Calculate permutation for the shuffle
+NB.~link0 0	Riffle shuffle	https://en.wikipedia.org/wiki/Shuffling#Riffle]
+NB. Create list indicating which positions come from the top half
+NB. (0) and which from the bottom (1); then find the ordinal positions,
+NB. which gives the direct form of the permutation that moves
+NB. 00...011...1 to 01010101 or 10101010.  This is the shuffle
+NB. permutation
+shuffleperm =. /: /: x $ y
+
+NB.~title1 0	Convert to cycles and find LCM
+NB.~link0 0	LCM	https://en.wikipedia.org/wiki/Least_common_multiple
+NB.~link1 0	Cycle Notation for permutations	https://en.wikipedia.org/wiki/Permutation#Cycle_notation
+NB. Convert to cycles, find the length of each, and LCM.
+NB. This is the result
+*./ #@> C. shuffleperm
+))
+) 
+PREPARE
+
+NB. =========================================================
+Lab Section Out-shuffle permutation
+We see the calculation of the out-shuffle permutation using the ordinals of the alternating list.
+)
+52 shufflecount 0 1
+
+NB. =========================================================
+Lab Section Compute LCM
+We get the length of each cycle, and then take the LCM of all the lengths.
+
+Note the use of (#@>) to get the lengths of the cycles.  It wouldn't do to use (# >) because
+opening the boxes would force them all into a single array with fills added, losing the original length information.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Completion
+)
+debugrun''
+
+NB. =========================================================
+Lab Section In-shuffle permutation
+Same computation, but for the in-shuffle.
+)
+52 shufflecount 1 0
+
+NB. =========================================================
+Lab Section Compute LCM
+The in-shuffle permutation has a different cycle structure.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Completion
+It takes more in-shuffles than out-shuffles to restore the pack to original order.
+)
+debugrunstop''
+
+NB. =========================================================
+Lab Section Expert version
+In expert J the program is a one-liner.
+)
+NB. Perfect shuffles
+NB. x is the size of the pack
+NB. y is 0 1 for an out-shuffle, 1 0 for an in-shuffle
+NB. Result is the number of shuffles needed to restore order
+shufflecount =: ((*./)@:(#@>)@C.@/:@/:@$)"0 1
+
+52 shufflecount 0 1
+52 shufflecount 1 0
+
+
+
+
+
+
+NB. =========================================================
+Lab Chapter Random Composition
+NB. =========================================================
+Lab Section The problem
+The problem is to choose an ordered set of N positive integers such that the integers sum to the value S.  Such an ordered set is called a "composition" of S, and we want our verb to choose randomly from the possible compositions of S such that any composition is equally likely to be chosen.
+
+Write the program to select such a random composition.
+
+Are you thinking about loops and indices ALREADY!?  No, no - let's focus on the problem, not the machine.  We can pick random numbers, but how do we ensure they add up to S?
+
+One way would be to have them correspond to nonoverlapping subintervals that cover the interval 0 to S.  The lengths of such a set of subintervals would necessarily add to S.
+
+Yes, that's the way.  Suppose N=10 and S=50.  We start with the points 0 and 50, and then choose 9 other points at random in the interval 1 to 49, making sure no value is repeated.  These 11 points define 10 intervals, and the lengths of these intervals are the composition we desire.
+
+Now we'll write the program.  Think about it before going on; perhaps sketch out a design in the language of your choice.
+)
+
+NB. =========================================================
+Lab Section Solution
+The J solution is in the edit window.
+
+The program performs the steps we outlined.  The only change is that it is more convenient to select the random numbers in the range 0 to S-2 rather than 1 to S-1.
+)
+PREPARE
+'randomcomp.ijs' opendebscript 0 : 0
+NB. Return random composition (ordered list of positive
+NB. integers adding to a desired total)
+NB. x is the number of integers to pick
+NB. y is the total they must add up to
+randomcomposition =: dyad define
+NB.~stop randomcomp
+NB.~title 3	Random Composition
+NB.~title1 0	Choose random points
+NB.~link0 0	Compositions	http://en.wikipedia.org/wiki/Composition_(combinatorics)
+NB.~check shape
+
+NB. Choose x-1 random values from 0 to y-2, without repeats
+randoms =. ? (x-1) $ y-1
+NB.~title1 0	Sort the points
+NB.~check all
+
+NB. Sort the list
+randoms =. /:~ randoms
+NB.~title1 0	Calculate interval lengths
+
+NB. Find the lengths of the intervals given the random points
+NB. and the starting point _1 and the ending point y-1.
+NB. This is the result
+(randoms,y-1) - (_1 , randoms)
+))
+)
+PREPARE
+
+NB. =========================================================
+Lab Section Choose random values
+We will step through the execution of the program.
+
+The verb (randomcomposition) is defined as a "dyad", meaning it expects two operands.  When we execute it here, with the sentence
+
+5 randomcomposition 10
+
+the two operands are the nouns to its left and right.  The nouns are assigned to argument-names before (randomcomposition) runs: (5) is assigned to the name (x) and (10) to the name (y).
+
+The first line uses the verb (x ? y) which selects (x) random integers in the range (0) to (y-1), with no duplicates.
+
+[Note: the dissected version of the sentence is a preview of the execution of the line by the debugger.  The random values will be different between the two versions.]
+)
+5 randomcomposition 10
+
+NB. =========================================================
+Lab Section Sort the values
+The verb (/:~ y) sorts (y) into ascending order.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Calculate interval lengths, return result
+We have 9 random numbers between 0 and (y-2).  If we bracket these values with the fixed values (_1) and (y-1), we will have defined the desired set of nonoverlapping subintervals spanning the range (_1) to (y-1), which is a total length of (y).
+
+[Note that the negative sign for numbers in J is the underscore.]
+
+Then the starting values of the intervals will be (_1) followed by the random values, and the ending values will be the random values followed by (y-1).
+
+We form the lists of ending points and starting points and take the difference.  That produces the desired result.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section completion
+The verb produces its final result, a list.
+)
+0 debugchangestops 'randomcomp'
+debugrunstop''
+
+NB. =========================================================
+Lab Section Expert version
+In advanced J, the program can be written in a single line.
+)
+NB. Return random composition (ordered list of positive
+NB. integers adding to a desired total)
+NB. x is the number of integers to pick
+NB. y is the total they must add up to
+randomcomposition =: (/:~@:? (, - _1&,@[) ])&<:
+
+5 randomcomposition 10
+
+
+NB. =========================================================
+Lab Chapter Read CSV file
+NB. =========================================================
+Lab Section CSV files
+A CSV file is a representation of a spreadsheet.  The name stands for 'comma-separated values', and indicates that fields are separated by commas, and lines by LF [newline or end-of-line] characters.
+
+The edit window shows the sample CSV file we will work with.
+
+The program we want will read in a CSV file and convert it to a form usable in J.
+)
+open jpath '~addons/labs/labs/core/example.csv'
+NB. =========================================================
+Lab Section Designing the program
+The first decision is the input and output of the program.
+
+For maximum flexibility, the input will be the text of the file.  Each line will be terminated with LF.  On some operating systems there may be CR characters which we will discard.
+
+The result will be a collection of fields, each of which is a string.  But these fields cannot be assembled as is into a single array, because J arrays require that each item have the same shape and type.  If a short string is joined to a long string in a single array, the short string will be padded with spaces.
+
+When you need a heterogeneous array, you use boxing.  A box is treated as an atom, but it has contents that can have any shape or type.  If you want an array of different-sized strings, put each one in a box first and then make an array of the boxes.
+
+Similarly, each line of the CSV file might contain a different number of fields, so the lines must not be joined into a single array.  Each line must be boxed first.
+
+So, the result will be a list of boxes, one for each line of the CSV file; each boxes will contain a list of boxes, one for each field in the line.
+)
+
+NB. =========================================================
+Lab Section Design cont'd: quotes
+Reading the details at
+
+http://en.wikipedia.org/wiki/Comma-separated_values
+
+reveals that double-quote ["] characters are used to enclose fields that contain special characters, and that the special characters are " itself, comma, and LF [linefeed or end-of-line].
+
+Since LF may appear in a quoted field, we must not start the program by splitting the data at each LF character.  Rather, at each stage of processing we need to treat a special character as special only if it is preceded by an odd number of " characters.
+
+The final program is shown in the edit window.
+)
+PREPARE
+'splitcsv.ijs' opendebscript 1!:1 < jpath '~addons/labs/labs/core/splitcsv.ijs'
+PREPARE
+
+NB. =========================================================
+Lab Section Audit input
+The first thing to do is to check the input: remove any CR characters that the operating system put in, and make sure the file ends with LF.
+)
+splitcsv 1!:1 < jpath '~addons/labs/labs/core/example.csv'
+
+NB. =========================================================
+Lab Section Split into lines
+(;._2) is a "partitioning modifier".  It is applied to a verb to its left to produce a "compound".  The whole compound - (u;._2) where (u) is any verb you like - is a new verb.  When the compound is executed, (u) will be applied on selected portions of the right argument to the compound.  Each such selected portion is called a "partition".
+
+Here, the verb is (< y) which means each partition will be put into a box.
+
+The compound verb (x <;._2 y) is executed here with a left and a right argument.  The left argument has a 1 in the position of each unquoted LF character; the right argument is the file data; the result is to box each line.
+
+The partitions will be those portions of the right argument that end at each 1 in the left argument, but not including the value corresponding to the 1.  [This is the definition of the partitioning modifier (;._2)].
+
+Let's see how that mask of LF positions was calculated.
+)
+debugstep''
+NB. =========================================================
+Lab Section Find parity of " characters
+('"' = y) creates a 1 for each LF and a 0 for each non-LF.
+
+(\) is another partitioning modifier: (u\ y) executes (u) on "prefixes" of y of increasing length: first on just the first item of y, then on the first 2 items, then the first 3, and so on, collecting the results from the prefixes together into its final result.
+
+Here the (u) is (+/), which adds up the items of its argument.
+
+Thus, (+/\ y) computes, for each item of (y), the total number of " characters up to and including that item.
+
+(x | y) takes the remainder of dividing (y) by (x); (2 | y) produces 1 if (y) is odd, 0 if (y) is even.
+
+(|.!.0 y) shifts (y) one position to the right, bringing in a 0 to the vacated position.  So the result is 1 if an item of (y) is preceded by an odd number of 1s.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Find unquoted delimiters
+(x E. y) produces a result with the shape of (y), with 1 at points in (y) that match (x), and 0 elsewhere.
+
+(-. y) is Boolean negation.
+
+(x *. y) is Boolean AND.
+
+So this line produces a 1 in the location of every delimiter (x) [LF in this case], except in positions that are preceded by an odd number of " characters.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Split each line
+Now each line has been put into its own box.  All that remains is to process each line, splitting it at commas.
+
+The verb (splitline) will do that for one line.  To apply (splitline) to the contents of each boxed line, we use the (each) modifier.  (each) is an adverb, which means that it applies to the verb to its left.  (splitline each y) will open each atom of (y), apply (splitline) to the contents, and then put the result into a box.  In other words, (splitline each y) applies (splitline) inside each box of (y).
+
+We will follow (splitline) through one execution. 
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Split the line at commas
+We calculate the position of unquoted commas, and split the line there.  This is similar to the way we split the file into lines.
+
+We are careful to add an extra ending delimiter to the line, so that even if it doesn't end with a comma, the last characters will be put into a box.
+)
+0 debugchangestops 'delim'
+debugstep''
+
+NB. =========================================================
+Lab Section Remove outer quotes
+Any field that begins with a " character should have the outer " characters removed.  They must be the first and last characters.
+
+Again we use (each) to operate inside the boxes for the fields.
+
+The sequence (u^:v y), where (u) and (v) are verbs, is the "Dynamic If" sequence.  It means 'apply (u) IF (v) produces 1, but not if (v) produces 0'.  So, if (v) produces 0, the result of (u^:v y) is (y), while if (v) produces 1, the result is (u y).
+
+In other words, the result is (y) but with (u) applied to it if (v) produced TRUE.
+
+The Dynamic If is better than an (if.-do.-end.) sequence because Dynamic If is an expression rather than a statement, and can be applied to each item of an array with different results from the test-verb (v).  Here, the decision of whether to remove the " characters is made for each box independently.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Remove escaped quotes
+Any sequence of "" characters represents an escaped quote.  We find these, and the create a mask of all the characters that are NOT escaped quotes.  We give this mask to the verb (x # y) to preserve any character that was not an escaped quote.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section completion and final result
+All that remains is to apply the formatting verb to each line.
+
+The result of the verb is shown.
+)
+0 debugchangestops 'splitline splitcsv'
+debugrunstop''
+
+NB. =========================================================
+Lab Section expert version
+The short version follows the same plan as the longer one.  The comments are much longer than the code.  That's good practice in J.
+)
+NB. y is text, x is a delimiter string
+NB. Result is a Boolean list, one per character of y, with
+NB. 1 in the places where the delimiter is found, but
+NB. only places that are preceded by an even number of " characters
+udlp =: E. > |.!.0@(~:/\)@('"' = ])
+
+NB. Execute verb u on sections delimited by unescaped x, adding x
+NB. if it's not at the end
+ondelim =: adverb define
+:
+(u;._2~ x&udlp) x ,~^:(~: {:) y
+)
+
+NB. y is text of a CSV file
+NB. Result is list of boxes, one per line
+NB.  Each box contains a list of boxes, one per field, containing a string
+NB. Fields quoted with " are allowed.  Quoted fields may contain any character including LF.
+NB. To put " in a quoted field, escape it by using two quotes "" .
+NB. The enclosing ", and any escaping ", are removed in the result.
+splitcsv =: [: LF&(<@splitline ondelim) -.&CR
+
+NB. y is the text of a comma-delimited line
+NB. result is list of boxed fields
+NB. Fields containing comma or " must be enclosed in " characters.
+NB. Enclosing " characters are removed from the field value.
+NB. A " character is escaped inside a string by doubling it
+splitline =: (#~ -.@('""'&udlp)) @ (}.@}:^:('"'={.)) each @ (','&(< ondelim))
+
+splitcsv 1!:1 < jpath '~addons/labs/labs/core/example.csv'
+
+NB. =========================================================
+Lab Chapter Random Battleship board
+NB. =========================================================
+Lab Section The game of Battleship
+The game of battleship is played on a 10x10 board.  A player has 5 ships of varying lengths that are placed horizontally or vertically on the board.  The game is described at
+
+http://en.wikipedia.org/wiki/Battleship_%28game%29
+
+The problem is to create a random starting position, with the 5 ships placed without overlap.
+
+The resulting board will be a 10x10 table indicating occupancy of each cell: 0 for an empty cell, or the number of the ship occupying the cell.
+)
+
+NB. =========================================================
+Lab Section Program design
+Since most of the board is empty, we will simply place ships at random and then check for overlap.  If there is an overlap, we will start over again.  We should get a valid board after a few tries.
+
+We will write a verb to place one ship given its length and ID.  We will call that verb for each ship, and then check for overlap.
+
+The program to produce the starting position is shown in the edit window.
+)
+PREPARE
+'battleship.ijs' opendebscript 0 : 0
+SHIPLENID =: 5 4 3 3 2 ,. 1 2 3 4 5  NB. length and id of each ship
+NB. Random Battleship Board
+NB. y is a table, where each row is (ship length),(ship id)
+NB. Result is 10x10 board where each cell contains the id of a ship, or 0 if the cell is empty.
+NB. We deal random boards until we get one with no overlapping ships
+battleshipstart =: monad define
+NB.~stop battleship
+NB.~title 3	Random Battleship Board
+NB.~title1 0	Test for valid board
+NB.~link0 0	Battleship	http://en.wikipedia.org/wiki/Battleship_%28game%29
+NB.~link1 0	Control Structures	http://code.jsoftware.com/wiki/Vocabulary/Foreigns#m1
+NB. Test for valid board
+whilst. 1 < >./ , +/ 0 ~: ships do.
+NB.~title1 0	Create all ships
+NB.~link1
+NB.~stop
+  NB. Place each ship into its own board
+  ships =. placeship y
+end.
+NB.~stop finish
+NB.~title1 0	Combine ships into single board
+
+NB. No overlaps in 'ships' - combine all ships into one board
++/ ships
+))
+
+NB. Place one ship
+NB. y is (length of ship),(id of ship)
+NB. Result is 10x10 array with the ship randomly placed
+placeship =: 3 : 0"1
+NB.~stop place
+NB.~title 3	Place One Ship
+NB.~title1 0	Split y into components
+NB.~link0 0	Battleship	http://en.wikipedia.org/wiki/Battleship_%28game%29
+NB. Split y into its parts
+'ship id' =. y
+NB.~title1 0	Place and move the ship
+NB.~link1 0	Multiple Assignment	http://code.jsoftware.com/wiki/Vocabulary/Assignment#Multiple_Assignment
+NB.~auto 1
+NB.~check shape
+
+NB. Create the ship, randomly rotate, randomly transpose
+|:^:(?2) (- ? 11 - (1,ship)) |. 10 10 {. ,: ship $ id
+))
+)
+PREPARE
+
+NB. =========================================================
+Lab Section Place all ships
+J supports the usual control structures, including if-then-else and do-while.  These are blunt instruments, applying to entire sentences.  Most of the time we will use J's verb modifiers which allow finer control.
+
+Here, we want to repeatedly deal boards until we get one that doesn't conflict.  This calls for the seldom-used "do-until" where you perform the body of the loop before the first test.  There's no modifier to do that.
+
+We use the (whilst.)-(do.)-(end.) structure.  Note that the "control words" all end with a period, and are the only names that do.
+
+"(whilst.)" stands for "while., but Skip the Test first time."  [You're supposed to chuckle now.]
+
+Execution thus starts with the line after the (do.). Since that line executes (placeship) 5 times, once for each ship, we will  pick up the action in the next section where we are placing a single ship.
+)
+
+NB. =========================================================
+Lab Section placeship - unpack y argument
+The syntax of J demands that every verb have 1 or 2 arguments, but we all know programs may need lots of parameters.
+
+When a verb needs more arguments, you simply pack them into a list before calling the verb, and have the verb unpack them first thing.
+
+Here, the (y) argument is a list of two arguments, so we assign it to two names, (size) and (id).
+)
+battleshipstart SHIPLENID
+
+NB. =========================================================
+Lab Section placeship - place the ship randomly
+This line places one ship.
+
+First, we use ($) to create the ship, a horizontal array with the correct length and value.
+
+Then (,: y) converts the list into a one-row table.
+
+Then (x {. y) creates a 10x10 array with the ship in the top-left corner.
+
+Then we use (? y) to create a random position: in the vertical direction, a random value between 0 and 9; in the horizontal direction, a random value between 0 and the maximum starting position, which is 10 - the length of the ship, to keep the ship from falling off the right-hand edge.
+
+Then we use (x |. y) to rotate the ship to the random position.  The rotation counts are negative to perform rightward rotation.
+
+Finally, we use (|: y) to interchange axes, making the placement vertical rather than horizontal.  We random either perform this operation or not, to get a random orientation.
+
+Note: the dissect display is taken from a different execution of the sentence than the one that produces the result used in the program.  Since there are random numbers involved, the displayed value will be different from the one used in the program.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section check for valid placement
+After placing all the ships we have a brick, a 3-dimensional array containing 5 boards.  We check for a collision between ships.
+
+The idea is, we add the boards together and look for a place where the total is more than 1.
+
+First we convert all the nonzero ids to the value 1, by comparing them for inequality to 0 using (~:).
+
+Then we add all the boards together using (+/), producing a single board with  the sum at each position.
+
+Then we convert the table into a list using (,) so that when we find the largest item using (>./) we get the largest single number.
+
+We compare that value against 1.  If it is greater than 1, there was a collision and we have to build the board again.
+)
+0 debugchangestops 'place'
+debugstep''
+
+NB. =========================================================
+Lab Section combine boards to produce final result
+After a few tries we find a board with no conflict.  We add all the boards together to get the final result.
+)
+0 debugchangestops 'battleship'
+debugrun''
+
+NB. =========================================================
+Lab Section completion
+Here's the final result.
+)
+0 debugchangestops 'finish'
+debugrunstop''
+
+NB. =========================================================
+Lab Section expert version
+An expert would have no reason to sniff at our version.
+
+It is possible to write the program shorter but the version we have is pretty short and easy to maintain.
+)
+
+NB. =========================================================
+Lab Chapter Levenshtein distance
+NB. =========================================================
+Lab Section The Problem
+The Levenshtein distance between two strings is a measure of how closely they match.  It is described at
+
+http://en.wikipedia.org/wiki/Levenshtein_distance
+
+Essentially, the Levenshtein distance is the minimum number of single-character changes (i.e. insertions, deletions or substitutions) required to convert one string to the other.
+
+Consider the problem.  If you like, look at the solutions given in Wikipedia.
+)
+NB. =========================================================
+Lab Section The Program
+Our method will be to process each character of string (a) against string (b), producing a list (D)
+defined as follows:
+
+after (i) characters of (a) have been processed, position (j) of (D) contains L(i,j), which we define as the Levenshtein distance between
+(i {. a) and (j {. b), where (x {. y) means "the first (x) characters of (y)".  (D) has one atom for each character of (b).
+
+
+When we are all through, the last item of (D) will be the Levenshtein distance between the entire strings (a) and (b).
+
+The initial condition of (D) is the set of Levenshtein distances between an empty string (0 {. a) and each prefix of (b).  The distance between an empty string (e) and any string (s) is the length of (s), representing an insertion for each character of (s).
+Thus, the initial condition of (D) is the list (1,2,3...).
+
+When we add a new character of (a), we have to consider its effect on each prefix of (b).  At each position (j):
+
+1. The new character could be deleted, which would mean that L(i,j) = 1 + L(i-1,j) since the deletion increases the Levenshtein distance by 1.
+
+2. The new character could be matched with character (j), which will mean that L(i,j) = L(i-1,j-1)+(subst) where (subst) is 1 if the new character is different from character (j) of (b).  This corresponds to adding 1 to the Levenshtein distance if there is a substitution.
+If the new character matches character (j) of (b), the distance should not be increased.
+
+There is one additional step: L(i,j) can never be more than 1 more than L(i,j-1) because if there is an arrangement that gives a distance L for L(i,j-1), that same arrangement would give a distance of L+1 for L(i,j) [where the added 1 represents a deletion of character (j) of (b)].
+
+The program is shown in the edit window.
+)
+PREPARE
+'levenshtein.ijs' opendebscript 0 : 0
+NB. x and y are strings
+NB. Result is Levenshtein distance: number of insertions, deletions, & substitutions required
+NB. to transform one string into the other
+levdist =: dyad define"1
+NB.~stop levdist
+NB.~title 3	Levenshtein Distance
+NB.~title1 0	Assign strings to names
+NB.~link0 0	Levenshtein distance	http://en.wikipedia.org/wiki/Levenshtein_distance
+NB.~link1 0	Assignment	http://code.jsoftware.com/wiki/Vocabulary/Assignment
+NB. Assign shorter string to a, longer to b
+'a b'=. (x;y) /: (#x),(#y)
+NB.~title1 0	Initialization
+NB.~link1
+NB. Init iz to index vector with length of b, D to initial value (all insertions)
+D=. >: iz =. i.#b
+NB.~title1 0	Loop over each character of a
+NB.~link1 0	Control Structures	http://code.jsoftware.com/wiki/Vocabulary/Foreigns#m1
+NB. Process each character of a
+for_j. a do.
+NB.~stop levmain
+NB.~title1 0	Calculate new D(i,j)
+NB.~link1 0	Control Structures	http://code.jsoftware.com/wiki/Vocabulary/Foreigns#m1
+NB. (>: D) is the distance to use if the new character is deleted
+NB. (shifted D) is the distance to use if the character is substituted,
+NB.  with 1 added if the substitution is a mismatch
+NB. We make sure that the values in D increase by no more than 1
+  D=. <./\&.(-&iz) (>: D) <. (j ~: b) + |.!.j_index D
+end.
+NB.~stop levfinish
+NB.~title1 0	Return result
+NB.~link1
+NB. The last item of D is the distance
+{:D
+))
+)
+PREPARE
+
+NB. =========================================================
+Lab Section Find longer string
+The first step is to sort the strings in order of length.  The verb (x /: y) sorts (x) into the the order given by (y).
+We get the lengths of the input strings and sort them into ascending order of length.  Then we assign the shorter
+string to the name (a), the longer to (b).
+)
+'kiting' levdist 'scatting'
+
+NB. =========================================================
+Lab Section Preliminaries
+We create a list of ascending integers (iz) with the length of (b).  We will use this list in the main loop.  This illustrates a common trick in J:
+rather than looping n times, we create a noun with n items and operate on each item of the noun.
+
+We also initialize the result list (D) to a value corresponding to an empty (a).  In that case, every character of (b) would require a deletion step, and thus for every (i),
+(D(i)=i+1).  Thus (d) is just one more than (iz).
+)
+debugstep''
+
+NB. =========================================================
+Lab Section The loop
+J has loops (while. ... do. ... end.) and (for. ... do. ... end.).  We don't use them often, because every verb in J
+automatically loops.  This application calls for a (for.) loop.
+
+The construct we will use is (for_j. a do. body end.) which works like this:
+
+1. (a) is an array.  The loop body is executed once for each item of (a).
+
+2. (j), designated in (for_j.), is the index variable.  Before each execution of the body, the value of the next item of (a) is assigned to (j).
+
+3. (j_index) [whose name is derived from (j)] gives the iteration number.  The first iteration is 0,  Formally, on iteration (J_index), (j) is (j_index{a).
+
+Here the array (a) is simply the shorter string, so we will be executing the loop once for each character in (a), giving the character the name (j).
+)
+debugstep''
+
+NB. =========================================================
+Lab Section The loop body
+The work of the program is done in 3 steps.  We consider deleting the character, and substituting it at each possible position in D; then we choose whichever operation gives the shorter distance.
+
+1.  ((j ~: b) + |.!.j_index D) considers the substitution, which may be a match.  (x ~: y) is the "not-equal" verb.  (j ~: b) produces a Boolean list for each position in (b), containing 1 if the character at that position is not the same as the new character (j).
+
+(|.!.f y) is the "right-shift" operation.
+Each item of (y) is moved one item to the right, the last item is discarded, and the first item is replaced by (f).
+
+This is saying that if there is a substitution at position (j_index), the distance after the subsitution is either: [i] if the character in (b) matches (j), it's a match, and the distance is the same as the previous distance for the first (j_index-1) characters; [ii] if the characters do not match, we have to add 1 to the
+previous distance to account for the substitution.
+
+The tricky bit is handling a substitution at the first character.  This implies the deletion of the first (j_index) characters of (a), so we shift that value into the calculation.
+
+2. (>: D) considers the deletion of the character (j).  This simply adds 1 to all the distances that were found for the first (j_index-1) characters of (a).
+
+The smaller of those two values is the distance from the delete/substitute step.
+
+We then have to propagate the improved distance through the list (D), to account for the fact that D(i,j)<=D(i,j-1)+1.
+
+This sounds like a loop, but mentally unrolling the loop we find that it is saying that if for each position (n) in (D) we take (D(n)-n), the resulting values should never increase.
+
+This puts the computation into the mold of (u&.v y), one of the loveliest notations in J.  (u&.v y) says 'apply (v) to (y); then apply (u) to that result; then un-apply (v)'.  Formally, it is
+
+(u&.v y) <=> (v^:_1 u v y)
+
+where (v^:_1) is the inverse operation of (v).
+
+Thus the phrase (<./\&.(-&iz) y) is saying:
+
+1. Subtract (iz) from (y)
+
+2. apply <./\, which is similar to the 'running sum' verb (+/\); it finds, for each position in (y), the smallest value up to and including that position;
+
+3. Add (iz) back into the result
+
+
+That's a full line's worth of computation!  Probe around the dissect window until you see how it all works.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Repeat for subsequent characters of (a)
+Here the second character of (a) is considered.
+
+If you want to see execution on more lines, single-step the Debug window.  When you advance this lab, we will skip to the end of the loop.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Calculate result
+When the loop finishes, the last item of (D) holds the final distance.
+)
+0 debugchangestops 'levdist levmain'
+debugrun''
+
+NB. =========================================================
+Lab Section Completion and expert version
+When we let the verb complete, it returns its result.
+
+Our version of the verb would satisfy an expert.
+
+If you understand the (levdist) verb created here, you might want to look at the Damerau-Levenshtein distance at
+
+http://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
+
+and find the small modification to (levdist) needed to calculate this distance.
+)
+0 debugchangestops 'levfinish'
+debugrunstop''
+
+NB. =========================================================
+Lab Chapter Five Number Summary
+NB. =========================================================
+Lab Section The Program
+The Five Number Summary is a rough-and-ready way of characterizing a dataset.  It is described at 
+http://en.wikipedia.org/wiki/Five-number_summary
+
+Our input will be the name of a CSV file created by a spreadsheet program.  The first row will contain titles, and subsequent rows will contain one dataset per row.  The titles will contain one title 'Data'.  That column, and all following columns, are the numeric observations for the dataset.  All columns before the 'Data' column are descriptive labels for the dataset, which will be copied over into the output.
+
+Our output will be a CSV file.  The first line will be copied from the input, except that the 'Data' column and after will be replaced with headers for the Five Number Summary.  Subsequent lines will contain the descriptive labels, followed by the Five Number Summary for each row.
+
+The program is shown in the edit window.
+)
+PREPARE
+'fivenumbersumm.ijs' opendebscript 0 : 0
+NB. Five Number Summary
+NB. y is filename (string) of a CSV file
+NB.  We read in the file and break it into comma-delimited fields
+NB.  The first line is headers
+NB.    The 'Data' header marks the start of the observations
+NB.  Remaining lines are datasets
+NB.    Columns before 'Data' are labels, which are preserved
+NB.    in the output
+NB.    Columns starting with 'Data' are replaced by the
+NB.    Five Figure Summary
+NB.    Empty values are ignored
+NB. Result is comma-delimited string, suitable for writing
+NB.  to a CSV file; or empty string, if there was an error
+fivenumbercsv =: monad define
+NB.~stop fivenum
+NB.~title 3	Five Number Summary of CSV File
+NB.~title1 0	Read and convert the file
+NB.~link0 0	Five Number Summary	http://en.wikipedia.org/wiki/Five-number_summary
+NB.~link1 0	I/O Verbs	http://code.jsoftware.com/wiki/Vocabulary/Foreigns#m1
+NB. Read the file, convert to CSV format
+boxedfields =. splitcsv 1!:1 < jpath y
+NB.~title1 0	Take first line
+NB.~link1
+
+NB. Extract header line
+header =. > {. boxedfields
+NB.~title1 0	Find position of 'Data'
+
+NB. Find position of 'Data' header (error if omitted)
+datax =. header i. <'Data'
+NB.~title1 0	Exit if no 'Data'
+if. datax = #header do. '' return. end.
+NB.~title1 0	Remove empties, convert to numeric
+NB.~link1 0	each	http://code.jsoftware.com/wiki/Vocabulary/ampdot
+NB.~datasize 20 20
+
+NB. Remove empties; convert the data to numeric (__ if invalid data); leave data as numeric list
+datafields =. {.@(__&".)@> each  (-.&a:) each datax }. each }. boxedfields
+NB.~title1 0	Check for errors in conversion
+NB.~link1 0	if. blocks	http://code.jsoftware.com/wiki/Vocabulary/TBlock
+if. __ e. ; datafields do. '' return. end.
+NB.~title1 0	Calculate FNS
+NB.~link1 0	each	http://code.jsoftware.com/wiki/Vocabulary/ampdot
+NB.~datasize
+
+NB. Take the five-number summary of each line
+NB. This returns 5 numbers or none for each line
+NB.  (none if there are no numbers)
+fns =. fivenumbersumm each datafields
+NB.~title1 0	Join headers & labels to FNS
+NB.~link1
+NB.~datasize 10 20
+NB. Append headers to summaries, and summaries to line labels.
+
+NB. Convert numbers to string form
+reslines =. (datax {.&> boxedfields) ,. ('Min';'Q1';'Median';'Q3';'Max') , ":each@> fns
+NB.~title1 0	Convert fields to CSV
+NB.~link1 0	each	http://code.jsoftware.com/wiki/Vocabulary/ampdot
+
+NB. Convert each row to CSV
+reslines =. (addquote each reslines) , each ','
+NB.~title1 0	Convert lines to CSV
+
+NB. Collect fields into rows; replace final comma with LF; run lines together
+; LF _1} each  <@;"1 reslines
+))
+
+NB. y is a string
+NB. result s the same string, but any " characters are doubled,
+NB. and if the string contains , or " it is enclosed in "
+addquote =: monad define
+NB.~stop addquote
+NB.~title 3	Convert field to CSV format
+NB.~title1 0	Escape embedded quotes
+NB. Double any " characters
+escquotes =. (>: '"' = y) # y
+NB.~title1 0	Test for special character
+NB.~link0 0	if. blocks	http://code.jsoftware.com/wiki/Vocabulary/TBlock
+
+NB. Enclose in quotes if value contains special character
+if. +./ (',"',LF) e. y do.
+NB.~title1 0	Enclose line in quotes
+NB.~link0
+  escquotes =. '"' , escquotes , '"'
+end.
+
+NB. Return the result
+escquotes
+))
+
+
+NB. y is a list of numbers
+NB. Result is Five Number Summary (a list of 5 numbers)
+NB. but if there are no numbers in y, return empty numeric list
+fivenumbersumm =: monad define
+NB.~stop fivenumsumm
+NB.~title 3	Five Number Summary
+NB.~title1 0	Check for empty input
+NB.~link0 0	Five Number Summary	http://en.wikipedia.org/wiki/Five-number_summary
+NB. If input empty, return empty
+if. 0 = #y do. 0$0 return. end.
+NB.~title1 0	Calculate percentile positions
+
+NB. Calculate indices of the 5 percentiles
+index =. (<:#y) * 0 0.25 0.5 0.75 1
+NB.~title1 0	Calculate index of lower value
+
+NB. The integer part of the index is the lower number to use
+fetchlo =. <. index
+NB.~title1 0	Calculate weighting for upper & lower values
+
+NB. The fractional part of the index is the amount of the
+NB. upper number to use; 1-that is the amount of the lower number to use.
+NB. For example, an index of 4.25 will take 0.75 times value 4
+NB. and 0.25 times value 5
+NB. Create (upper weight,lower weight) for each result: a 5x2 table
+weights =. (,.   -.) (index - fetchlo)
+NB.~title1 0	Sort inputs, fetch value, weight
+NB.~link1 0	Sort	http://code.jsoftware.com/wiki/Vocabulary/slashco#dyadic
+NB.~link2 0	Table	http://code.jsoftware.com/wiki/Vocabulary/slash#dyadic
+
+NB. Sort the inputs into order.
+NB. Fetch (upper value, lower value) for each result, multiply by
+NB. weight, and add.  We have to add on an extra value at the end
+NB. for the last (=maximum) result (it will have a weight of 0)
++/"1 weights * (fetchlo +/ 1 0) { (/:~y),0
+))
+)
+PREPARE
+load '~addons/labs/labs/core/splitcsv.ijs'
+
+NB. =========================================================
+Lab Section Read the CSV file
+First we read the file, and then use the splitcsv program we wrote earlier to parse it.
+
+(1!:1 y) is a verb, in fact a verb to read a file.  (!:) is a "conjunction", meaning it takes two operands, which can be nouns or verbs, on its left and right, and produces any part of speech.
+
+This is different from a verb which takes one or two arguments which must be nouns, and produces a result that must be a noun.
+
+We have seen conjunctions before, for example in (<;._2) where the conjunction was (;.) and the operands were (<) and (_2), and the result (<;._2) was a verb that chopped up its (y) argument and put the pieces in boxes.
+
+The result of executing the conjunction [(;.) above] is usually a verb.  This result [(<;._2) above] is a compound, also called the "derived verb".  The derived verb will itself be executed when it is presented with arguments.
+
+The description of a conjunction in NuVoc is mainly a description of the derived verb it produces.
+
+
+The (!:) conjunction gives access to a grab-bag of useful features that are not important enough to get their own ASCII primitive.  Many of them perform actions that are considered outside the J language, such as operating-system requests, DLL calls, and file I/O.  Such actions are called "foreign".
+
+The foreign functions are accessed by number.  (!:) is invoked by giving it two numbers (m) and (n), as in (m!:n).  The numbers are arbitrary, but generally functions with the same value of (m) are somewhat related.  The supported values of (m) and (n) are shown in a NuVoc page.
+
+The foreign function used here, (1!:1), reads the file named by (y) and produces as result an array containing the bytes of the file.
+
+
+The library function (jpath) resolves the name ('~addons') to its location on your system.
+)
+fivenumbercsv '~addons/labs/labs/core/fivenum.csv'
+
+NB. =========================================================
+Lab Section Extract header line
+Since the first line is special, containing headers, we pull it out by itself, and remove the outer boxing.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Locate 'Data' header
+We search in the headers to find 'Data', saving the index value at which it is found.
+
+If the value is not found, the result is the number of headers, which is one more than the last valid index.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Verify 'Data' present
+If the 'Data' field is not given, we have to abort with an error indication.
+
+The (return.) control word ends execution of a verb, just as if the verb ran to the end.  As always, the result of the last sentence executed becomes the result of the verb.  So, the sentence producing the return value, ('') here, is executed just before the (return.).
+
+But our data file contains 'Data', so the condition tests false (0) and we keep going.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Remove empties, convert to numeric
+(}. y) removes the first item of (y); in this case, it removes the header line, leaving all the data lines, each a list of boxed fields inside an outer box.
+
+(x }. y) removes the (x) leading items of (y).  Since we apply (each) to (}.), with (}. each), this operation is performed inside the boxes.  In other words, we delete the columns before the 'Data' column.
+
+(x -. y) deletes items of (x) that match (y).  We want to remove any empty fields, that is, we want to remove any fields in a line that match (a:) which is a box containing an empty list.
+
+But note: we can't simply write
+
+(lines -. each a:)
+
+because that would apply the (-.) to the contents of each argument - but we don't want the contents of (a:), we want the boxed (a:).  The solution is to create a verb
+
+(-.&a:)
+
+which means 'remove (a:) from (y)'.  (-.&a: y) is equivalent to (y -. a:).  The (&) bonds the noun (a:) to the verb (-.) to produce a new verb (-.&a:) in which the (a:) is automatically supplied as the right argument of (-.).  We apply this verb inside the boxes.
+
+Converting the boxed strings to unboxed numbers is similar.  The verb is
+
+({.@(__&".)@> each)
+
+(u@v y) means 'apply (v) to a cell of (y), then apply (u).'
+
+(__ ". y) means 'convert y from character to numeric, and if there is an error in the conversion, use (__) for the erroneous value'.  We use (&) as we did above to create a bonded verb that automatically supplies (__) as the left argument of (".).
+
+({. y) takes the first item of (y).  This is a protection against ill-formed fields that produce 0 or more than 1 number.
+
+Thus, the verb ({.@(__&".)@> each) means, 'go inside each box; then, open each box you find and convert the contents to numeric, using (__) as the value if there is a conversion error; and take only one number.'  The result inside each box will be a list of numbers rather than a list of boxes.
+
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Check for errors
+(datafields) is a list of boxes, each containing a list of numbers.  If any of these numbers is (__), there was an erroneous value and we need to abort.
+
+(; datafields) runs the contents of (datafields) together in one list.
+
+(__ e. y) returns 1 if (__) is found as an item of (y).
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Calculate Five Number Summary
+For each contents of (datafields), we want to calculate the Five Number Summary.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section FNS: check for empty input
+If there are no numbers, no reasonable summary is possible.  Return an empty result in that case.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section FNS: calculate percentile positions
+Each result value is a blend between two adjacent data values in the sorted input data.
+
+For example, if there are 6 values in (y), the median is the average of values 2 and 3 [the middle values].
+
+Generally, we calculate a value int.frac [it would be 2.5 in the example above] which means blend between values (int) and (int+1), giving weight (frac) to value (int+1) and weight (1-frac) to value (int).
+)
+debugstep''
+
+NB. =========================================================
+Lab Section FNS: index of lower value
+We save the integer parts of the int.frac values as the indexes to the lower blended values.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section FNS: weights of upper,lower values
+The weight for the upper value is the fractional part of the int.frac form, which we extract by subtracting away the integer part.
+
+Each number thus produced needs to be converted into a list of two numbers: (frac) needs to turn into (frac , 1-frac).
+
+The form (u v) where (u) and (v) are verbs is called a hook.  The two verbs adjacent have no normal meaning, so J defines that ((u v) y) means (y u v y).
+
+So here, ((,.  -.) frac) means (frac ,. -. frac).
+
+(-. y) means (1-y).
+
+(x ,. y) joins corresponding items of (x) and (y) together.
+
+The result is a 5x2 array of (frac , 1-frac) for each result number.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section FNS: Sort, fetch, and weight
+(/:~ y) sorts (y) into ascending order.  We have to append one more unused value, since the maximum value is always going to have the index (last.0) and will fetch values at (last) and (last+1)
+
+(fetchlo +/ 1 0) uses (+/) which produces an addition table, the 5x2 table where each row uses (fetchlo) and each column uses (1 0).
+
+The verb ({) extracts the 5x2 array of selected values.
+
+These values are multiplied by the calculated weights.
+
+Then the total is taken across each row, which for each result number adds the two contributing weighted values.  This gives the final five-number result.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Append headers and non-data columns
+If the dissect display doesn't fit on your screen, you can move it around by clicking and holding in any empty spot, and dragging the contents around.
+
+At this point (fns) is a list of boxes, each containing a five-number summary (unless there were no numbers to begin with, in which case the contents are empty.
+
+First we want to convert this to a table of boxed strings, one for each number.  This means we want to remove the boxing around each box of (fns), and then, for each number, convert it to characters and box it so that the different-length numbers are not coerced into the same array.
+
+These lines, 5 numbers each, will be collected into a table of boxes, 5 columns wide.
+
+Any box of (fns) that was empty will not have 5 boxed numbers to contribute.  J will add empty boxes to fill out the array.  This empty box is called (a:) and is equivalent to (<0$0).  We will see a row with 5 empty fields.
+
+The verb to do all this is (":each@>) which unboxes each box and then applies (":), which converts numerics to string form, on each individual number, leaving the result in its own box.
+
+Next is to append headings to the five-number summary, using (,).
+
+Next, we preserve the part of the original input that was to the left of the data, using (datax {.&> boxedfields) which takes the first (datax) items from each contents of (boxedfields).  The (boxedfields) were in boxes because there were varying numbers of them per line, but now that we have squared off the array we can dispense with the outer boxing, leaving a table (datax) columns wide.
+
+Finally, we join the two tables together using (,.) which appends corresponding rows.
+)
+0 debugchangestops 'fivenumsumm'
+debugstep''
+
+NB. =========================================================
+Lab Section Format fields as CSV
+The final result will be a string with commas between fields and LF between lines.
+
+Fields containing special characters will have to be escaped and enclosed in " characters.  We delegate that to the verb (addquote) and we use (each) so that the string is properly formatted inside its own box.
+
+Next we add a comma after each field, converting (123.45) to (123.45,).  This produces all the comma delimiters, plus one extra one at the end of the line.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Escape quote characters by doubling them
+Here we follow the execution of (addquote).
+
+First, we have to replace each " character by "" .   We do this be creating a list that contains 2 for each " character and 1 for each non-quote, and using (x # y) to create a string containing (x) copies of each item of (y).
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Enclose in quotes if necessary
+We use (x e. y) to check each special character for inclusion in (y).  We then use (+./ y) to OR together those results, producing 1 if the field contained a special character.
+
+If the field did, we enclose it in quotes.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section Format lines as CSV
+Back in the main verb, next we format each row.  The first step is to run all the fields for the row together.  We do this with the compound verb (<@;"1 y), which runs (; y) followed by (< y).
+
+(; y) when applied to a boxed array opens the boxes and runs all the contents together into a single array.
+
+(< y) is then immediately applied to that array to enclose it in a box.
+
+This sequence of operations is applied to each row separately, because of the rank ("1) given in (<@;"1).
+
+Now each row is a single string, but it ends with an extra comma and doesn't have a newline character.  We fix this by replacing the last character with (LF).  The verb to do this is (x _1} y) which creates a copy of (y) with the last item [indexed by the (_1)] replaced by (x).  We use (each) to cause this replacement to occur inside each box.
+
+Finally, (; y) runs the boxed lines together to produce the final result, a single character string.
+)
+debugstep''
+
+NB. =========================================================
+Lab Section completion, and the expert version
+The final result of (fivenumbercsv) is the string representing the CSV file.
+
+An expert would be satisfied with the code we wrote.
+)
+0 debugchangestops 'addquote fivenum'
+debugrunstop''
