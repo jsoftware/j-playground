@@ -24,6 +24,19 @@ void em_jsetstr(char *var, char *val) {
 	I r = JSetM(jt,var,&type,&jr,(I*)&jl,(I*)&val);
 }
 
+//inspiration from https://github.com/jitwit/jpl-mode/blob/5c179ffb94c30a561835456365e0b09aa01db337/jpl-module.c
+#define DO(n,x) {I i=0,_i=(n);for(;i<_i;++i){x;}}
+static I cardinality (I r,I s) { I c=1;DO(r,c*=((I*)s)[i]);R c; }
+char* em_jgetstr(char *var) {
+	I jr,jtype, js;
+	char *jd;
+	I r = JGetM(jt,var,&jtype,&jr,&js,&jd);
+	 I c=cardinality(jr,js);
+	 jd[c]='\0';
+	return jd;
+}
+
+
 /* J calls for output */
 void _stdcall Joutput(JS jt,int type, C* s)
 {
@@ -70,6 +83,7 @@ int main( void ) {
 #if HTML
  //load stdlib
  em_jdo("(0!:0) <'jlibrary/system/main/stdlib.ijs'");
+ em_jdo("(0!:0) <'emj.ijs'");
 #endif
    return 0;
 }

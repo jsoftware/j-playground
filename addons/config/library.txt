@@ -1,0 +1,4 @@
+library_current_9.2.8_android.tar.gz 83954
+library_current_9.2.8_win.zip 103155
+library_current_9.2.8_linux.tar.gz 83952
+library_current_9.2.8_darwin.tar.gz 83953

@@ -1,0 +1,9 @@
+arc/zlib 1.0.9
+general/misc 2.5.3
+graphics/afm 1.0.15
+graphics/bmp 1.0.14
+graphics/color 1.0.19
+graphics/plot 1.0.195
+graphics/png 1.0.28
+ide/jhs 1.0.316
+math/misc 1.2.6

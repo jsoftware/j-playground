@@ -3,6 +3,7 @@ document.body.appendChild(outputDiv)
 
 var jdo1 = Module.cwrap('em_jdo','string',['string'])
 var jsetstr = Module.cwrap('em_jsetstr','void',['string','string'])
+var jgetstr = Module.cwrap('em_jgetstr','string',['string'])
 
 function getLine(textarea) {
     //console.log("getting stuff");
@@ -76,7 +77,8 @@ code.addEventListener("keydown", (e) => {
                                 "\n (~.,.<@#/.~);: 'I read what I want to read'         NB. group by unique word and count appearances" +
                                 "\n (2!:0) 'alert(\"hello world\")'                     NB. show alert popup" +
                                 "\n smoutput 'hello: ', ((2!:0) 'prompt(\"name?\")')    NB. interact with host javascript" +
-                                "\n (1!:0) 'jlibrary/system/main/*.ijs'                 NB. list directory matching *.ijs "
+                                "\n (1!:0) 'jlibrary/system/main/*.ijs'                 NB. list directory matching *.ijs " +
+                                "\n plot i.10 [ require 'plot'                          NB. draw a plot"
                                 );
                                 window.out("   ", true)
          }
@@ -114,16 +116,36 @@ function toggleEditor(event) {
   _editorShown = !_editorShown;
 }
 
+var _plotShown = true;
+function togglePlot(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  //hide the plot area
+  if (_plotShown) {
+    document.getElementById('plot').style.display='none';
+    document.getElementById('repl').style.width='100%';
+  } else {
+    document.getElementById('plot').style.display='';
+    document.getElementById('repl').style.width='50%';
+  }
+  _plotShown = !_plotShown;
+}
+//hide the plot by default
+togglePlot();
+
 function runEditor() {        
     var editorValue = editor.getValue();    
     jsetstr('CODE',editorValue);
     var out = jdo1("(0!:101) CODE");
-window.out("   ", true)
+    window.out("   ", true)
     document.getElementById("permalinkBase").href = '#code='+encodeURIComponent(editorValue);
     document.getElementById("permalink").style.display = '';
 
 }
-document.getElementById('toggleEditor').addEventListener('click', toggleEditor);        
+document.getElementById('toggleEditor').addEventListener('click', toggleEditor);
+document.getElementById('togglePlot').addEventListener('click', togglePlot);
 document.getElementById('runEditor').addEventListener('click', runEditor);  
 
 function checkPermalink() {

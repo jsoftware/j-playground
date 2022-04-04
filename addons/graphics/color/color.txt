@@ -1,0 +1,35 @@
+directory:  addons/graphics/color
+
+This directory contains scripts to assist with RGB color
+definitions.
+
+rgb.ijs
+=======
+This script defines the verb RGB to convert between color
+triples and RGB values.
+
+--------------
+
+The following color tables are defined as character
+matrices of name followed by RGB definition.
+Execute them to define global names.
+
+color16.ijs
+===========
+This script defines COLOR16, the 16 primary colors.
+
+colorcss.ijs
+===========
+This script defines COLORCSS, the colors supported by CSS
+
+colortab.ijs
+============
+This script defines COLORTABLE, the main color table used in J.
+
+showcolor.ijs
+============
+This script defines verb showcolor to display color values.
+
+xwin.ijs
+========
+This script defines COLORXWIN, the X Windows color table.

@@ -1,0 +1,4 @@
+arc/zlib - change history
+
+== 1.0.0 ==
+ * initial 803 release

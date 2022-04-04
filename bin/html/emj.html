@@ -90,7 +90,7 @@
         right:0px;
         height:100%;display:block;
       }
-      .repl { border: 1px solid #c0c0c0; height:25%}
+      .repl, #plot { border: 1px solid #c0c0c0; height:25%}
 
       #permalink {
         
@@ -111,6 +111,7 @@
         <button class="dropbtn">View</button>
         <div class="dropdown-content" style="width:300px">
           <a href="#toggle-editor" id="toggleEditor">Toggle Multi-line Editor</a>          
+          <a href="#toggle-plot" id="togglePlot">Toggle Plot</a>          
         </div>
     </div>
     <div class="dropdown">
@@ -143,9 +144,14 @@
             </span>
       </div>
     </div>
-    <div class="repl" id="repl">
-        <textarea name="" autocomplete="off" spellcheck="false" autocorrect="off" id="code" autofocus style="height:100%"></textarea>
-     </div>
+    <div id="bottomArea" style="height:100%">
+      <div class="repl" id="repl"  style="float:left">
+          <textarea name="" autocomplete="off" spellcheck="false" autocorrect="off" id="code" autofocus style="height:100%"></textarea>
+      </div>
+      <div id="plot" style="float:left;width:48%;height:100%;display:none">
+          <iframe id="plotFrame" style="height:100%;width:100%"  frameBorder="0"></iframe>
+      </div>    
+    </div>
 </div>
 
     <!--textarea id="output" rows="8"></textarea-->
