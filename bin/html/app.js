@@ -108,10 +108,10 @@ function toggleEditor(event) {
   //hide the editor
   if (_editorShown) {
     document.getElementById('editContainer').style.display='none';
-    document.getElementById('repl').style.height='85%';
+    document.getElementById('repl').style.height='100%';
   } else {
     document.getElementById('editContainer').style.display='';
-    document.getElementById('repl').style.height='35%';
+    document.getElementById('repl').style.height='53%';
   }
   _editorShown = !_editorShown;
 }
