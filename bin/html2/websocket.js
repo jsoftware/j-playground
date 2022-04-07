@@ -21,7 +21,7 @@ var ws = {
     //console.log(cmd);
     var ret = jdo1(cmd);
     //tcmreturn slices the first character off
-    tcmreturn(' ' + ret);
+    tcmreturn(' ' + ret + '\n');
   }
 }
 function wsopen() {}
