@@ -1,4 +1,4 @@
-Version
+Versions for testing
 -------
 1. https://jsoftware.github.io/j-playground/bin/html/ - Original Proof of Concept
 2. https://jsoftware.github.io/j-playground/bin/html2/ - 2018 J Playground (much improved) ported to WASM engine - work in progress.
