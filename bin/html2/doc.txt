@@ -1,0 +1,44 @@
+
+shortcuts not available:
+ctrl: n o s
+ctrl+shift: b g j n t v
+
+-------------
+
+4 states:
+
+edit is always on right or top
+term is always on left or bottom
+
+1. default:
+┌────┬────┐
+│    │view│
+│term├────┤
+│    │edit│
+└────┴────┘
+
+actions:
+
+2. flip default to:
+
+┌────┬────┐
+│edit│view│
+├────┴────┤
+│  term   │
+└─────────┘
+
+3. swap to:
+
+┌────┬────┐
+│view│    │
+├────┤edit│
+│term│    │
+└────┴────┘
+
+4. flip swap to:
+
+┌─────────┐
+│  edit   │
+├────┬────┤
+│term│view│
+└────┴────┘
