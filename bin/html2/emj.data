@@ -24804,7 +24804,726 @@ Dissect the examples below to see how the components are executed.
 Forms with (&) and (&:) can be used monadically, but the monadic case (u&:v y) executes exactly like (u@:v y), and (u&v y) like (u@v y).  For this reason monadic forms in (&) and (&:) are seldom used.
 )
 'three' +&:# 'four'
-('three';'seven') +@(#&>) ('two;'five')arc/zlib - change history
+('three';'seven') +@(#&>) ('two;'five')NB. stats/base/random
+NB. Random number generation
+
+NB.*setrl v       set random link
+NB.
+NB.*rand01 v      generate y random numbers in interval (0,1)
+NB.*rand11 v      generate y random numbers in interval (_1,1)
+NB.*randomize v   sets a random value into random link
+NB.
+NB.*deal v        deal x items from y (no repetition)
+NB.*dealx v       deal x indices from shape y (no repetition)
+NB.*toss v        pick x items from y (with repetition)
+NB.*tossx v       pick x indices from shape y (with repetition)
+NB.
+NB. betarand        v random numbers in a beta distribution
+NB. binomialrand    v random numbers 0 and 1 in binomial distribution
+NB. cauchyrand      v random numbers in a cauchy distribution
+NB. discreterand    v random numbers in a discrete distribution
+NB. exponentialrand v random numbers in an exponential distribution
+NB. gammarand       v random numbers in a gamma distribution
+NB. normalrand      v random numbers in a standard normal distribution,
+NB. poissonrand     v random numbers in a poisson distribution
+NB.
+NB. note: y for deal is data
+NB.       y for dealx is $data
+NB.
+NB. similarly for toss and tossx
+
+NB. ---------------------------------------------------------
+NB. examples:
+NB.
+NB.    p=. ;: 'anne dave mary tom'
+NB.    words=: ;: inverse
+NB.
+NB.    words deal p
+NB. mary anne dave tom
+NB.
+NB.    words 3 deal p
+NB. tom dave mary
+NB.
+NB.    words 6 toss p
+NB. mary mary dave dave mary tom
+NB.
+NB.    dealx 2 3
+NB. 0 1
+NB. 1 1
+NB. 0 2
+NB. 1 2
+NB. 0 0
+NB. 1 0
+NB.
+NB.    3 dealx 3 5 7
+NB. 2 4 6
+NB. 1 0 6
+NB. 2 4 5
+NB.
+NB.    4 tossx 2 3
+NB. 0 2
+NB. 1 2
+NB. 1 1
+NB. 0 2
+
+cocurrent 'z'
+
+setrl=: 9!:1                NB. set random link
+
+deal=: (# ? #) : (? #) { ]  NB. deal x items from y (no repetition)
+dealx=: ] #: ?~ : ? & (*/)  NB. deal x items from shape y (no repetition)
+toss=: ? @ (# #) { ]        NB. pick x items from y (with replacement)
+tossx=: ] #: (?@# */)       NB. pick x items from shape y (with replacement)
+rand01=: ?@$ 0:             NB. generate y random numbers in interval (0,1)
+rand11=: <: @: +: @: rand01  NB. generate y random numbers in interval (_1,1)
+
+NB. =========================================================
+NB.*randomize v sets a random value into random link
+randomize=: 3 : 0
+ try.
+   require 'guid'
+   tmp=. _2 (3!:4) , guids 1
+ catch.             NB. general/misc/guid.ijs not available
+   tmp=. >:<.0.8*0 60 60 24 31#.0 0 0 0 _1+|.<.}.6!:0 ''
+ end.
+ ([ 9!:1) {.^:(2~:9!:42'') tmp    NB. set random initial random seed
+)
+
+NB. =========================================================
+NB.*betarand v random numbers in a beta distribution
+NB. y has 3 elements p,q,n
+NB.   0 = power parameter
+NB.   1 = power parameter
+NB.   2 = number of trials
+betarand=: 3 : 0
+'p q n'=. y
+if. (1>p) *. 1>q do.
+  b=. n#1
+  r=. n#0
+  whilst. 1 e. b do.
+    m=. +/b
+    x=. (rand01 m)^%p
+    y=. x+(rand01 m)^%q
+    t=. 1>:y
+    z=. (t#x)%t#y
+    i=. t#b#i.#b
+    b=. 0 i } b
+    r=. (z+i{r) i } r
+  end.
+else.
+  s%(gammarand q,n)+s=. gammarand p,n
+end.
+)
+
+NB. =========================================================
+NB.*binomialrand v random numbers 0 and 1 in binomial distribution
+NB.
+NB. y has 2 elements:
+NB.  0  =  probability of success in one trial
+NB.  1  =  number of trials
+binomialrand=: 3 : 0
+'p n'=. y
+r=. 2147483647
+s=. <:p*r
+s>?n#<:r
+)
+
+NB. =========================================================
+NB.*cauchyrand v random numbers in a cauchy distribution
+NB. with F(x)=0.5+(arctan x)%o.1
+NB.
+NB. y  =  number of trials
+cauchyrand=: 3 : 0
+3 o. o. _0.5+rand01 y
+)
+
+NB. =========================================================
+NB.*discreterand v random numbers in a discrete distribution
+NB. y has two elements
+NB.   0 =  2-row matrix: 0 =  discrete values
+NB.                      1 =  corresponding probabilities
+NB.   1 =  number of trials
+discreterand=: 3 : 0
+'m n'=. y
+'v p'=. m
+f=. 0,+/\p%+/p
+l=. #f
+r=. /:f,rand01 n
+s=. +/\l>r
+r=. s r } r
+v {~ <:l}.r
+)
+
+NB. =========================================================
+NB.*exponentialrand v random numbers in an exponential distribution
+NB. with mean=1. F(x)=1-^-x
+NB.
+NB. y  =  number of trials
+exponentialrand=: 3 : 0
+-^.rand01 y
+)
+
+NB. =========================================================
+NB.*gammarand v random numbers in a gamma distribution
+NB. y has 2 elements p,n
+NB.   0 = power parameter
+NB.   1 = number of trials
+NB.
+NB. if p=1 this is the exponential distribution
+gammarand=: 3 : 0
+'p n'=. y
+r=. n#0
+k=. p-i=. <.p
+if. k do.
+  r=. betarand k,(-.k),n
+  r=. r * -^.rand01 n
+end.
+if. i do.
+  r-^.*/rand01 i,n
+end.
+)
+
+NB. =========================================================
+NB.*normalrand v random numbers in a standard normal distribution,
+NB. with  mean=0, standard deviation=1.
+NB. y  = number of trials.
+normalrand=: 3 : 0
+(2 o. +: o. rand01 y) * %: - +: ^. rand01 y
+)
+
+NB. =========================================================
+NB.*poissonrand v random numbers in a poisson distribution
+NB.
+NB. y has 2 elements:
+NB.   0  = mean of distribution (=variance)
+NB.   1  = number of trials
+poissonrand=: 3 : 0
+'m n'=. y
+roll=. -@^.@rand01
+r=. b=. m >: t=. roll n
+i=. i.n
+while. #i=. b#i do.
+  b=. m >: t=. (b#t) + roll #i
+  r=. (b + i{r) i } r
+end.
+r
+)
+NB. stats/base/univariate
+NB. Univariate statistics
+
+NB.*mean v         arithmetic mean (dyadic: weighted)
+NB.*geomean v      geometric mean
+NB.*harmean v      harmonic mean
+NB.*commonmean v   common mean
+NB.
+NB.*dev v          deviation from mean (dyadic: weighted)
+NB.*ssdev v        sum of squared deviations (dyadic: weighted)
+NB.*var v          sample variance (dyadic: weighted)
+NB.*stddev v       standard deviation (dyadic: weighted)
+NB.*varp v         population variance
+NB.*stddevp v      population standard deviation
+NB.*skewness v     skewness
+NB.*kurtosis v     kurtosis
+NB.
+NB.*min v          minimum
+NB.*max v          maximum
+NB.*midpt v        index of midpoint
+NB.*median v       median
+NB.
+NB. quantiles v    quantiles of y at the specified probabilities x
+NB. nquantiles v   values which partition y into x quantiles
+NB. iqr v          interquartile range (IQR) of y
+NB. ntiles v       assign values of y to x quantiles
+NB. cile v         assign values of y to x subsets of nearly equal size
+NB.
+NB. dstat v        descriptive statistics
+NB. freqcount v    frequency count
+NB. Idotr v        equivalent to I. but intervals closed on left, open on right
+NB. histogram v    histogram
+NB. binnedData a   applies u to binned data y as specified by intervals x
+
+cocurrent 'z'
+
+mean=: (+/ % #) : wmean        NB. arithmetic mean (dyadic: weighted)
+geomean=: mean &.: ^.          NB. geometric mean
+harmean=: mean &.: %           NB. harmonic mean
+commonmean=: [: {. (%:@*/ , -:@+/) ^: _
+
+wmean=: +/@[ %~ +/@:*          NB. weighted arithmetic mean
+wdev=: ] -"_1 _ wmean          NB. weighted deviation from mean
+wssdev=: [ +/@:* *:@wdev       NB. weighted sum of squared deviations
+wvar=: (#@-.&0 %~ <:@#@-.&0 * +/)@[ %~ wssdev  NB. weighted sample variance
+wstddev=: %:@wvar              NB. weighted sample standard deviation
+
+dev=: (-"_1 _ mean) : wdev     NB. deviation from mean (dyadic: weighted)
+ssdev=: (+/@:*:@dev) : wssdev  NB. sum of squared deviations (dyadic: weighted)
+var=: (ssdev % <:@#) : wvar    NB. sample variance (dyadic: weighted)
+stddev=: (%:@var) : wstddev    NB. sample standard deviation (dyadic: weighted)
+
+NB. "p" suffix = population definitions
+varp=: ssdev % #               NB. population variance
+stddevp=: %: @ varp            NB. population standard deviation
+
+min=: <./
+max=: >./
+midpt=: -:@<:@#
+median=: -:@(+/)@((<. , >.)@midpt { /:~)
+
+NB. There are a number of different methods for calculating quantiles
+NB. https://en.wikipedia.org/wiki/Quantile , also Hyndman and Fan (1996)
+qh4=. 4 : 'x * # y'               NB. alpha=0, beta=1
+qh5=. 4 : '0.5 + x * # y'         NB. alpha=0.5, beta=0.5
+qh6=. 4 : 'x * >:@# y'            NB. alpha=0, beta=0
+qh7=. 4 : '1 + x * <:@# y'        NB. alpha=1, beta=1      ; default for R, NumPy & Julia
+qh8=. 4 : '1r3 + x * 1r3 + # y'   NB. alpha=1/3, beta=1/3  ; recommended by Hyndman and Fan (1996)
+qh9=. 4 : '3r8 + x * 0.25 + # y'  NB. alpha=3/8, beta=3/8  ; tends to be used for Normal QQ plots
+Qh=: (qh4 f.)`(qh5 f.)`(qh6 f.)`(qh7 f.)`(qh8 f.)`(qh9 f.)
+QuantileMethod=: 7               NB. default quantile method to use
+
+NB. =========================================================
+NB.*quantiles v  returns the quantile of y at the specified probabilities x
+NB. y is: numeric values to calculate quantiles for
+NB. x is: 0{:: probabilities at which to calculate quantiles (default 0.25 0.5 0.75)
+NB.       1{:: method for calculating quantiles (default 7)
+NB. EG: 0 0.25 0.5 0.75 1 quantiles 2 4 5 6 7 8 9
+quantiles=: 3 : 0
+  0.25 0.5 0.75 quantiles y
+:
+  t=. /:~ y
+  'prob htype'=. 2 {. (boxopen x) ,< QuantileMethod
+  'invalid quantile method' assert (3&< *. <&10) htype
+  qh=. (Qh {~ htype - 4)`:6    NB. define quantile method
+  h=. (,prob) <:@qh t          NB. J is zero-based so subtract 1
+  h=. 0 >. (<:@#t) <. h        NB. constrain h between 0 & n-1
+  diff=. t -/@({~ >. ,: <.) h
+  prop=. (] - <.) h
+  base=. t ({~ <.) h
+  base + prop * diff
+)
+
+NB. =========================================================
+NB.*nquantiles v  returns the values which partition y into x quantiles
+NB. returns 1 less value than the number of quantiles specified
+NB. y is: numeric values to calculate quantiles for
+NB. x is: number of quantiles (default 4)
+NB. EG: 4 nquantiles 2 4 5 6 7 8 9
+nquantiles=: 4&$: : ((}.@i. * %)@[ quantiles ])
+
+NB.*iqr v  calculates the interquartile range (IQR) of y
+iqr=: -/@(0.75 0.25 quantiles ])
+
+NB. =========================================================
+NB.*ntiles v  assign values of y to x quantiles
+NB. x is: number of quantiles (default 4)
+NB. EG: 2 ntiles 2 4 5 6 7 8 9
+ntiles=: 4&$: : (] Idotr~ min@] , nquantiles , >:@max@])
+
+NB. =========================================================
+NB.*cile v  assign values of y to x subsets of nearly equal size
+NB. eg: 3 cile i.12
+cile=: $@] $ ((* <.@:% #@]) /:@/:@,)
+
+NB.*rankOrdinal a  ordinal ranking ("0 1 2 3") of array y
+NB. tied items are ranked on the order they appear in y
+NB. eg: /: rankOrdinal 5 2 5 0 6 2 4  NB. rank ascending
+NB. eg: \: rankOrdinal 5 2 5 0 6 2 4  NB. rank descending
+rankOrdinal=: 1 :'/:@u'
+
+NB.*rankCompete a  standard competition ranking ("0 0 2 3") of array y
+NB. eg: /: rankCompete 5 2 5 0 6 2 4  NB. rank ascending
+NB. eg: \: rankCompete 5 2 5 0 6 2 4  NB. rank descending
+rankCompete=: 1 :'u~ i. ]'
+
+NB.*rankDense a  dense ranking ("0 0 1 2") of array y
+NB. eg: /: rankDense 5 2 5 0 6 2 4  NB. rank ascending
+NB. eg: \: rankDense 5 2 5 0 6 2 4  NB. rank descending
+rankDense=: 1 :'u rankOrdinal@~. {~ ~. i. ]'
+
+NB.*rankFractional a  fractional ranking ("0 1.5 1.5 3") of array y
+NB. Items with the same ranking have the mean of their ordinal ranks.
+NB. eg: /: rankFractional 5 2 5 0 6 2 4  NB. rank ascending
+NB. eg: \: rankFractional 5 2 5 0 6 2 4  NB. rank descending
+rankFractional=: 1 : '(] (+/ % #)/. u rankOrdinal) {~ ~. i. ]'
+
+NB. =========================================================
+NB.*dstat v  descriptive statistics
+NB. table of formatted descriptive statistics
+dstat=: 3 : 0
+t=. '/sample size/minimum/maximum/median/mean'
+t=. t,'/std devn/skewness/kurtosis'
+t=. ,&':  ' ;._1 t
+v=. $,min,max,median,mean,stddev,skewness,kurtosis
+t,. ": ,. v y
+)
+
+NB. =========================================================
+NB.*freqcount v  frequency count
+NB. (value, frequency) sorted by decreasing frequency
+freqcount=: (\: {:"1)@(({. , #)/.~)
+
+NB. =========================================================
+NB.*Idotr v  Equivalent to I. but intervals are closed on the left and open on the right
+NB. Idotr : (0{x) <= y < (1{x)
+NB.    I. : (0{x) < y <= (1{x)
+Idotr=: |.@[ (#@[ - I.) ]
+
+NB. =========================================================
+NB.*histogram v  tally of the items in each bin
+NB. x is a list of interval start/end points. The number of intervals is 1+#x
+NB. y is an array of data
+histogramR=: <: @ (#/.~) @ (i.@>:@#@[ , I.)      NB. Intervals (,]
+histogramL=: <: @ (#/.~) @ (i.@>:@#@[ , Idotr)   NB. Intervals [,)
+histogram=: histogramL f.
+
+NB. =========================================================
+NB.*binnedData a  Applies verb u to the values of y after binning them in the intervals specified by x
+NB. x is a list of interval start/end points. The number of intervals is 1+#x
+NB. y is an array of data.
+NB. eg: < binnedData  NB. verb to box the binned data
+NB. eg: (+/ % #) binnedData  NB. verb to average the binned data
+binnedData=: adverb define
+  bidx=. i.@>:@# x                    NB. indicies of bins
+  x (Idotr (u@}./.)&(bidx&,) ]) y     NB. apply u to data in bins after dropping first value
+)
+
+NB. =========================================================
+NB.*kurtosis v  4th moment coefficient
+kurtosis=: # * +/@(^&4)@dev % *:@ssdev
+
+NB. =========================================================
+NB.*skewness v  3rd moment coefficient
+skewness=: %:@# * +/@(^&3)@dev % ^&1.5@ssdev
+NB. stats/base/combinatorial
+NB. Sample design
+
+NB. comb v         combinations of size x from i.y
+NB. combrep v      combinations of size x from i.y with repetition
+NB. combrev v      comb in revolving door order
+NB. perm v         permutations of size x from i.y
+NB. permrep v      permutations of size x from i.y with repetition
+NB. steps v        steps from a to b in c steps
+
+cocurrent 'z'
+
+NB. =========================================================
+NB.*comb v combinations of size x from i.y
+comb=: 3 : 0
+comb~ y
+:
+k=. i.>:d=. y-x
+z=. (d$<i.0 0),<i.1 0
+for. i.x do. z=. k ,.&.> ,&.>/\. >:&.> z end.
+; z
+)
+
+NB. =========================================================
+NB.*combrep v combinations of size x from i.y with repetition
+combrep=: $:~ : (i.@[ -"1~ [ comb + - 1:)
+
+NB. =========================================================
+NB.*combrev v comb in revolving door order
+NB. combinations in what Knuth calls "revolving door order"
+NB. such that any two adjacent combinations differ by a
+NB. single element (Gray codes for combinations).
+combrev=: 3 : 0
+combrev~ y
+:
+i=. 1+x
+z=. 1 0$k=. i.#c=. 1,~(y-x)$0
+while. i=. <:i do. z=. (c#k),.;(-c=. +/\.c)|.@{.&.><1+z end.
+|.y-1+z
+)
+
+NB. =========================================================
+NB.*perm v permutations of size x from i.y
+NB. monadic form gives all perms of size i.y (i@! A. i.)
+perm=: 3 : 0
+z=. i.1 0
+for. i.y do. z=. ,/ (0 ,. 1 + z) {"2 1 \:"1 = i. 1 + {: $z end.
+:
+,/ ({~ perm@#)"1 x comb y
+)
+
+NB. =========================================================
+NB.*permrep v permutations of size x from i.y with repetition
+permrep=: $:~ : (# #: i.@^~)
+
+NB. =========================================================
+NB.*steps v steps from a to b in c steps
+NB. form: steps a,b,c
+steps=: {. + (1&{ - {.) * (i.@>: % ])@{:
+NB. stats/base/distribution
+NB. Statistical distributions
+
+NB. discrete:
+NB. binomialdist v  discrete values for binomial distribution
+NB. binomialprob v  probability of success in binomial distribution
+NB. poissondist v   discrete values for poisson distribution
+NB. poissonprob v   probability of success in poisson distribution
+NB.
+NB. continuous:
+NB. chisqcdf v      chi squared CDF
+NB. normalcdf v     normal distribution (0,1) CDF
+NB. normalprob v    probability of success in normal distribution
+
+cocurrent 'z'
+
+NB. =========================================================
+NB.*binomialdist v discrete values for binomial distribution
+NB. y has 2 elements p,n:
+NB.  0  =  probability of success in one trial
+NB.  1  =  number of trials
+NB.
+NB. E=n*p, var=n*p*-.p
+NB.
+NB. e.g.  binomialdist 0.25 5  ...distribution of results from 0 to 5
+binomialdist=: 3 : 0
+'p n'=. y
+if. b=. p<:0.5 do. p=. -. p end.
+q=. -.p
+r=. }.i.>:n
+r=. (q^n)**/\1,(p%q)*(>:n-r)%r
+if. b do. |. r end.
+)
+
+NB. =========================================================
+NB.*binomialprob v probability of success in binomial distribution
+NB. y has 3 or 4 elements:
+NB.   0  =  probability of success in one trial
+NB.   1  =  number of trials
+NB.   2  =  minimum number of successes
+NB.  {3} =  maximum number of successes
+NB.
+NB. e.g.  binomialprob 0.25 100 30 40    ...probability that there are
+NB. between 30 and 40 successes in 100 trials, where probability = 0.25
+binomialprob=: 3 : 0
+'p n s'=. 3{.y
+m=. >:3{y,n
++/ s}.m{.binomialdist p,n
+)
+
+NB. =========================================================
+NB.*chisqcdf v  chi squared CDF
+NB. chi squared cumulative distribution function
+NB. see wiki Essays/Chi_Squared_CDF
+gamma=. ! & <:
+ig0=. 4 : '(1 H. (1+x) % x&((* ^) * (^ -)~)) y'
+incgam=. ig0 % gamma@[  NB. incomplete gamma
+chisqcdf=: incgam&-: f.
+
+NB. =========================================================
+NB.*normalcdf  v normal distribution (0,1) CDF
+NB. normal(0,1) cumulative distribution function
+NB. see wiki Essays/Normal_CDF
+NB.
+NB. the following are equivalent, but normalcdf more accurate:
+NB.   normalcdf X
+NB.   1 - normalprob 0 1, X
+erf=. (1 H. 1.5)@*: * 2p_0.5&* % ^@:*:
+normalcdf=: -: @ >: @ erf @ %&(%:2) f.
+
+NB. =========================================================
+NB.*normalprob v probability of success in normal distribution
+NB. y has 3 or 4 elements:
+NB.   0  =  mean of distribution
+NB.   1  =  standard deviation
+NB.   2  =  minimum result
+NB.  {3} =  maximum result
+NB.
+NB. e.g.  normalprob 0 1 2    ...probability that result will be
+NB. greater than 2, where mean = 0, standard deviation 1
+NB.
+NB. Result is rounded to 7 decimal places
+NB. Algorithm has accuracy ~ 7.5*1e_8
+normalprob=: 3 : 0
+'m s'=. 2{.y
+x=. s %~ m -~ 2}.y
+sgn=. *x
+x=. |x
+b=. 0.31938153 _0.356563782 1.781477937 _1.821255978 1.330274429
+p=. 0.2316419
+r=. ((2p1)^_0.5)*^_0.5**:x
+r=. r*b+/ .**/\5#(1,#x)$%>:p*x
+r=. -/|(sgn=_1)-r
+(<.0.5+r*c)%c=. 1e7
+)
+
+NB. =========================================================
+NB.*poissondist v discrete values for poisson distribution
+NB. y has 2 elements:
+NB.   0 = mean of distribution
+NB.   1 = maximum value to show
+NB.
+NB. e.g.  poissondist 2 10
+NB.       = list of probabilities of values from 0 to 10
+NB.         in poisson distribution of mean 2
+poissondist=: 3 : 0
+'m n'=. y
+(^-m)**/\1,m%}.i.>:n
+)
+
+NB. =========================================================
+NB.*poissonprob v probability of success in poisson distribution
+NB. y has 2 or 3 elements:
+NB.  0   =  mean of distribution
+NB.  1   =  minimum number of successes
+NB.  {2} =  maximum number of successes
+NB.
+NB. e.g.
+NB.   poissonprob 5 4 7    ...probability that result will be
+NB.         between 4 and 7 inclusive, where mean result is 5.
+NB.   poissonprob 5 6 6    ...probability that result will be
+NB.         exactly 6, where mean result is 5.
+poissonprob=: 3 : 0
+m=. {.y
+s=. }.y
+b=. 1=#s
+'x y'=. _2{.0,s-b
+if. 0>y do. 1 return. end.
+|b-(^-m)*+/x}.*/\1,m%}.i.>:y
+)
+NB. stats/base/multivariate
+NB. Multivariate statistics
+
+NB.*XtY            sum of cross products (monadic is XtX)
+NB.*spdev v        sum of cross products of deviations
+NB. cov v          (co)variance or var/cov matrix
+NB.*covp v         population (co)variance or var/cov matrix
+NB.
+NB.*diag v         returns the matrix diagonal
+NB.*cov2cor v      convert var/cov matrix to correlation matrix
+NB. corr v         correlation or correlation matrix
+NB.
+NB. lsfit v        least-squares fit
+NB. regression v   multiple regression
+
+require '~addons/stats/base/univariate.ijs'
+cocurrent 'z'
+
+XtY=: +/ .*~ |:           NB. sum of cross products (monadic is XtX)
+spdev=: XtY&dev           NB. sum of cross products of deviations
+
+NB. =========================================================
+NB.*cov v Covariance or variance/covariance matrix
+NB. form: [x] cov y
+NB. y is: numeric list or matrix
+NB. x is: numeric list or matrix
+NB. Monadic use:
+NB.   if y is a numeric list, the variance of the list is returned.
+NB.   if y is a numeric matrix, the variance/covariance matrix of the columns is returned
+NB. Dyadic use:
+NB.   if x and y are numeric lists then the covariance of the 2 lists is returned
+NB.   if x and y are compatible matrices, the variance/covariance matrix of their columns is returned
+cov=: spdev % <:@#@]
+
+NB. "p" suffix = population definitions
+covp=: spdev % #@]       NB. population (co)variance or var/cov matrix
+
+diag=: (<0 1)&|:          NB. returns matrix diagonal
+cov2cor=: % */~@:%:@diag  NB. convert var/cov matrix to correlation matrix
+
+NB. =========================================================
+NB.*corr v Correlation or correlation matrix
+NB. form: [x] corr y
+NB. Arguments as per cov, but returns correlations or correlation matrix
+NB. Although dyadic form also works for modadic matrix arguments, it is not as numerically exact
+corr=: cov2cor@cov : (cov % */~&stddev)
+
+NB. =========================================================
+NB.*rankcorr v Spearman rank correlation or correlation matrix
+NB. form: [x] rankcorr y
+NB. Arguments as per corr, but returns rank correlations or rank correlation matrix
+rankcorr=: corr&(/: rankFractional"_1&.|:)
+
+NB.*interpolate v  simple linear interpolation for intermediate points
+NB.y is: X,:Y  lists of X and corresponding Y values
+NB.x is: XI    list of points XI to interpolate Y for, to return YI
+NB.EG: (1.1 * i.8) interpolate (i.10) ,: (1.1 ^~ i.10)
+NB. http://www.jsoftware.com/pipermail/programming/2008-June/011078.html
+NB. https://code.jsoftware.com/wiki/Phrases/Arith#Interpolation
+interpolate=: 4 : 0
+  ix =. 1 >. (<:{:$y) <. (0{y) I. x
+  intpoly =. (1 { y) ,. (,~ {.)   %~/ 2 -/\"1 y
+  (ix { intpoly) p. ((<0;ix) { y) -~ x
+)
+
+NB. =========================================================
+NB.*lsfit v least-squares fit
+NB. form: n lsfit xy
+NB. coefficients of polynomial fitting data points
+NB. using least squares approximation.
+NB. xy = 2 row matrix of x ,: y
+NB. n  = order of polynomial
+lsfit=: {:@] %. {.@] ^/ i.@>:@[
+
+NB. =========================================================
+NB.*regression v multiple regression
+NB. form:  independent regression dependent
+NB.    dependent = vector of n observations (Y value)
+NB.  independent = n by p matrix of n observations for p independent
+NB.                variables (X value)
+NB.
+NB. returns: formatted values
+regression=: 4 : 0
+v=. 1,.x
+d=. y
+b=. d %. v
+k=. <:{:$v
+n=. $d
+sst=. +/*:d-(+/d) % #d
+sse=. +/*:d-v +/ .* b
+mse=. sse%n->:k
+seb=. %:({.mse)*(<0 1)|:%.(|:v) +/ .* v
+ssr=. sst-sse
+msr=. ssr%k
+rsq=. ssr%sst
+F=. msr%mse
+
+r=. ,: '             Var.       Coeff.         S.E.           t'
+r=. r, 15 15j5 15j5 12j2 ": (i.>:k),.b,.seb,.b%seb
+r=. r, ' '
+r=. r, '  Source     D.F.        S.S.          M.S.           F'
+r=. r, 'Regression', 5 15j5 15j5 12j2 ": k, ssr,msr,F
+r=. r, 'Error     ', 5 15j5 15j5 ": (n-k+1), sse,mse
+r=. r, 'Total     ', 5 15j5 ": (n-1), sst
+r=. r, ' '
+r=. r, 'S.E. of estimate    ', 12j5 ":%:mse
+r=. r, 'Corr. coeff. squared', 12j5 ": rsq
+)
+NB. stats manifest
+
+CAPTION=: 'Basic statistics package'
+
+DESCRIPTION=: 0 : 0
+Basic statistics package.
+
+Migrated from system/packages/stats.
+)
+
+VERSION=: '1.0.21'
+
+RELEASE=: ''
+
+FOLDER=: 'stats/base'
+
+FILES=: 0 : 0
+base.ijs
+combinatorial.ijs
+distribution.ijs
+multivariate.ijs
+random.ijs
+univariate.ijs
+)
+NB. base stats package
+NB.
+NB. loads complete set of base stats
+
+require 'stats/base/random'
+require 'stats/base/distribution'
+require 'stats/base/combinatorial'
+require 'stats/base/univariate'
+require 'stats/base/multivariate'
+arc/zlib - change history
 
 == 1.0.0 ==
  * initial 803 release
