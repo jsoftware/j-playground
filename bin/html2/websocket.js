@@ -25,8 +25,8 @@ var ws = {
     var ret = jdo1("(0!:101) CODE");
     
     //hack to prevent showing ending ) on multi-line definitions... probably needs to be a better way
-    if (ret == ')')  ret = '';
-    
+    if (ret == ')' || ret=='}}')  ret = '';
+
     //tcmreturn slices the first character off
     tcmreturn(' ' + ret + '\n');
   }
