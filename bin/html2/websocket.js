@@ -20,8 +20,13 @@ var ws = {
   open: function() {},
   close: function() {},
   send: function(cmd) { 
-    //console.log(cmd);
-    var ret = jdo1(cmd);
+    //console.log(cmd);    
+    jsetstr('CODE',cmd);
+    var ret = jdo1("(0!:101) CODE");
+    
+    //hack to prevent showing ending ) on multi-line definitions... probably needs to be a better way
+    if (ret == ')')  ret = '';
+    
     //tcmreturn slices the first character off
     tcmreturn(' ' + ret + '\n');
   }
