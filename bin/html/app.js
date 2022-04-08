@@ -5,6 +5,42 @@ var jdo1 = Module.cwrap('em_jdo','string',['string'])
 var jsetstr = Module.cwrap('em_jsetstr','void',['string','string'])
 var jgetstr = Module.cwrap('em_jgetstr','string',['string'])
 
+//ported from the original J Playground (2018) to unify plotting across both JS ides
+function tcmreturn(e) {
+  //O("tcmreturn e", JSON.stringify(e));
+  if (e.length === 0) return;
+  var t = Number(e[0]);
+  var s = e.slice(1);
+  /* beautify preserve:start */
+  switch(t) {
+   case 0: return tcmprompter(s);
+   case 6: return tcmecho(s);
+   case 7: return tcmplot(s);
+   case 8: return tcmviewmat(s);
+   case 9: return showhelp(s);
+   case 3: return;
+   default: return out(s);
+  }
+  /* beautify preserve:end */
+ }
+
+//modified from original J Playground (2018) since this jplayground puts the plots on the right
+ function tcmplot(e) {
+  if (!_plotShown) {
+    togglePlot();
+  }
+  var ndx = e.indexOf("\n");
+  var pid = e.slice(0, ndx).split(" ");
+  var def = e.slice(ndx + 1);
+  var cvs = document.createElement("canvas");
+  cvs.id = pid[0];
+  cvs.width = pid[1];
+  cvs.height = pid[2];
+  cvs.position = "absolute";
+  document.getElementById('plot').appendChild(cvs);
+  eval(def);
+}
+
 function getLine(textarea) {
     //console.log("getting stuff");
     let v = textarea.value;

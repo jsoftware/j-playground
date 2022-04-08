@@ -13,6 +13,8 @@ var jws = {};
 var jver;
 
 var jdo1 = Module.cwrap('em_jdo','string',['string'])
+var jsetstr = Module.cwrap('em_jsetstr','void',['string','string'])
+var jgetstr = Module.cwrap('em_jgetstr','string',['string'])
 
 var ws = {
   open: function() {},
