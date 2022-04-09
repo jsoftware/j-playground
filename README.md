@@ -29,7 +29,7 @@ cp jversion-x.h jversion.h
 ### HTML
 
 1. make -f makefile.html clean j
-2. cd ../bin/html && python2 -c 'import SimpleHTTPServer; SimpleHTTPServer.test() 
+2. cd ../bin/html && php -S 127.0.0.1:9999
 
 ### Wasmer or wasmtime 
 
