@@ -16,7 +16,7 @@ jobs:
 
   strategy:
    matrix:
-    os: [ubuntu-18.04, macos-11, windows-2019]
+    os: [ubuntu-18.04]
     #os: [ubuntu-18.04]
     #os: [macos-11]
     #os: [windows-2019]
@@ -28,153 +28,51 @@ jobs:
    - name: Setup Environment (Linux)
      if: matrix.os == 'ubuntu-18.04'
      run: |
-      sudo apt-get install -y libedit-dev libncursesw5-dev
-
-   - name: Setup Environment (Windows)
-     if: matrix.os == 'windows-2019'
-     uses: ilammy/msvc-dev-cmd@v1
-     with:
-      arch: amd64
+      sudo apt-get install -y libedit-dev libncursesw5-dev g++-multilib
 
    - name: Build JE (Linux)
      if: matrix.os == 'ubuntu-18.04'
      env:
-      CC: clang
-      USE_SLEEF: 1
-     run: script/buildga.sh linux
-
-   - name: Build JE (macOS)
-     if: matrix.os == 'macos-11'
-     env:
-      CC: clang
-      USE_SLEEF: 1
-     run: script/buildga.sh darwin
-
-   - name: Build JE (Windows)
-     if: matrix.os == 'windows-2019'
-     shell: cmd
-     run: script\buildga.cmd
+      CC: gcc
+     run: make -f makefile.linux clean j
 
    - name: Test JE (Linux)
      if: matrix.os == 'ubuntu-18.04'
-     run: script/testga.sh linux
+     # update this later
+     run: ../bin/linux/emj
+#  tests:
+#   name: Test Results
+#   runs-on: ubuntu-18.04
+#   needs: jengine
+#   steps:
+#    - name: Checkout Git repository
+#      uses: actions/checkout@v2
 
-   - name: Test JE (macOS)
-     if: matrix.os == 'macos-11'
-     run: script/testga.sh darwin
+#    - name: Get Test Results
+#      uses: actions/download-artifact@v2
+#      with:
+#        name: dist
 
-   - name: Test JE (Windows)
-     if: matrix.os == 'windows-2019'
-     shell: cmd
-     run: script\testga.cmd
+#    - name: Merge Test Results
+#      run: script/testgares.sh
 
-   - name: Compress Files (Linux)
-     if: matrix.os == 'ubuntu-18.04'
-     run: zip -r l64.zip j64
+#    - name: Copy Tests to Build
+#      uses: ncipollo/release-action@v1
+#      with:
+#       tag: build
+#       artifacts: "tests.txt"
+#       token: ${{ secrets.GITHUB_TOKEN }}
+#       allowUpdates: true
+#       replacesArtifacts: true
 
-   - name: Compress Files (macOS)
-     if: matrix.os == 'macos-11'
-     run: zip -r m64.zip j64
-
-   - name: Compress Files (Windows)
-     if: matrix.os == 'windows-2019'
-     shell: pwsh
-     run: Compress-Archive j64 w64.zip
-
-   - name: Release JE (Linux)
-     if: matrix.os == 'ubuntu-18.04'
-     uses: ncipollo/release-action@v1
-     with:
-      tag: build
-      artifacts: "l64.zip"
-      token: ${{ secrets.GITHUB_TOKEN }}
-      allowUpdates: true
-      replacesArtifacts: true
-
-   - name: Release JE (version)
-     if: matrix.os == 'ubuntu-18.04'
-     uses: ncipollo/release-action@v1
-     with:
-      tag: build
-      artifacts: "version.txt"
-      token: ${{ secrets.GITHUB_TOKEN }}
-      allowUpdates: true
-      replacesArtifacts: true
-
-   - name: Release JE (macOS)
-     if: matrix.os == 'macos-11'
-     uses: ncipollo/release-action@v1
-     with:
-      tag: build
-      artifacts: "m64.zip"
-      token: ${{ secrets.GITHUB_TOKEN }}
-      allowUpdates: true
-      replacesArtifacts: true
-
-   - name: Release JE (Windows)
-     if: matrix.os == 'windows-2019'
-     uses: ncipollo/release-action@v1
-     with:
-      tag: build
-      artifacts: "w64.zip"
-      token: ${{ secrets.GITHUB_TOKEN }}
-      allowUpdates: true
-      replacesArtifacts: true
-
-   - name: Copy Test (Linux)
-     if: matrix.os == 'ubuntu-18.04'
-     uses: actions/upload-artifact@v2
-     with:
-       name: dist
-       path: testlinux.txt
-
-   - name: Copy Test (macOS)
-     if: matrix.os == 'macos-11'
-     uses: actions/upload-artifact@v2
-     with:
-       name: dist
-       path: testdarwin.txt
-
-   - name: Copy Test (Windows)
-     if: matrix.os == 'windows-2019'
-     uses: actions/upload-artifact@v2
-     with:
-       name: dist
-       path: testwin.txt
-
- tests:
-  name: Test Results
-  runs-on: ubuntu-18.04
-  needs: jengine
-  steps:
-   - name: Checkout Git repository
-     uses: actions/checkout@v2
-
-   - name: Get Test Results
-     uses: actions/download-artifact@v2
-     with:
-       name: dist
-
-   - name: Merge Test Results
-     run: script/testgares.sh
-
-   - name: Copy Tests to Build
-     uses: ncipollo/release-action@v1
-     with:
-      tag: build
-      artifacts: "tests.txt"
-      token: ${{ secrets.GITHUB_TOKEN }}
-      allowUpdates: true
-      replacesArtifacts: true
-
- webhook:
-  name: Run Webhook
-  runs-on: ubuntu-18.04
-  needs: tests
-  steps:
-   - name: update server
-     uses: distributhor/workflow-webhook@v2
-     env:
-      webhook_url: ${{ secrets.WEBHOOK_URL }}
-      webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
-      data: '{ "id": "jebuild" }'
+#  webhook:
+#   name: Run Webhook
+#   runs-on: ubuntu-18.04
+#   needs: tests
+#   steps:
+#    - name: update server
+#      uses: distributhor/workflow-webhook@v2
+#      env:
+#       webhook_url: ${{ secrets.WEBHOOK_URL }}
+#       webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+#       data: '{ "id": "jebuild" }'
