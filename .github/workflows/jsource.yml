@@ -34,12 +34,12 @@ jobs:
      if: matrix.os == 'ubuntu-18.04'
      env:
       CC: gcc
-     run: make -f makefile.linux clean j
+     run: cd jsrc && make -f makefile.linux clean j && cd
 
    - name: Test JE (Linux)
      if: matrix.os == 'ubuntu-18.04'
      # update this later
-     run: ../bin/linux/emj
+     run: bin/linux/emj
 #  tests:
 #   name: Test Results
 #   runs-on: ubuntu-18.04
