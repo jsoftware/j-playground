@@ -1,7 +1,7 @@
 NB. startup J code for the j playground
 
 Displayload_j_  =: 0
-SystemFolders_j_ =: |: ('temp';'/') ,. ('addons';'/addons/')
+SystemFolders_j_ =: |: ('temp';'') ,. ('addons';'/addons/')
 load 'jlibrary/system/util/scripts.ijs'
 IFTESTPLOTJHS_z_=: 1
 require 'plot'
@@ -40,4 +40,33 @@ plotdef=: 3 : 0
 'CANVAS_DEFSHOW_jzplot_ CANVAS_DEFWINDOW_jzplot_ CANVAS_DEFSIZE_jzplot_ JHSOUTPUT_jzplot_'=: y
 JHSOUTPUT_jzplot_=: 'canvas'
 i.0 0
+)
+
+
+BASE64=: (a.{~ ,(a.i.'Aa') +/i.26),'0123456789+/'
+tobase64=: 3 : 0
+res=. BASE64 {~ #. _6 [\ , (8#2) #: a. i. y
+res, (0 2 1 i. 3 | # y) # '='
+)
+
+
+require 'graphics/viewmat'
+
+viewmat_jviewmat_=: 3 : 0
+'' viewmat y
+:
+a=. '' conew 'jviewmat'
+xx__a=: x [ yy__a=: y
+if. VIEWMATGUI do.
+  empty vmrun__a ''
+else.
+  empty vmrun__a ''
+  (setalpha no_gui_bitmap__a'') writepng jpath '~temp/',TITLE__a,'.png'
+  TITLE=. TITLE__a
+  destroy__a ''
+
+  d=. tobase64_base_ fread (<'/viewmat.png')
+  imghtml_j_ =: '8',d
+  (2!:0) plotJS_j_
+end.
 )

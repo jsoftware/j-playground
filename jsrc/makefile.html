@@ -13,7 +13,7 @@ CFLAGS += -D HTML=1 -D WASM=1
 
 SRCS=$(wildcard *.c)
 
-EXCLUDE:=aes-ni.c andjnative.c fnmatch.c gemm.c jconsole.c jep.c jfex.c xaes.c xcrc.c xsha.c
+EXCLUDE:=aes-ni.c andjnative.c fnmatch.c gemm.c jconsole.c jep.c jfex.c xaes.c xsha.c
 
 SRCS:=$(filter-out $(EXCLUDE),$(SRCS))
 

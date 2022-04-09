@@ -1,0 +1,36 @@
+graphics/viewmat - change history
+
+== 1.0.0 ==
+ * initial 701 release
+
+== 1.0.1 ==
+ * J701 beta release
+
+== 1.0.4/5 ==
+ * opengl color RGB byte order with R in the lowest byte
+ * viewmat: gtk+3 compatible
+ * viewmat: gl2 changes
+
+== 1.0.6/13 ==
+ * android/iOS
+
+== 1.0.14 ==
+ * android
+
+== 1.0.15/18 ==
+ * qt
+
+== 1.0.19 ==
+ * cover verb for wd query cmds
+
+== 1.0.20/25 ==
+ * qt
+
+== 1.0.26/.. ==
+ * j801
+
+== 1.0.39 ==
+ * fixed bug in closeall
+
+== 1.0.40 ==
+ * add Esc close
