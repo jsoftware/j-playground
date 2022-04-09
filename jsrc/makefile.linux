@@ -9,7 +9,7 @@ CFLAGS += -Wno-comment -Wno-string-plus-int -Wno-unsequenced  -fomit-frame-point
 SRCS=$(wildcard *.c)
 
 #xf.c
-EXCLUDE:=aes-ni.c andjnative.c fnmatch.c gemm.c jconsole.c jep.c jfex.c xaes.c xcrc.c xsha.c
+EXCLUDE:=aes-ni.c andjnative.c fnmatch.c gemm.c jconsole.c jep.c jfex.c xaes.c xsha.c
 
 SRCS:=$(filter-out $(EXCLUDE),$(SRCS))
 
