@@ -15,8 +15,9 @@ docker run -v /tmp:/host_tmp -it emscripten/emsdk bash
 
 # on the docker container shell
 cd /host_tmp
-git clone https://github.com/joebo/jsource.git
-cd jsource
+# depth 1 if you only need the last commit
+git clone --depth 1 https://github.com/jsoftware/j-playground.git
+cd j-playground
 git checkout j903_wasm
 
 cd jsrc
@@ -28,7 +29,7 @@ cp jversion-x.h jversion.h
 ### HTML
 
 1. make -f makefile.html clean j
-2. cd ../bin/html && python2 -c 'import SimpleHTTPServer; SimpleHTTPServer.test() 
+2. cd ../bin/html && python3 -m http.server
 
 ### Wasmer or wasmtime 
 
