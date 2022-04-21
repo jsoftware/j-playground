@@ -23,9 +23,9 @@ function docmd(cmd, log, show) {
  dlog_add(cmd);
  if (log) tcmappend(cmd + "\n");
  if (show)
-  ws.send("output_jrx_=:i.0 0\noutput_jrx_=:" + cmd + "\noutput_jrx_");
+  localjserver.send("output_jrx_=:i.0 0\noutput_jrx_=:" + cmd + "\noutput_jrx_");
  else
-  ws.send(cmd);
+  localjserver.send(cmd);
 }
 
 // ---------------------------------------------------------------------

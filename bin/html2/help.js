@@ -28,7 +28,7 @@ function getcontext(t) {
  if (!txt.trim()) return tcm.focus();
  txt = t + " " + ((cm === tcm) ? 0 : 1) + " " + bgn + " " + end + " " + txt;
  let cmd = "helpplay_jws_ '" + txt + "'"
- ws.send(cmd);
+ localjserver.send(cmd);
 }
 
 // ---------------------------------------------------------------------
