@@ -28,7 +28,6 @@ function initload() {
  layout.size();
  layout.fini();
  resizer();
- wsopen();
 }
 
 // ---------------------------------------------------------------------
