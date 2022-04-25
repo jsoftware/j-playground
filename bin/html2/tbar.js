@@ -65,13 +65,13 @@ function inittbar() {
  h += "</ul></li>"
 
  h += top("Links", 1);
+ h += sub1("plink", "Last Run Permalink",1);
  h += sub1("wiki", "Wiki", 1);
  h += sub2("nuvoc", "NuVoc", "Shift+F1", 2);
  h += sub2("nvcontext", "NuVoc Context Sensitive", "Ctrl+Shift+F1", 1);
  h += sub2("vocab", "Vocabulary", "F1", 2);
  h += sub2("context", "Context Sensitive", "Ctrl+F1", 2);
  h += sub1("dictionary", "Dictionary", 2);
-
  h += "</ul></li>"
 
  h += top("Help", 1);

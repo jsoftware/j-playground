@@ -47,6 +47,8 @@ function menu(t) {
    return menuwiki("");
   case "vocab":
    return menuhelp("dictionary/vocabul");
+  case "plink":
+    return menuplink();
  }
 }
 
@@ -75,6 +77,13 @@ function menuwiki(t) {
  return window.open("http://code.jsoftware.com/wiki/" + t, "_blank");
 }
 
+// ---------------------------------------------------------------------
+function menuplink(t) {
+  var url = document.getElementById("mn_plink").childNodes[0].href;
+  return window.open(url, "_blank");
+ }
+
+ 
 // ---------------------------------------------------------------------
 function menuclose() {
  menuclose1(this);

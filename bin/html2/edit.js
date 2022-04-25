@@ -17,6 +17,8 @@ function ecminitvalue() {
   ecm.setValue(ecmLast);
  else
   ecm.setValue(Exams[0]);
+
+  checkPermalink();
 }
 
 // ---------------------------------------------------------------------
@@ -54,6 +56,11 @@ function ecmset(s) {
  ecm.focus();
 }
 
+// ---------------------------------------------------------------------
+function ecmget() {
+  return ecm.getDoc().getValue();
+ }
+ 
 // ---------------------------------------------------------------------
 function ecmsnap() {
  ecmLast = ecm.getDoc().getValue();

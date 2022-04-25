@@ -16,11 +16,32 @@ var localjserver = {
     //hack to prevent showing ending ) on multi-line definitions... probably needs to be a better way
     if (ret == ')' || ret=='}}')  ret = '';
 
+    //generate permalink so the user can copy the executed code
+    genPermalink();
+
     //tcmreturn slices the first character off
     tcmreturn(' ' + ret + '\n');
   }
 } 
 
+function genPermalink() {
+  document.getElementById("mn_plink").childNodes[0].href = '#code='+encodeURIComponent(ecmget());
+}
+
+function checkPermalink() {
+  var code = decodeURIComponent(window.location.hash).substr(1);
+  if (code.substring(0,5)=='code=') {
+    code = code.substring(5);
+    ecmset(code);
+  } 
+  else if (code.toLowerCase().substring(0,4) == 'url=') {
+      let url = code.substring(4);
+      console.log(url);
+      fetch(url).then(response=>response.text()).then(data=>{ 
+          ecmset(data);
+      });    
+  }
+}
 
 
 // ---------------------------------------------------------------------
