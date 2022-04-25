@@ -18,6 +18,8 @@ function menu(t) {
  menucloseall();
  if ("exam" === t.substring(0, 4))
   return ecmset(Exams[Number(t.substring(4))]);
+ if ("lab" === t.substring(0, 3))
+  return labrun(labs[Number(t.substring(3))]);
  if (window[t])
   return window[t]();
  switch (t) {
@@ -49,6 +51,8 @@ function menu(t) {
    return menuhelp("dictionary/vocabul");
   case "plink":
     return menuplink();
+  case "advlab":
+    labnext();
  }
 }
 
@@ -114,4 +118,28 @@ function about() {
  }
  h += "<hr><p>&copy; 2018 Jsoftware</p>";
  popup(h, 200);
+}
+
+// ---------------------------------------------------------------------
+function labrun(labPath) {
+
+  //override out
+  window.out = function(str) {
+    tcmreturn('6'+str)        
+  }
+
+  //load the labs utilities / doesn't hurt to reload each time
+  jdo1("(0!:0) <'labs/labs805.ijs'")
+  var lab = labPath.slice(labPath.indexOf('/')+1);
+  jdo1("lab 'labs/" + lab + ".ijt'");
+  //go back to the base locale so the labs execute where the user can interact
+  jdo1("('base';'z') copath 'jlab805'")
+
+  return 0;
+
+}
+
+// ---------------------------------------------------------------------
+function labnext() {
+  jdo1("labnext''")
 }

@@ -110,7 +110,8 @@ function initedit() {
  "Shift-Ctrl-C": layout.centerpanes,
  "Shift-Ctrl-L": swappanes,
  "Shift-Ctrl-R": ecmrunallx,
- "Shift-Ctrl-Enter": ecmrunlineshow
+ "Shift-Ctrl-Enter": ecmrunlineshow,
+ "Shift-Ctrl-.": labnext
  };
  /* beautify preserve:end */
 

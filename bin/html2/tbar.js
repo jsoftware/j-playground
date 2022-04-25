@@ -64,6 +64,12 @@ function inittbar() {
  h += sub2("runallx", "Clear Term & All Lines", "Ctrl+Shift+R", 2);
  h += "</ul></li>"
 
+ h += top("Labs", 1);
+ h += sub2("advlab", "Advance Labs","Ctrl+>", 1);
+ for (var i = 0; i < labs.length; i++)
+  h += sub1("lab" + i, labs[i]);
+ h += "</ul></li>"
+
  h += top("Links", 1);
  h += sub1("plink", "Last Run Permalink",1);
  h += sub1("wiki", "Wiki", 1);

@@ -164,3 +164,31 @@ scale=: [ # #"1          NB. scale y by integer x
 viewrgb 2 scale (hp ^:6 HP) { 256 #. Purple,:Lime
 
 `);
+
+
+var labs =[
+    'system/special_searches',
+    'general/towerofhanoi',
+    'general/seqmachine',
+    'general/huffman',
+    'livetexts/coleman',
+    'core/display',
+    'core/jtaste2',
+    'core/sparse',
+    'core/monad',
+    'core/intro',
+    'math/fntab',
+    'math/shapley',
+    'math/iter',
+    'math/bestfit',
+    'math/families',
+    'math/pythag3',
+    'math/averages',
+    'math/bincoefs',
+    'math/tables',
+    'math/volume',
+    'math/groups',
+    'math/frame',
+    'math/polynom',
+    'math/mathroot',
+    ]
