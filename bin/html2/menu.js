@@ -25,14 +25,18 @@ function menu(t) {
  switch (t) {
   case "center":
    return layout.centerpanes();
+  case "consen":
+   return menuwiki("Playground#Context_Sensitive");
   case "constants":
    return menuwiki("Vocabulary/Constants");
   case "controls":
-   return menuhelp("dictionary/ctrl");
-  case "dictionary":
-   return menuhelp("dictionary/contents");
+   return menuwiki("Vocabulary/ControlStructures");
+  //case "dictionary":
+   //return menuhelp("dictionary/contents");
   case "flip":
    return swappanes();
+  case "guide":
+   return menuwiki("Playground");
   case "log":
    return dlog_select();
   case "nuvoc":
@@ -45,15 +49,27 @@ function menu(t) {
    return ecmrunall();
   case "runallx":
    return ecmrunallx();
+  case "shortcuts":
+   return menuwiki("Playground/Shortcuts");
   case "wiki":
    return menuwiki("");
-  case "vocab":
-   return menuhelp("dictionary/vocabul");
+  //case "vocab":
+   //return menuhelp("dictionary/vocabul");
   case "plink":
     return menuplink();
   case "advlab":
     labnext();
  }
+}
+
+// ---------------------------------------------------------------------
+function menuconsen() {
+ menu("consen");
+}
+
+// ---------------------------------------------------------------------
+function menuguide() {
+ menu("guide");
 }
 
 // ---------------------------------------------------------------------
@@ -72,6 +88,11 @@ function menunuvoc() {
 }
 
 // ---------------------------------------------------------------------
+function menushortcuts() {
+ menu("shortcuts");
+}
+
+// ---------------------------------------------------------------------
 function menuvocab() {
  menu("vocab");
 }
@@ -87,7 +108,7 @@ function menuplink(t) {
   return window.open(url, "_blank");
  }
 
- 
+
 // ---------------------------------------------------------------------
 function menuclose() {
  menuclose1(this);
@@ -125,7 +146,7 @@ function labrun(labPath) {
 
   //override out
   window.out = function(str) {
-    tcmreturn('6'+str)        
+    tcmreturn('6'+str)
   }
 
   //load the labs utilities / doesn't hurt to reload each time

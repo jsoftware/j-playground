@@ -37,11 +37,6 @@ function inittbar() {
 
  h += '<ul class="dropdown" style="float:left">';
 
- h += top("Server", 0);
- h += sub1("reconnect", "Connect");
- h += sub1("disconnect", "Disconnect");
- h += "</ul></li>"
-
  h += top("View", 0);
  h += sub1("clearedit", "Clear Edit", 2);
  h += sub1("clearterm", "Clear Term", 1);
@@ -73,18 +68,16 @@ function inittbar() {
  h += top("Links", 1);
  h += sub1("plink", "Last Run Permalink",1);
  h += sub1("wiki", "Wiki", 1);
- h += sub2("nuvoc", "NuVoc", "Shift+F1", 2);
- h += sub2("nvcontext", "NuVoc Context Sensitive", "Ctrl+Shift+F1", 1);
- h += sub2("vocab", "Vocabulary", "F1", 2);
- h += sub2("context", "Context Sensitive", "Ctrl+F1", 2);
- h += sub1("dictionary", "Dictionary", 2);
+ h += sub2("nuvoc", "Vocabulary", "F1", 2);
+ h += sub2("nvcontext", "Vocabulary Context Sensitive", "Ctrl+F1", 1);
+ //h += sub1("dictionary", "Dictionary", 2);
  h += "</ul></li>"
 
  h += top("Help", 1);
  h += sub1("guide", "Playground", 2);
  h += sub1("shortcuts", "Shortcuts", 2);
  h += sub1("consen", "Context Sensitive", 1);
- h += sub1("about", "About", 2);
+ //h += sub1("about", "About", 2);
 
  h += "</ul></li>"
  h += "</ul></nav>"
