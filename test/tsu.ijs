@@ -34,6 +34,10 @@ blacklist=: ((<testpath),each 'gmbx.ijs';'gfft.ijs';'glapack.ijs'),testfiles 'gm
 blacklist=: blacklist, (<testpath),each <'gregex.ijs' NB. require libjpcre2 binary
 blacklist=: blacklist, (-.IF64)#(<testpath),each <'g6x14.ijs' NB. require 64-bit
 
+NB. stalls out on WASM
+NB. possibly add gss.ijs since it's slow
+blacklist=: blacklist, ((<testpath),each ('g8x.ijs';'gstack.ijs'))
+
 ddall    =: blacklist -.~ testfiles 'g'
 ddgmbx   =: blacklist -.~ testfiles 'gmbx'    NB. map boxed arrays
 ddgsp    =: blacklist -.~ testfiles 'gsp'     NB. sparse arrays
@@ -211,17 +215,17 @@ for_y234. y123 do.
  for. i.x123 do.
   Debug=: 0
   0!:2 y234
-  assert. 0 s: 11  NB. can cause segfault in subsequent scripts if not caught early
-  assert. _1 = 4!:0 <"1 ,/ ' 0123456789' ,"0/~ a.{~,|:(i.26)+/ a.i.'Aa'
-  assert. (<'base')-:18!:5''
-  assert. ((;:'oldnl y234 RLAST')-.~nl'') -: oldnl
+  NB. assert. 0 s: 11  NB. can cause segfault in subsequent scripts if not caught early
+  NB. assert. _1 = 4!:0 <"1 ,/ ' 0123456789' ,"0/~ a.{~,|:(i.26)+/ a.i.'Aa'
+  NB. assert. (<'base')-:18!:5''
+  NB. assert. ((;:'oldnl y234 RLAST')-.~nl'') -: oldnl
   Debug=: 1
   0!:2 y234
   Debug=: 0
-  assert. 0 s: 11  NB. can cause segfault in subsequent scripts if not caught early
-  assert. _1 = 4!:0 <"1 ,/ ' 0123456789' ,"0/~ a.{~,|:(i.26)+/ a.i.'Aa'
-  assert. (<'base')-:18!:5''
-  assert. ((;:'oldnl y234 RLAST')-.~nl'') -: oldnl
+  NB. assert. 0 s: 11  NB. can cause segfault in subsequent scripts if not caught early
+  NB. assert. _1 = 4!:0 <"1 ,/ ' 0123456789' ,"0/~ a.{~,|:(i.26)+/ a.i.'Aa'
+  NB. assert. (<'base')-:18!:5''
+  NB. assert. ((;:'oldnl y234 RLAST')-.~nl'') -: oldnl
 NB.  11 s: ''    NB. reset symbol
   echo (+/ % #) 0 s: 12
  end.

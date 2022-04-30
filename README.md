@@ -66,6 +66,21 @@ apt install -y g++-multilib
 1. make -f makefile.linux clean j
 1. ../bin/linux/emj
 
+## Testing
+
+Use emrun to test from within the emscripten docker image. 
+
+Firefox installation: 
+1. apt install firefox
+
+Chrome Installation:
+1. Google if you'd like to. I skipped this because chrome needed a full x11 and was a large installation
+
+Emrun: https://emscripten.org/docs/compiling/Running-html-files-with-emrun.html
+
+1. Firefox: emrun --browser=firefox --hostname=localhost --kill_exit --browser_args="--headless" /host_tmp/bin/tests/index.html  2>>/dev/null | grep -v GFX
+1. Chrome: emrun --browser=chrome --hostname=localhost --kill_exit --browser_args="--headless --remote-debugging-port=0 --disable-gpu --disable-software-rasterizer" /host_tmp/bin/tests/index.html
+
 ## emcc version
 The version of emcc used for this experiment is shown below
 ```

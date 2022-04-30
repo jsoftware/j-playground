@@ -85,5 +85,11 @@ int main( void ) {
  em_jdo("(0!:0) <'jlibrary/system/main/stdlib.ijs'");
  em_jdo("(0!:0) <'emj.ijs'");
 #endif
+#ifdef TESTS
+ em_jdo("smoutput 1");
+ printf("hello world\n");
+ em_jdo("(0!:0) <'testga.ijs'");
+ exit(1);
+#endif
    return 0;
 }
