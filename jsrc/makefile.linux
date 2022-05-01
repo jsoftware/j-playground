@@ -19,7 +19,9 @@ OBJ=$(SRCS:.c=.o)
 j      : $(OBJ)
 	  mkdir -p ../bin/linux
 	  $(CC) $(CFLAGS) $(OBJ) -lm  -ldl  
-
+	  cp ../bin/html/testga.ijs ../bin/linux/
+	  ln -fs ../../jlibrary/ ../bin/linux/jlibrary
+	  ln -fs ../../test ../bin/linux/test
 clean:;	rm -f $(OBJ) j
 
 $(OBJ) : $(HDR)

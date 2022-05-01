@@ -69,9 +69,8 @@ C* _stdcall Jinput(JS jt,C* prompt){
 
 //extern static void Initializer(int argc, char** argv, char** envp);
 
-int main( void ) {
+int main( int argc, char *argv[] ) {
   void* callbacks[] = {Joutput,0,Jinput,0,(void*)SMCON}; int type;
-
 
  jt=JInit(); //((JInitType)JInit)();
  JSM(jt, callbacks);
@@ -80,6 +79,14 @@ int main( void ) {
 //   printf( "Enter two numbers: \n\n" );
    //scanf( "%lf%lf", &x, &y );
    //printf( "The arithmetic-geometric mean is %lf\n", agm(x, y) );
+//linux
+
+
+
+if (argc>1 && strcmp(argv[1],"TEST") == 0)  {
+	em_jdo("(0!:11) <'jlibrary/system/main/stdlib.ijs'");
+	em_jdo("(0!:0) <'testga.ijs'");
+}
 #if HTML
  //load stdlib
  em_jdo("(0!:0) <'jlibrary/system/main/stdlib.ijs'");

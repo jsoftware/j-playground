@@ -13,6 +13,8 @@ IF64=: 16={:$3!:3[2
 IFBE=: 'a'~:{.2 (3!:4) a.i.'a'
 'IFUNIX IFWIN IFWINCE'=: 5 6 7 = 9!:12''
 IFJHS=: 0
+
+return. 0
 IFWINE=: (0 ~: 'ntdll wine_get_version >+ x'&(15!:0)) ::(0:@(15!:10))`0:@.IFUNIX ''
 if. notdef 'IFIOS' do.
   IFIOS=: 0
@@ -73,6 +75,7 @@ end.
 
 assert. IFQT *: IFJA
 )
+
 jcwdpath=: jpathsep@(1!:43@(0&$),])@((*@# # '/'"_),])
 jsystemdefs=: 3 : 0
 xuname=. UNAME
