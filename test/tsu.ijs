@@ -10,6 +10,7 @@ IGNOREIFFVI_z_ =: ]
 
 3 : 0 ''
 testpath=: '/',~(t i:'/'){.t=. jpath;(4!:4<'ddall'){4!:3''
+return. 1
 if. IFWIN do.
  n=. 'tsdll.dll'
 else.
@@ -217,15 +218,15 @@ for_y234. y123 do.
   0!:2 y234
   NB. assert. 0 s: 11  NB. can cause segfault in subsequent scripts if not caught early
   NB. assert. _1 = 4!:0 <"1 ,/ ' 0123456789' ,"0/~ a.{~,|:(i.26)+/ a.i.'Aa'
-  NB. assert. (<'base')-:18!:5''
-  NB. assert. ((;:'oldnl y234 RLAST')-.~nl'') -: oldnl
+  assert. (<'base')-:18!:5''
+  assert. ((;:'oldnl y234 RLAST')-.~nl'') -: oldnl
   Debug=: 1
   0!:2 y234
   Debug=: 0
   NB. assert. 0 s: 11  NB. can cause segfault in subsequent scripts if not caught early
   NB. assert. _1 = 4!:0 <"1 ,/ ' 0123456789' ,"0/~ a.{~,|:(i.26)+/ a.i.'Aa'
-  NB. assert. (<'base')-:18!:5''
-  NB. assert. ((;:'oldnl y234 RLAST')-.~nl'') -: oldnl
+  assert. (<'base')-:18!:5''
+  assert. ((;:'oldnl y234 RLAST')-.~nl'') -: oldnl
 NB.  11 s: ''    NB. reset symbol
   echo (+/ % #) 0 s: 12
  end.

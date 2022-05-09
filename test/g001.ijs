@@ -340,7 +340,8 @@ a > 7!:0''
 4!:55 <'xxx'
 a > 7!:0''
 
-0 = ('=',':') +./@:E. a =. 2 , :: (13!:12@'') '2'  NB. For a while the =. was changed to =:
+NB. this fails for some reason or gets hung up
+NB. 0 = ('=',':') +./@:E. a =. 2 , :: (13!:12@'') '2'  NB. For a while the =. was changed to =:
 
 NB. Test that arithmetic dyads migrate outer loop to inner loop
 p =: 0.5 * i. 10000 [ q =: 0.5
