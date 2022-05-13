@@ -21,7 +21,7 @@ function initload() {
  inittbar();
  initdlog();
  initmenu();
- initpanes(Config.layout);
+ initpanes(0);
  layout.init();
  initterm();
  initedit();

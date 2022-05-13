@@ -51,6 +51,8 @@ function menu(t) {
    return ecmrunallx();
   case "shortcuts":
    return menuwiki("Playground/Shortcuts");
+  case "toggleedit":
+   return layout.toggleedit();
   case "wiki":
    return menuwiki("");
   //case "vocab":
@@ -74,7 +76,7 @@ function menuguide() {
 
 // ---------------------------------------------------------------------
 function menuhelp(t) {
- return window.open("http://www.jsoftware.com/docs/help807/" + t + ".htm", "_blank");
+ return window.open("https://www.jsoftware.com/docs/help807/" + t + ".htm", "_blank");
 }
 
 // ---------------------------------------------------------------------
@@ -99,7 +101,7 @@ function menuvocab() {
 
 // ---------------------------------------------------------------------
 function menuwiki(t) {
- return window.open("http://code.jsoftware.com/wiki/" + t, "_blank");
+ return window.open("https://code.jsoftware.com/wiki/" + t, "_blank");
 }
 
 // ---------------------------------------------------------------------

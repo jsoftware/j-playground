@@ -60,7 +60,7 @@ function ecmset(s) {
 function ecmget() {
   return ecm.getDoc().getValue();
  }
- 
+
 // ---------------------------------------------------------------------
 function ecmsnap() {
  ecmLast = ecm.getDoc().getValue();
@@ -108,6 +108,7 @@ function initedit() {
  "Shift-Ctrl-Down": dummy,
  "Shift-Ctrl-Up": dummy,
  "Shift-Ctrl-C": layout.centerpanes,
+ "Shift-Ctrl-E": layout.toggleedit,
  "Shift-Ctrl-L": swappanes,
  "Shift-Ctrl-R": ecmrunallx,
  "Shift-Ctrl-Enter": ecmrunlineshow,

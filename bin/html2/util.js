@@ -3,13 +3,6 @@
 "use strict";
 
 // ---------------------------------------------------------------------
-var Config = {
- layout: 0,
- port: 5020,
- host: "localhost"
-};
-
-// ---------------------------------------------------------------------
 function classadd(id, cls) {
  getid(id).classList.add(cls);
 }

@@ -8,7 +8,6 @@ let mbarsize, tbarsize, topsize;
 
 // ---------------------------------------------------------------------
 var layout = new function() {
-
  let r = new Object();
 
  let O = console.log;
@@ -19,10 +18,13 @@ var layout = new function() {
  vstate = 0;
 
  // ---------------------------------------------------------------------
- r.centerpanes = function() {
+ function centerpanes() {
   vprop = hprop = 0.5;
   resizer();
- };
+ }
+
+ // ---------------------------------------------------------------------
+ r.centerpanes = centerpanes;
 
  // ---------------------------------------------------------------------
  r.closeviewer = function() {
@@ -68,7 +70,6 @@ var layout = new function() {
  // ---------------------------------------------------------------------
  // called at outset or when panes are flipped
  r.init = function() {
-
   panes = getid("panes");
 
   topsize = getheight(maintop);
@@ -82,6 +83,19 @@ var layout = new function() {
  // ---------------------------------------------------------------------
  r.openview = function() {
   vstate = 1;
+  resizer();
+ };
+
+ // ---------------------------------------------------------------------
+ r.showedit = function(ifshow) {
+  if (ifshow) {
+   if (panex && vprop > 0.1) return;
+   if (!panex && hprop < 0.9) return;
+   centerpanes();
+  } else {
+   if (panex) vprop = 0;
+   else hprop = 1;
+  }
   resizer();
  };
 
@@ -116,7 +130,6 @@ var layout = new function() {
     setheight(side, h - topsize);
    }
   } else {
-
    show(hb);
 
    t = mbarsize;
@@ -147,7 +160,7 @@ var layout = new function() {
     setwidth(sidepane, w);
     setwidth(side, w);
    }
-  };
+  }
 
   cmsetsize();
  };
@@ -159,6 +172,18 @@ var layout = new function() {
  };
 
  // ---------------------------------------------------------------------
+ r.toggleedit = function() {
+  if (panex) {
+   if (vprop < 0.05) centerpanes();
+   else vprop = 0;
+  } else {
+   if (hprop > 0.95) centerpanes();
+   else hprop = 1;
+  }
+  resizer();
+ };
+
+// ---------------------------------------------------------------------
  r.widths = function() {
   O("body=" + window.innerWidth + ", tbar=" + getwidth(tbar) +
    ", panes=" + getwidth(panes) +
@@ -172,8 +197,8 @@ var layout = new function() {
   e.stopPropagation();
   let em = this;
   let id = em.id;
-  let dir = (id === "vb") ? "left" : "right";
-  let pos = "client" + ((id === "vb") ? "X" : "Y");
+  let dir = id === "vb" ? "left" : "right";
+  let pos = "client" + (id === "vb" ? "X" : "Y");
   em.style.position = "relative";
   let start = e[pos];
   let diff = 0;
@@ -190,26 +215,22 @@ var layout = new function() {
    e.stopPropagation();
    em.style[dir] = null;
    em.style.position = "static";
-   if (id === "vb")
-    slidevb(diff);
-   else
-    slidehb(diff);
+   if (id === "vb") slidevb(diff);
+   else slidehb(diff);
    document.body.onmousemove = null;
    document.body.onmouseleave = document.body.onmouseup = null;
   }
 
   document.body.onmousemove = slidemove;
   document.body.onmouseleave = document.body.onmouseup = slidend;
-
  }
 
  // ---------------------------------------------------------------------
+ // d=distance moved
  function slidehb(d) {
   let h, p, x;
-  if (panex === 0)
-   h = getheight(view);
-  else
-   h = getheight(splitpane) - topsize;
+  if (panex === 0) h = getheight(view);
+  else h = getheight(splitpane) - topsize;
   x = h + d;
   p = x / (getheight(panes) - 2 * topsize - mbarsize);
   vprop = Math.min(1, Math.max(0, p));
@@ -217,12 +238,11 @@ var layout = new function() {
  }
 
  // ---------------------------------------------------------------------
+ // d=distance moved
  function slidevb(d) {
   let x, w;
-  if (panex === 0)
-   w = getwidth(main);
-  else
-   w = getwidth(side);
+  if (panex === 0) w = getwidth(main);
+  else w = getwidth(side);
   x = w + d;
   x = x / (getwidth(panes) - getwidth(vb) - 2);
   hprop = Math.max(0, Math.min(1, x));
@@ -234,3 +254,8 @@ var layout = new function() {
 }();
 
 var state = layout.state;
+
+// ---------------------------------------------------------------------
+function showedit(ifshow) {
+ layout.showedit(ifshow);
+}
