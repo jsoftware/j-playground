@@ -40,6 +40,7 @@ function inittbar() {
  h += top("View", 0);
  h += sub1("clearedit", "Clear Edit", 2);
  h += sub1("clearterm", "Clear Term", 1);
+ h += sub2("toggleedit", "Hide/Show Edit", "Shift+Ctrl+E", 1);
  h += sub2("log", "Input Log", "Ctrl+D", 1);
  h += sub2("center", "Center Panes", "Shift+Ctrl+C", 2);
  h += sub2("flip", "Flip Panes", "Shift+Ctrl+L", 1);

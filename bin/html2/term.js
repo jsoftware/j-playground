@@ -93,6 +93,7 @@ function initterm() {
  "Shift-Ctrl-Down": tcmlogdown,
  "Shift-Ctrl-Up": tcmlogup,
  "Shift-Ctrl-C": layout.centerpanes,
+ "Shift-Ctrl-E": layout.toggleedit,
  "Shift-Ctrl-L": swappanes,
  "Shift-Ctrl-T": clearterm
  };
