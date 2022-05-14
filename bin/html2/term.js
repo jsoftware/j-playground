@@ -95,7 +95,8 @@ function initterm() {
  "Shift-Ctrl-C": layout.centerpanes,
  "Shift-Ctrl-E": layout.toggleedit,
  "Shift-Ctrl-L": swappanes,
- "Shift-Ctrl-T": clearterm
+ "Shift-Ctrl-T": clearterm,
+ "Shift-Ctrl-.": labnext
  };
  /* beautify preserve:end */
  tcm.setOption("extraKeys", keys);
