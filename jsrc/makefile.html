@@ -4,16 +4,16 @@
 # jdox('i.10')
 
 CC     = emcc 
-CFLAGS = -m32 -DC_64=0
+CFLAGS = -fPIC  -g -msse2  -DC_64=0  -m32
+CFLAGS += -D __linux__=1 
+CFLAGS += -fPIC -O2 -fvisibility=hidden -fno-strict-aliasing -fno-stack-protector
 CFLAGS += -Wno-parentheses -Wno-unused-value -Wno-pointer-sign
 CFLAGS += -Wno-empty-body -Wno-return-type -Wno-constant-logical-operand
-CFLAGS += -Wno-comment -Wno-string-plus-int -Wno-unsequenced  -fomit-frame-pointer -D __linux__=1
-CFLAGS += -D HTML=1 -D WASM=1
+CFLAGS += -Wno-comment -Wno-string-plus-int -Wno-unsequenced  -fomit-frame-pointer
+CFLAGS += -D HTML=1 -D WASM=1 -msimd128
 
-
-SRCS=$(wildcard *.c)
-
-EXCLUDE:=aes-ni.c andjnative.c fnmatch.c gemm.c jconsole.c jep.c jfex.c xaes.c xsha.c
+SRCS=$(wildcard *.c) blis/gemm_c-ref.c blis/gemm_vec-ref.c blis/gemm_int-sse2.c
+EXCLUDE:=aes-ni.c andjnative.c fnmatch.c jconsole.c jep.c jfex.c xaes.c xsha.c
 
 SRCS:=$(filter-out $(EXCLUDE),$(SRCS))
 
