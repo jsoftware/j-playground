@@ -26,7 +26,8 @@ j      : $(OBJ)
 	  # since the html and js are customized
 	  $(CC) $(CFLAGS) $(OBJ) -o ../bin/html/emj.js -s BINARYEN_EXTRA_PASSES="--pass-arg=max-func-params@75" \
 	  -s WASM=1 -s EMULATE_FUNCTION_POINTER_CASTS=1 -s EXPORTED_FUNCTIONS='["_main","_em_jdo", "_em_jsetstr", "_em_jgetstr"]' \
-	  -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap","ccall", "UTF8ToString", "lengthBytesUTF8", "stringToUTF8"]' -s NO_EXIT_RUNTIME=1 -s ALLOW_MEMORY_GROWTH=1 \
+	  -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap","ccall", "UTF8ToString", "lengthBytesUTF8", "stringToUTF8"]' -s NO_EXIT_RUNTIME=1 \
+	  -s TOTAL_MEMORY=32MB -s ALLOW_MEMORY_GROWTH=1 \
 	  --preload-file ../jlibrary/ --preload-file ../labs/ --preload-file ../addons/ --embed-file ../bin/html/emj.ijs@emj.ijs
 	  cp ../bin/html/emj.* ../bin/html2/
 
