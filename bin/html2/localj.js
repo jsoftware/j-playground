@@ -9,18 +9,23 @@ var jgetstr = Module.cwrap('em_jgetstr','string',['string'])
 
 var localjserver = { 
   send: function(cmd) { 
-    //console.log(cmd);    
-    jsetstr('CODE',cmd);
-    var ret = jdo1("(0!:101) CODE");
-    
-    //hack to prevent showing ending ) on multi-line definitions... probably needs to be a better way
-    if (ret == ')' || ret=='}}')  ret = '';
+    //don't execute blank links, instead just execute tcmreturn to reset state
+    if (cmd.trim()=='') {
+      //tcmreturn uses the first character to determine how to show the output
+      tcmreturn(' ');
+    } else {
+      jsetstr('CODE',cmd);
+      var ret = jdo1("(0!:101) CODE");
+      
+      //hack to prevent showing ending ) on multi-line definitions... probably needs to be a better way
+      if (ret == ')' || ret=='}}')  ret = '';
 
-    //generate permalink so the user can copy the executed code
-    genPermalink();
+      //generate permalink so the user can copy the executed code
+      genPermalink();
 
-    //tcmreturn slices the first character off
-    tcmreturn(' ' + ret + '\n');
+      //tcmreturn slices the first character off
+      tcmreturn(' ' + ret + '\n');
+    }
   }
 } 
 
