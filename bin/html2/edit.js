@@ -130,8 +130,8 @@ function initedit() {
 // checks only most common cases using standard library
 function ismultiline(t) {
  var s = t.trim();
- //support for direct definitions
- if (s.slice(-2)== '{{') return true;
+ //support for direct definitions {{, {{)n {{)d NB. foo
+ if (s.indexOf('{{') >= 0) return true;
 
  if (s.length === 0) return false;
  if ("Note'" === s.substring(0, 5)) return true;
