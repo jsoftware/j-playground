@@ -30,7 +30,9 @@ var localjserver = {
 } 
 
 function genPermalink() {
-  document.getElementById("mn_plink").childNodes[0].href = '#code='+encodeURIComponent(ecmget());
+  document.getElementById("mn_plink").childNodes[0].href = '#code='+encodeURIComponent(ecmget())
+    //replace parentheses as they cause problems in markdown
+    .replace(/\(/g, '%28').replace(/\)/g, '%29');;
 }
 
 function checkPermalink() {
