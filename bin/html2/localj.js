@@ -7,25 +7,27 @@ var jdo1 = Module.cwrap('em_jdo','string',['string'])
 var jsetstr = Module.cwrap('em_jsetstr','void',['string','string'])
 var jgetstr = Module.cwrap('em_jgetstr','string',['string'])
 
-var localjserver = { 
+//override window.out to output to the terminal
+window.out = function(str) {
+  tcmreturn(' ' + str + '\n');
+}
+
+var localjserver = {
+  sendMultiple: function(cmds) {
+    jsetstr('CODE',cmds.join("\n"));
+    jdo1("(0!:101) CODE");
+    //generate permalink so the user can copy the executed code
+    genPermalink();
+
+  },
   send: function(cmd) { 
-    //don't execute blank links, instead just execute tcmreturn to reset state
-    if (cmd.trim()=='') {
-      //tcmreturn uses the first character to determine how to show the output
-      tcmreturn(' ');
-    } else {
+    //if the cmd has a linefeed in it, it should be executed with (0!:101) because jdo expects single lines
+    //no output is required since window.out is overridden
+    if (cmd.indexOf("\n")>-1) {
       jsetstr('CODE',cmd);
-      var ret = jdo1("(0!:101) CODE");
-      
-      //hack to prevent showing ending ) on multi-line definitions... probably needs to be a better way
-      if (ret == ')' || ret=='}}')  ret = '';
-
-      //generate permalink so the user can copy the executed code
-      genPermalink();
-
-      //tcmreturn slices the first character off
-      tcmreturn(' ' + ret + '\n');
-    }
+      jdo1("(0!:101) CODE");
+    } else 
+      jdo1(cmd)
   }
 } 
 

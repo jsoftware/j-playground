@@ -30,10 +30,7 @@ function docmd(cmd, log, show) {
 
 // ---------------------------------------------------------------------
 function docmds(cmds, log) {
- cmdlist = cmds.map(function(e) {
-  return [e, log, false, true];
- });
- docmdnext();
+  localjserver.sendMultiple(cmds);
 }
 
 // ---------------------------------------------------------------------
