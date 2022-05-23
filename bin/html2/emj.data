@@ -23,8 +23,6 @@ mkdir system
 xcopy %userprofile%\%1\system  system  /S /Q
 
 cd %userprofile%
-A=:1
-
 NB. do not edit -- created by sym2ijs
 cocurrent<'jdefs'
 

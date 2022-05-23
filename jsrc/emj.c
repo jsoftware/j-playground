@@ -6,16 +6,29 @@
 
 J jt;
 
-static char input[30000];
+const int MAX_OUTPUT_SIZE=30000;
 
+static char input[30000];
 //there is probably a better way to do this
-static char output[30000];
+static char output[MAX_OUTPUT_SIZE];
+int outputPtr=0;
 
 // function for calling from HTML
 // var jdo = Module.cwrap('em_jdo','string',['string'])
 // jdo('1+1')
 char* em_jdo( char *cmd ) {
+  
+  //JDo will call Joutput to create output string in global output variable
+  outputPtr=0;
+  
+  //clear output
+  output[outputPtr] = '\0';
+
+  //execute the J cmd
   JDo(jt, cmd);
+
+  //null terminate the output
+  output[outputPtr-1] = '\0';
   return output;
 }
 
@@ -40,12 +53,11 @@ char* em_jgetstr(char *var) {
 /* J calls for output */
 void _stdcall Joutput(JS jt,int type, C* s)
 {
-  
-  strncpy(output, s, sizeof(output));
-
-  //drop 1 character to remove the trailing \n
-  int len = strlen(s);
-  output[len-1] = '\0';  
+  char *p = s;
+  while(*p != 0 && outputPtr < MAX_OUTPUT_SIZE) {
+	  output[outputPtr++] = *p;
+	  p++;
+  }
   printf("%s", s);
 }
 

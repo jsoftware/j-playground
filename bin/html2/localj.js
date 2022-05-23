@@ -13,16 +13,23 @@ var localjserver = {
     if (cmd.trim()=='') {
       tcmreturn('');
     } else {
-      jsetstr('CODE',cmd);
+      jsetstr('CODE',cmd);      
       var ret = jdo1("(0!:101) CODE");
-      
-      //hack to prevent showing ending ) on multi-line definitions... probably needs to be a better way
-      if (ret == ')' || ret=='}}')  ret = '';
+      //filter out the cmd from the output since it's already been typed in
+      ret = ret.replace(cmd,'').trim();
+      if (ret.length > 0 && ret[0] == '\n') {
+        ret = ret.slice(1);
+      }
 
       //generate permalink so the user can copy the executed code
       genPermalink();
 
-      tcmreturn(ret + '\n');
+      if (ret.length>0) {
+        tcmreturn('1'+ ret + '\n');
+      } else {
+        tcmreturn('');
+      }
+      
     }
   }
 } 
