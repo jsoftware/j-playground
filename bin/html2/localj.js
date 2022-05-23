@@ -8,7 +8,7 @@ var jsetstr = Module.cwrap('em_jsetstr','void',['string','string'])
 var jgetstr = Module.cwrap('em_jgetstr','string',['string'])
 
 var localjserver = { 
-  send: function(cmd) { 
+  send: function(cmd, show=false) {
     //don't execute blank links, instead just execute tcmreturn to reset state
     if (cmd.trim()=='') {
       tcmreturn('');
@@ -19,6 +19,11 @@ var localjserver = {
       ret = ret.replace(cmd,'').trim();
       if (ret.length > 0 && ret[0] == '\n') {
         ret = ret.slice(1);
+      }
+
+      //if showing filter out the output_jrx_lines
+      if (show == true) {
+        ret = ret.split("\n").slice(3).join("\n");
       }
 
       //generate permalink so the user can copy the executed code

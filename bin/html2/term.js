@@ -23,7 +23,7 @@ function docmd(cmd, log, show) {
  dlog_add(cmd);
  if (log) tcmappend(cmd + "\n");
  if (show)
-  localjserver.send("output_jrx_=:i.0 0\noutput_jrx_=:" + cmd + "\noutput_jrx_");
+  localjserver.send("output_jrx_=:i.0 0\noutput_jrx_=:" + cmd + "\noutput_jrx_", show);
  else
   localjserver.send(cmd);
 }
@@ -199,12 +199,7 @@ function tcmprompter() {
 
 // ---------------------------------------------------------------------
 function tcmreturn(e) {
- if (e.length) tcmreturn1(e);
- tcmprompter();
-}
-
-// ---------------------------------------------------------------------
-function tcmreturn1(e) {
+ if (!e.length) return tcmprompter();
  var t = Number(e[0]);
  var s = e.slice(1);
  /* beautify preserve:start */
@@ -214,7 +209,7 @@ function tcmreturn1(e) {
   case 8: return tcmviewmat(s);
   case 9: return showhelp(s);
   case 3: return;
-  default: return tcmappend(s);
+  default: tcmappend(s);tcmprompter();
  }
  /* beautify preserve:end */
 }
