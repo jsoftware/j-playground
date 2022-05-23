@@ -10,7 +10,8 @@ const int MAX_OUTPUT_SIZE=30000;
 
 static char input[30000];
 //there is probably a better way to do this
-static char output[MAX_OUTPUT_SIZE];
+static char output[30000];
+
 int outputPtr=0;
 
 // function for calling from HTML
