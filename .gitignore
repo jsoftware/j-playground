@@ -71,3 +71,7 @@ jlibrary/tools/
 
 #github workflow action folders
 j64/
+
+# dev scripts
+clean.sh
+runserver.sh

@@ -11,8 +11,7 @@ var localjserver = {
   send: function(cmd) { 
     //don't execute blank links, instead just execute tcmreturn to reset state
     if (cmd.trim()=='') {
-      //tcmreturn uses the first character to determine how to show the output
-      tcmreturn(' ');
+      tcmreturn('');
     } else {
       jsetstr('CODE',cmd);
       var ret = jdo1("(0!:101) CODE");
@@ -23,8 +22,7 @@ var localjserver = {
       //generate permalink so the user can copy the executed code
       genPermalink();
 
-      //tcmreturn slices the first character off
-      tcmreturn(' ' + ret + '\n');
+      tcmreturn(ret + '\n');
     }
   }
 } 
@@ -50,10 +48,3 @@ function checkPermalink() {
   }
 }
 
-
-// ---------------------------------------------------------------------
-// originally this connected to a docker instance
-// now just does the load ...
-function connect() {
-  initload();
-}

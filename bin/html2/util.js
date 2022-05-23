@@ -2,6 +2,10 @@
 
 "use strict";
 
+var AA, BB;
+var O = console.log;
+var S = JSON.stringify;
+
 // ---------------------------------------------------------------------
 function classadd(id, cls) {
  getid(id).classList.add(cls);

@@ -32,8 +32,6 @@ function initload() {
 
 // ---------------------------------------------------------------------
 function showstate(e) {
- getid(e ? "mn_reconnect" : "mn_disconnect").classList.add("hidden");
- getid(e ? "mn_disconnect" : "mn_reconnect").classList.remove("hidden");
  var b = ["mainpane", "maintop", "sidepane", "sidetop", "mn_View",
   "mn_Examples", "mn_EditRun", "mn_context", "mn_nvcontext"
  ];
@@ -87,5 +85,5 @@ window.onresize = function() {
 
 // ---------------------------------------------------------------------
 window.onload = function() {
- connect();
+ initload();
 }

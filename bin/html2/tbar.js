@@ -39,7 +39,7 @@ function inittbar() {
 
  h += top("View", 0);
  h += sub1("clearedit", "Clear Edit", 2);
- h += sub1("clearterm", "Clear Term", 1);
+ h += sub2("clearterm", "Clear Term", "Shift+Ctrl+T", 1);
  h += sub2("toggleedit", "Hide/Show Edit", "Shift+Ctrl+E", 1);
  h += sub2("log", "Input Log", "Ctrl+D", 1);
  h += sub2("center", "Center Panes", "Shift+Ctrl+C", 2);
@@ -61,13 +61,13 @@ function inittbar() {
  h += "</ul></li>"
 
  h += top("Labs", 1);
- h += sub2("advlab", "Advance Labs","Ctrl+>", 1);
+ h += sub2("advlab", "Advance Labs", "Ctrl+>", 1);
  for (var i = 0; i < labs.length; i++)
   h += sub1("lab" + i, labs[i]);
  h += "</ul></li>"
 
  h += top("Links", 1);
- h += sub1("plink", "Last Run Permalink",1);
+ h += sub1("plink", "Last Run Permalink", 1);
  h += sub1("wiki", "Wiki", 1);
  h += sub2("nuvoc", "Vocabulary", "F1", 2);
  h += sub2("nvcontext", "Vocabulary Context Sensitive", "Ctrl+F1", 1);

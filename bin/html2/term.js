@@ -103,7 +103,7 @@ function initterm() {
  tcm.on("focus", function() {
   lastfocus = tcm;
  });
-
+ tcmprompt("   ");
 }
 
 // ---------------------------------------------------------------------
@@ -191,20 +191,24 @@ function tcmprompt(t) {
 }
 
 // ---------------------------------------------------------------------
-function tcmprompter(t) {
- tcmprompt(t);
+// fixed at 3 spaces
+function tcmprompter() {
+ tcmprompt("   ");
  docmdnext();
 }
 
 // ---------------------------------------------------------------------
 function tcmreturn(e) {
- //O("tcmreturn e", JSON.stringify(e));
- if (e.length === 0) return;
+ if (e.length) tcmreturn1(e);
+ tcmprompter();
+}
+
+// ---------------------------------------------------------------------
+function tcmreturn1(e) {
  var t = Number(e[0]);
  var s = e.slice(1);
  /* beautify preserve:start */
  switch(t) {
-  case 0: return tcmprompter(s);
   case 6: return tcmecho(s);
   case 7: return tcmplot(s);
   case 8: return tcmviewmat(s);
