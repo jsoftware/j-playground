@@ -75,9 +75,9 @@ function menuguide() {
 }
 
 // ---------------------------------------------------------------------
-function menuhelp(t) {
- return window.open("https://www.jsoftware.com/docs/help807/" + t + ".htm", "_blank");
-}
+//function menuhelp(t) {
+ //return window.open("https://www.jsoftware.com/docs/help807/" + t + ".htm", "_blank");
+//}
 
 // ---------------------------------------------------------------------
 function menuref() {

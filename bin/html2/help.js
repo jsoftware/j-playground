@@ -32,28 +32,25 @@ function getcontext(t) {
 }
 
 // ---------------------------------------------------------------------
-function showhelp(s) {
- var t = Number(s[0]);
- s = s.substring(1);
- if (t === 0) {
-  var p = tcm.getCursor().line;
-  var n = tcm.lineCount() - 1;
-  if (n === p)
-   tcmappend("\n");
-  else {
-   var len = tcm.getLine(n).length;
-   tcm.getDoc().setSelection({
-    line: p + 1,
-    ch: 0
-   }, {
-    line: n,
-    ch: len
-   });
-   tcm.replaceSelection("");
-  }
-  return tcmappend(s);
+function showhelp(e) {
+ O("showhelp", e);
+ var t = Number(e[0]);
+ s = e.substring(1);
+ if (t) return menuwiki("Vocabulary/" + s);
+ var p = tcm.getCursor().line;
+ var n = tcm.lineCount() - 1;
+ if (n === p)
+  tcmappend("\n");
+ else {
+  var len = tcm.getLine(n).length;
+  tcm.getDoc().setSelection({
+   line: p + 1,
+   ch: 0
+  }, {
+   line: n,
+   ch: len
+  });
+  tcm.replaceSelection("");
  }
- if ("nuvoc" === s.substring(0, 5))
-  return menuwiki("Vocabulary" + s.substring(5));
- return menuhelp(s);
+ return tcmappend(s);
 }

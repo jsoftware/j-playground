@@ -73,5 +73,6 @@ jlibrary/tools/
 j64/
 
 # dev scripts
+/cdb*.sh
 clean.sh
 runserver.sh

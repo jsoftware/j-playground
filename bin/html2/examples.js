@@ -143,7 +143,7 @@ pd 'show'
 ExIds.push("Viewmat");
 addexam(`
 
-NB. load 'viewmat'
+load 'viewmat'
 
 viewmat */~ i:3                NB. multiplication table
 
