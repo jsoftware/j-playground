@@ -5,7 +5,28 @@
 // ---------------------------------------------------------------------
 function inittbar() {
  var h = "<nav id='menu'>";
-
+ var titles = ["An Idiosyncratic Introduction to J",
+               "A Taste of J",
+               "Monad/Dyad",
+               "Huffman Coding",
+               "Sequential Machines",
+               "The Tower of Hanoi",
+               "Coleman (sample topics)",
+               "Averages",
+               "Best Fit",
+               "Binomial Coefficients",
+               "Families of Functions",
+               "Function Tables",
+               "Frame's Method",
+               "Finite Groups",
+               "Iteration and the Power Operator",
+               "Mathematical Roots of J",
+               "Polynomials",
+               "Pythagorean Triples",
+               "Shapley Value on Old Macdonald's Farm",
+               "Math Tables",
+               "Volume",
+               "Special Searches"]
  function top(n, w) {
   return '<li' + pid(n) + ' class="top_menu"><a href="#">' + n + '</a><ul class="sub_menu width' + w + '">'
  }
@@ -63,7 +84,7 @@ function inittbar() {
  h += top("Labs", 1);
  h += sub2("advlab", "Advance Labs", "Ctrl+>", 1);
  for (var i = 0; i < labs.length; i++)
-  h += sub1("lab" + i, labs[i]);
+  h += sub1("lab" + i, titles[i]);
  h += "</ul></li>"
 
  h += top("Links", 1);
