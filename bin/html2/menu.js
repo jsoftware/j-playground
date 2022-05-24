@@ -146,15 +146,14 @@ function about() {
 // ---------------------------------------------------------------------
 function labrun(labPath) {
 
-  //override out
-  window.out = function(str) {
-    tcmreturn('6'+str)
-  }
-
   //load the labs utilities / doesn't hurt to reload each time
   jdo1("(0!:0) <'labs/labs805.ijs'")
   var lab = labPath.slice(labPath.indexOf('/')+1);
-  jdo1("lab 'labs/" + lab + ".ijt'");
+  var lines  = jdo1("lab 'labs/" + lab + ".ijt'");
+  lines.split('\n').forEach(line=>{
+    tcmappend(line+"\n");
+  })
+
   //go back to the base locale so the labs execute where the user can interact
   jdo1("('base';'z') copath 'jlab805'")
 
@@ -164,5 +163,10 @@ function labrun(labPath) {
 
 // ---------------------------------------------------------------------
 function labnext() {
-  jdo1("labnext''")
+  var lines = jdo1("labnext''")
+  lines.split('\n').forEach(line=>{
+    tcmappend(line+"\n");
+  })
+
+
 }
