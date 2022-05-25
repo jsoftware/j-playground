@@ -22,7 +22,7 @@ function docmd(cmd, log, show) {
   show = false;
  dlog_add(cmd);
  if (log) tcmappend(cmd + "\n");
- if (show)
+ if (show && cmd.length > 0)
   localjserver.send("output_jrx_=:i.0 0\noutput_jrx_=:" + cmd + "\noutput_jrx_", show);
  else
   localjserver.send(cmd);
