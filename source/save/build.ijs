@@ -6,4 +6,6 @@ dat=. dat,LF,'cocurrent ''base''',LF
 dat fwritenew '~.Playground/bin/html/emj.ijs'
 dat fwritenew '~.Playground/bin/html2/emj.ijs'
 
-textview dat
+Note''
+fview '~.Playground/bin/html2/emj.ijs'
+)

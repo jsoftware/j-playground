@@ -3,7 +3,10 @@ NB. make changes in the playground source directory and rebuild
 
 Displayload_j_=: 0
 SystemFolders_j_=: |: ('temp';'') ,. ('addons';'/addons/')
+
 load 'jlibrary/system/util/scripts.ijs'
+load 'jlibrary/system/util/pacman.ijs'
+
 IFTESTPLOTJHS_z_=: 1
 
 IFJHS_jzplot_=: 1

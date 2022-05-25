@@ -165,7 +165,20 @@ viewrgb 2 scale (hp ^:6 HP) { 256 #. Purple,:Lime
 
 `);
 
+// ---------------------------------------------------------------------
+ExIds.push("Addons");
+addexam(`
 
+NB. Addons are packages that can be loaded into a J session
+
+install 'github:jsoftware/math_calculus'
+
+require 'math/calculus'
+
+0 1 2&p. deriv_jcalculus_ 1
+`);
+
+// ---------------------------------------------------------------------
 var labs =[
     'core/intro',
     'core/jtaste2',
