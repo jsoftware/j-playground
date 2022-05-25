@@ -240,7 +240,7 @@ static B rmdir(C*v){R!rmdir1(v);}
 
 
 F1(jtjmkdir){A y,z;
-#ifdef WASM
+#ifdef WASMER
  R 0;
 #endif
  F1RANK(0,jtjmkdir,DUMMYSELF);
