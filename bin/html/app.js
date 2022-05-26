@@ -147,7 +147,7 @@ function toggleEditor(event) {
     document.getElementById('editContainer').style.display='none';    
     document.getElementById('repl').style.top='55px';
     document.getElementById('repl').style.width='100%'
-    document.getElementById('repl').style.height='calc(var(--100vvh, 100vh)*0.925)';
+    document.getElementById('repl').style.height='calc(var(--100vvh, 100vh)*0.91)';
     
   } else {
     document.getElementById('editContainer').style.display='';
@@ -196,7 +196,7 @@ function checkPermalink() {
       document.getElementById("permalinkBase").href = window.location.href;
       code = code.substring(5);
       editor.setValue(code);
-      toggleEditor();
+      //toggleEditor();
       document.getElementById("permalink").style.display = '';
     } 
     else if (code.toLowerCase().substring(0,4) == 'url=') {
@@ -204,7 +204,7 @@ function checkPermalink() {
         console.log(url);
         fetch(url).then(response=>response.text()).then(data=>{ 
             editor.setValue(data) 
-            toggleEditor()
+            //toggleEditor()
         });    
     }
     else {
@@ -224,6 +224,7 @@ if (useMonaco) {
   let codeEditor = document.createElement("textarea");
   codeEditor.style.height="100%";
   codeEditor.style.width="100%"
+  codeEditor.setAttribute("placeholder","Enter multiple lines of J code here and click Run");
   document.querySelector("#editor").append(codeEditor);
   window.editor = {
     setValue: function(value) {
@@ -233,7 +234,7 @@ if (useMonaco) {
       return codeEditor.value;
     }
   }
-  toggleEditor();
+  //toggleEditor();
   checkPermalink();
 }
 
