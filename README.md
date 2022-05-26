@@ -3,6 +3,12 @@ Versions for testing
 1. https://jsoftware.github.io/j-playground/bin/html/ - Original Proof of Concept
 2. https://jsoftware.github.io/j-playground/bin/html2/ - 2018 J Playground (much improved) ported to WASM engine - work in progress.
 
+Developing
+---------
+1. HTML/JS for the latest playground is in bin/html2 and is accessible from github pages (https://jsoftware.github.io/j-playground/bin/html2/). The older prototype playground is in bin/html. Files can be directly edited in these folders to make modifications. Later we may move the source out and keep those folders for produciton builds of the html/js
+2. J Engine is in jsrc. The playground startup is in emj.c. The solution can be built with the makefile.* files (namely makefile.html). The main difference from stock jsrc and the playground jsrc is as follows: a.) stock j uses a dynamic library, instead all of the j code is linked into one binary. b.) some primitives such as mmap and other things don't work in wasm - these are primarily excluded from the build with #ifdef WASM in the source code or excluded in makefile.*
+4. J Playground initialization J code is maintained in source/base and source/help and a build.py or jproject assembles it into emj.ijs, which is packaged in the html build. . Do not modify emj.ijs directly. Instead use the smaller, structured files in source.
+
 Building
 --------
 
