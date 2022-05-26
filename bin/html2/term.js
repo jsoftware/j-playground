@@ -146,14 +146,9 @@ function tcmenter() {
 }
 
 // ---------------------------------------------------------------------
-function tcmhtml(e,jnoun) {
+function tcmhtml(e) {
   var div = document.createElement("div");
-   if ((jnoun||'')!='') {
-     var html = jgetstr(jnoun);
-     div.innerHTML = html;
-   } else {
-     div.innerHTML = e;
-   }
+  div.innerHTML = e;
   document.body.appendChild(div);
   tcmaddlinewidget(div);
  }
