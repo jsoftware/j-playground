@@ -81,10 +81,12 @@ int __assert_fail(int a, int b, int c) {
 int __localtime_r(int a, int b, int c) {
     return 1;
 }
+/*
 
 int __clock_gettime(int a, int b, int c) {
     return 1;
 }
+*/
 /*
 int __syscall_munmap(int a, int b, int c) {
     return 1;
@@ -157,7 +159,7 @@ int invoke_viiiii(int, int, int, int, int, int) {}
 void emscripten_notify_memory_growth() { }
 //int fd_close(int v) { return 0; }
 int getTempRet0() { return 0; }
-void exit() { return; }
+//void exit() { return; }
 void gettimeofday() { return; }
 void clock() { return; }
 void time() { return; }
