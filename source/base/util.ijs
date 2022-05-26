@@ -31,3 +31,10 @@ a=. ucp '┌┬┐├┼┤└┴┘│─'
 x=. I. y e. b
 utf8 (a {~ b i. x { y) x } y
 )
+
+NB. =========================================================
+NB. opens a file in the j playground editor
+open=: 3 : 0
+data =. fread getscripts_j_ y
+(2!:0) 'if (confirm("Are you sure you wish to overwrite the editor?")) { ecmset(jgetstr("data")) }'
+)
