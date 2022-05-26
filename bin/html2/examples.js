@@ -178,6 +178,51 @@ require 'math/calculus'
 0 1 2&p. deriv_jcalculus_ 1
 `);
 
+ExIds.push("UI");
+addexam(`
+
+NB. J Playground has a popup facility that can be used to draw a simple form with user input
+NB. the user input can call J code to get html or SVG
+NB. In this example, the UI is updated on change of the select. A button could be added instead to refresh the display
+
+POPUPHTML =: 0 : 0
+<div>
+Select a circle color to draw. The circle will draw on selection<br>
+<select id="color" onchange="drawCircle()">
+  <option>red</option>
+  <option>blue</option>
+</select>
+</div>
+<div id="circle">
+</div>
+<div style='text-align:right'><button id='popup-ok'>OK</button></div>
+)
+
+NB. javascript that is called 
+POPUPJS =: 0 : 0
+  window.drawCircle = function() {
+      var color = document.getElementById('color').value;
+      circle.innerHTML = jdo1("getCircle '" + color + "'");
+  }
+)
+
+NB. example of a j function returning SVG
+NB. getCircle 'blue'
+getCircle =: 3 : 0
+'<svg height="100" width="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="', y, '" /></svg>'
+)
+
+NB. initialize JS
+(2!:0) POPUPJS
+
+NB. show the popup
+(2!:0) 'popup(jgetstr("POPUPHTML"),500,"ok")'
+
+NB. execute some javascript after the popup is displayed to draw the circle
+NB. add a delay to let the popup finish rendering
+(2!:0) 'setTimeout(function() { drawCircle() },100)'
+`);
+
 // ---------------------------------------------------------------------
 var labs =[
     'core/intro',
