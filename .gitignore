@@ -60,7 +60,7 @@ release
 /test/temp.ijs
 
 # build folders
-bin/
+bin/wasmer/
 make2/
 jlibrary/bin/
 jlibrary/bin32/

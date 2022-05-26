@@ -1,0 +1,239 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>J Playground (Prototype)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/viewport-fix.css">
+</head>
+
+<body> 
+  <div id="viewport">
+    <style type="text/css">
+
+body {
+  background:white;
+  font-family: sans-serif;
+}
+
+#viewport {
+  background: green;
+  color: white;
+}
+
+
+#plot {
+  position: fixed;
+  top: var(--offset-h, 0);
+  left: 0;
+  color: white;
+  padding: 0px;
+  z-index: 500;
+  margin-top: calc(var(--100vh, 100vh)/5);
+}
+
+/*
+#viewport:after,
+#viewport:before {
+  display: table;
+  content: "End of viewport";
+  background: lightblue;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 50vw;
+  left: 50%;
+  text-align: center;
+  margin-left: -25vw;
+  opacity: 0.5;
+  font-size: 16px;
+  padding: 15px;
+}
+
+#viewport:before {
+  bottom: auto; 
+  top: 0;
+  content: "Beginning of viewport"
+}
+*/
+#runEditor {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+#editContainer {
+  background:lightblue;
+  color: white;
+  padding: 10px;
+  box-sizing: border-box;
+  display: block;
+  height: calc(var(--100vvh, 100vh) * 0.5);
+  width: 100%;
+  position: absolute;
+  top: 55px;
+  right: 0;
+}
+#repl {
+  background: lightblue;
+  color: white;
+  padding: 10px;
+  box-sizing: border-box;
+  display: block;
+  height: calc(var(--100vvh, 100vh) * 0.50);
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  right: 0;
+}
+
+.fixed_item {
+  position: fixed;
+  top: var(--offset-h, 0);
+  left: 0;
+  width: 600px;
+  background: hsl(204deg 90% 45%);
+  color: white;
+  padding: 0px;
+  z-index: 9999;
+}
+    
+        .dropbtn {
+      /*  background-color: #f1f1f1; */
+      font-family: "courier";
+      color: black;
+      padding: 10px;
+      font-size: 12pt;
+      border: none;
+    }
+    
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      font-family: "courier";
+    }
+    
+    .dropdown-content {
+      display: none;
+      color: black;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,.5);
+      z-index: 1;
+      font-family: "courier";
+    }
+    
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    
+    .dropdown-content a:hover {background-color: #ddd;}
+    
+    .dropdown:hover .dropdown-content {display: block;}
+    
+    .dropdown:hover .dropbtn {background-color: #f1f1f1;}
+        </style>
+        <style>    
+          #permalink {
+            
+          }
+          #permalink a {
+            text-decoration: none;
+            color: #ffffff;
+            border-bottom: 1px dotted #aaa;
+          }
+          #permalink a:hover {
+            color: #242625;
+            border-bottom: 1px dotted #242625;
+          }
+          #editor textarea { border: 1px solid #c0c0c0}
+        </style>
+        
+        <div id="menu" class="fixed_item">
+        <span>J Playground</span><br>
+        <button id="runEditor">Run</button>
+        <div class="dropdown">
+            <button class="dropbtn">View</button>
+            <div class="dropdown-content" style="width:300px">
+              <a href="#toggle-editor" id="toggleEditor">Toggle Multi-line Editor</a>          
+              <a href="#toggle-plot-old" id="togglePlot" style="display:none"></a>
+              <a href="#toggle-plot" id="togglePlot2">Toggle Plot</a>          
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Labs</button>
+            <div class="dropdown-content" style="width:300px;overflow-y: scroll;height:500px;" id="labMenu">
+              
+            </div>
+        </div>
+        <div class="dropdown">
+          <button class="dropbtn">Links</button>
+          <div class="dropdown-content">
+            <a target="_blank" href="https://www.youtube.com/watch?v=aV936cVrN0I&list=WL&index=9">Teaser Video (youtube)</a>
+            <a target="_blank" href="https://code.jsoftware.com/wiki/Main_Page">Wiki</a>
+            <a target="_blank" href="https://github.com/jsoftware">J software (github)</a>
+            <a target="_blank" href="https://code.jsoftware.com/wiki/System/Installation/J903/Zips">Download J</a>
+            <a target="_blank" href="https://code.jsoftware.com/wiki/NuVoc">Vocabulary</a>
+            <a target="_blank" href="https://rosettacode.org/wiki/Category:J#mw-pages">Rosetta Code</a>
+          </div>
+        </div>        
+        <input type="button" value="Advance Lab" style="display:none" id="advanceLab" title="hotkey: ctrl+>">        
+        <span id="permalink" style="display:none">
+          <a id="permalinkBase" href="#">editor permalink</a>
+        </span>
+        <span id="plotx"></span>
+    </div>
+    
+    
+    <div class="parent">
+        <div id="editContainer">
+          <div class="editor" id="editor" style="width:100%;height:100%"></div>          
+        </div>
+        <div class="repl" id="repl">
+            <textarea name="" autocomplete="off" spellcheck="false" autocorrect="off" id="code" autofocus style="height:100%;width:100%"></textarea>
+        </div>
+        <div id="plot" class="partial_viewport"></div>
+    </div>
+    
+        <!--textarea id="output" rows="8"></textarea-->
+        <script type="text/javascript" src="emj.js"></script>
+        <script type="text/javascript" src="app.js"></script> 
+        <script>
+            //hack togglePlot for the experiment
+        window.togglePlot = function(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            //hide the plot area
+            if (_plotShown) {
+                document.getElementById('plot').style.display='none';             
+            } else {
+                document.getElementById('plot').style.display='';
+            }
+            _plotShown = !_plotShown;
+            }
+            document.getElementById('togglePlot2').addEventListener('click', togglePlot);
+            document.getElementById('plot').addEventListener('click', function() {
+                togglePlot();
+            })
+        </script>
+  </div>
+  <script src="viewport-fix.js"></script>
+  <script>new VVP()</script>
+
+</body>
+
+</html>

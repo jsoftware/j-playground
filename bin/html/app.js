@@ -37,6 +37,7 @@ function tcmreturn(e) {
   cvs.width = pid[1];
   cvs.height = pid[2];
   cvs.position = "absolute";
+  document.getElementById('plot').innerHTML='';
   document.getElementById('plot').appendChild(cvs);
   eval(def);
 }
@@ -143,11 +144,16 @@ function toggleEditor(event) {
   }
   //hide the editor
   if (_editorShown) {
-    document.getElementById('editContainer').style.display='none';
-    document.getElementById('repl').style.height='100%';
+    document.getElementById('editContainer').style.display='none';    
+    document.getElementById('repl').style.top='55px';
+    document.getElementById('repl').style.width='100%'
+    document.getElementById('repl').style.height='calc(var(--100vvh, 100vh)*0.925)';
+    
   } else {
     document.getElementById('editContainer').style.display='';
-    document.getElementById('repl').style.height='53%';
+    document.getElementById('repl').style.top='50%';
+    document.getElementById('repl').style.width='100%'
+    document.getElementById('repl').style.height='calc(var(--100vvh, 100vh)*0.5)';
   }
   _editorShown = !_editorShown;
 }
@@ -169,7 +175,7 @@ function togglePlot(event) {
   _plotShown = !_plotShown;
 }
 //hide the plot by default
-togglePlot();
+//togglePlot();
 
 function runEditor() {        
     var editorValue = editor.getValue();    
@@ -208,6 +214,7 @@ function checkPermalink() {
   
 //use monaco on a bigger device
 var useMonaco = window.innerWidth > 900;
+
 if (useMonaco) {
   let x = document.createElement("script");
   x.src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"//your script path will goes gere
@@ -216,6 +223,7 @@ if (useMonaco) {
 } else {
   let codeEditor = document.createElement("textarea");
   codeEditor.style.height="100%";
+  codeEditor.style.width="100%"
   document.querySelector("#editor").append(codeEditor);
   window.editor = {
     setValue: function(value) {
@@ -283,6 +291,29 @@ document.onreadystatechange = function(){
   }
 }
 
+var titles = ["An Idiosyncratic Introduction to J",
+"A Taste of J",
+"Monad/Dyad",
+"Huffman Coding",
+"Sequential Machines",
+"The Tower of Hanoi",
+"Coleman (sample topics)",
+"Averages",
+"Best Fit",
+"Binomial Coefficients",
+"Families of Functions",
+"Function Tables",
+"Frame's Method",
+"Finite Groups",
+"Iteration and the Power Operator",
+"Mathematical Roots of J",
+"Polynomials",
+"Pythagorean Triples",
+"Shapley Value on Old Macdonald's Farm",
+"Math Tables",
+"Volume",
+"Special Searches"]
+
 var labs =[
 'system/special_searches',
 'general/towerofhanoi',
@@ -313,11 +344,11 @@ let labMenu = document.getElementById('labMenu')
 document.getElementById("advanceLab").onclick = function() {
   jdo1("labnext''")
 }
-labs.forEach(x=>{
+labs.forEach((x,i)=>{
   //<a href="#toggle-editor" id="toggleEditor">Math/Averages</a>
   var labLink = document.createElement("a")
-  labLink.setAttribute("href","#" + x);
-  labLink.innerText = x;
+  labLink.setAttribute("href","#" + labs[i]);
+  labLink.innerText = titles[i];
   labMenu.appendChild(labLink);
   labMenu.onclick = function(e) {
     //load the labs utilities / doesn't hurt to reload each time
