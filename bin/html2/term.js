@@ -146,12 +146,18 @@ function tcmenter() {
 }
 
 // ---------------------------------------------------------------------
-function tcmhtml(e) {
- var div = document.createElement("div");
- div.innerHTML = e;
- document.body.appendChild(div);
- tcmaddlinewidget(div);
-}
+function tcmhtml(e,jnoun) {
+  var div = document.createElement("div");
+   if ((jnoun||'')!='') {
+     var html = jgetstr(jnoun);
+     div.innerHTML = html;
+   } else {
+     div.innerHTML = e;
+   }
+  document.body.appendChild(div);
+  tcmaddlinewidget(div);
+ }
+ 
 
 // ---------------------------------------------------------------------
 function tcmlogdown() {
