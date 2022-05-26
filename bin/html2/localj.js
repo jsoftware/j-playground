@@ -16,9 +16,8 @@ var localjserver = {
       jsetstr('CODE_jrx_',cmd);
       var ret = jdo1("(0!:101) CODE_jrx_");
       //filter out the cmd from the output since it's already been typed in
-      let ndx  = ret.indexOf('\n');
-      ret = ndx === -1 ? "" : ret.slice(1 + ndx);
-
+      ret = ret.replace(cmd, "").trim();
+      
       //if showing filter out the output_jrx_lines
       if (show == true) {
         ret = ret.split("\n").slice(2).join("\n");
