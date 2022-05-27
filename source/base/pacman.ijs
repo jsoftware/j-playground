@@ -69,5 +69,10 @@ RESPONSE_httpget_ (1!:2) <p
 
 NB. override install to only support github for now
 install_z_ =: 3 : 0
-    install_gitrepo_jpacman_ y
+  install_gitrepo_jpacman_ y
+)
+
+NB. create a helper httpget in z
+httpget_z_ =: 3 : 0
+  httpget_jpacman_ y
 )

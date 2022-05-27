@@ -223,6 +223,54 @@ NB. add a delay to let the popup finish rendering
 (2!:0) 'setTimeout(function() { drawCircle() },100)'
 `);
 
+ExIds.push("CSV");
+addexam(`
+install 'github:jsoftware/tables_dsv'
+install 'github:jsoftware/tables_csv'
+
+require 'tables/csv'
+
+NB. from https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv
+NB. read a hard coded csv string
+csvtxt =. 0 : 0
+date,county,state,fips,cases,deaths,confirmed_cases,confirmed_deaths,probable_cases,probable_deaths
+2022-05-27,Autauga,Alabama,01001,15930,216,12757,194,3173,22
+2022-05-27,Baldwin,Alabama,01003,56274,682,39319,474,16955,208
+2022-05-27,Barbour,Alabama,01005,5694,99,3246,69,2448,30
+2022-05-27,Bibb,Alabama,01007,6482,105,4147,73,2335,32
+2022-05-27,Blount,Alabama,01009,15055,243,11110,201,3945,42
+2022-05-27,Bullock,Alabama,01011,2333,54,1965,43,368,11
+2022-05-27,Butler,Alabama,01013,5083,129,4015,96,1068,33
+2022-05-27,Calhoun,Alabama,01015,32552,628,22512,468,10040,160
+2022-05-27,Chambers,Alabama,01017,8530,162,3711,96,4819,66
+2022-05-27,Cherokee,Alabama,01019,5149,86,2891,48,2258,38
+2022-05-27,Chilton,Alabama,01021,11155,207,7902,159,3253,48
+2022-05-27,Choctaw,Alabama,01023,2052,37,901,17,1151,20
+2022-05-27,Clarke,Alabama,01025,7163,101,4705,66,2458,35
+2022-05-27,Clay,Alabama,01027,4106,82,2886,66,1220,16
+2022-05-27,Cleburne,Alabama,01029,3572,69,2807,46,765,23
+2022-05-27,Coffee,Alabama,01031,13724,231,8969,113,4755,118
+2022-05-27,Colbert,Alabama,01033,16434,262,10133,213,6301,49
+)
+
+subsetdata =. fixcsv csvtxt
+
+NB. show the first 10 lines
+10 {. subsetdata
+
+NB. count the lines
+# subsetdata
+
+NB. download the full dataset
+httpget 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv'
+data =: readcsv 'us-counties.csv'
+
+NB. count all the lines
+# data
+
+NB. filter to a state
+((2{"1 data) = (<'Ohio')) # data
+`)
 // ---------------------------------------------------------------------
 var labs =[
     'core/intro',
