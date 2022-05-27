@@ -285,7 +285,7 @@ document.onreadystatechange = function(){
         });
         
         //hide editor by default
-        toggleEditor();
+        //toggleEditor();
 
         checkPermalink()                  
     });

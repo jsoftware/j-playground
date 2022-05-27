@@ -121,7 +121,12 @@ case. do.
 end.
 )
 
-readpackage=: 3 : 0
+NB. extracts a path from a path with filename
+getPath =: 3 : 0
+'/' , y #~ +./\. y e. '=/'
+)
+
+readpackage =: 3 : 0
 
 'tag rep cmt'=: y
 
@@ -129,13 +134,16 @@ NB. execute the manifest to get the FILES list
 (0!:100) <'manifest.ijs'
 
 NB. make the folder for the addon
-NB. smoutput 'making ', FOLDER
 mkdir (jpath '~addons/',FOLDER)
 
 filesBoxed =. LF cut FILES
 urls =. getfileurl each {{tag;rep;cmt;(y,LF)}} each filesBoxed
 outputPaths =. {{jpath '~addons/',FOLDER,'/',y}} each filesBoxed
 cmds =. urls,.(<"0 (#urls)#100),.outputPaths
+
+NB. make any subdirectories
+mkdir_jpacman_ each ~. getPath each outputPaths
+
 NB. download each file
 httpget each <"1 cmds
 )
