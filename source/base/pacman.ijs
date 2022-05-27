@@ -11,7 +11,15 @@ httpgetJS =: {{)n
     console.log(url);
     if (request.status === 200) {
       //console.log(request.responseText);
-      jsetstr("RESPONSE_httpget_",request.responseText);
+      //this fails on a large file
+      //jsetstr("RESPONSE_httpget_",request.responseText);
+
+      //from https://github.com/emscripten-core/emscripten/issues/6860
+      var bufferSize = Module.lengthBytesUTF8(request.responseText);
+      var bufferPtr = Module._malloc(bufferSize + 1);
+      Module.stringToUTF8(request.responseText, bufferPtr, bufferSize + 1);
+
+      jsetstrPtr("RESPONSE_httpget_",bufferPtr);
     }
 
 

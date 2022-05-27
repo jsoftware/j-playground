@@ -4,7 +4,10 @@
 
 
 var jdo1 = Module.cwrap('em_jdo','string',['string'])
+//sets a noun using a string
 var jsetstr = Module.cwrap('em_jsetstr','void',['string','string'])
+//sets a noun using a Module._malloc'd pointer
+var jsetstrPtr = Module.cwrap('em_jsetstr','void',['string','int'])
 var jgetstr = Module.cwrap('em_jgetstr','string',['string'])
 
 var localjserver = {
