@@ -1,0 +1,289 @@
+<!doctype html>
+<html ng-app="demo">
+    <head>
+        <title>J Dashboard (Prototype)</title>
+        <script src="content/jquery-1.11.3.min.js"></script>
+        <link rel="stylesheet" href="content/bootstrap.min.css">
+        <link rel="stylesheet" href="content/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="content/angular-gridster.min.css">
+        <link rel="stylesheet" href="content/jquery-ui.css">
+        <script src="content/bootstrap.min.js"></script>
+        <script src="content/ace.js"></script>
+        <script src="content/ext-language_tools.js"></script>
+        <script src="content/angular.min.js"></script>
+        <script src="content/angular-route.min.js"></script>
+        <script src="content/plotly-latest.min.js"></script>
+        <script src="content/angular-gridster.min.js"></script>
+        <script src="content/jquery-ui.min.js"></script>
+        <script src="content/numeral.min.js"></script>
+        <script>
+            var Module = {}
+            Module['locateFile'] = function(file) { 
+                //pull dependencies from /bin/html
+                return '/bin/html/' + file;
+            }
+        </script>
+        <script src="/bin/html/emj.js"></script>
+        
+        <style>
+            th { padding: 5px; }
+            .grid-item {
+                border: 1px solid #cccccc; 
+                border: 0px;
+                position: relative;
+             }
+            .grid-item.spacer {
+                border: 0px; 
+                position: relative;
+            }
+            .grid-item .toolbar a, .grid-item-spacer .toolbar a {
+                color: #c0c0c0;
+            }
+            .grid-item .toolbar, grid-item-spacer .toolbar {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                z-index:9999;
+            }
+            .ui-dialog .ui-dialog-titlebar { padding: 0 }
+            .tile .inactive {
+                background-color: #a0a0a0;
+                color: white;
+            }
+           .tile .active {
+                background-color: rgb(7,52,91);
+                color:white;
+            }
+         .MarginTop { display: none }
+         @media print {
+            #Toolbar, .noprint { display:none }
+             .DashboardTable {page-break-after: always;}
+             #Sidebar { display: none}  
+             .MarginTop { display: block }
+         }
+        </style>
+    </head>
+    <body>
+        <div id="ng-app" ng-app="demo">
+        <div class="center" ng-view></div>
+        <script type="text/ng-template" id="/partials/index.html">
+
+            <img src="content/logo.png" style="width:25px;height:25px;"> Dashboard            
+            <br>
+        <div id="Sidebar" style="background-color:rgb(7,52,91);position:absolute;z-index:99999">
+            <div id="SidebarContent" style="color:white;width:300px;display:none;padding:10px">
+                    This is a demo of dashboard interface that uses the WASM J Engine for queries. It was originally built in 2018 and used in a prototype
+                    with the a .NET port of J, <a href="https://github.com/joebo/microj">microj</a> and was never published.
+                    <br>
+                    <br>
+                    The creation of the WASM jengine port opened up the possibility of turning it into a demo that has no server side component.
+                    <br><br>
+                    Toggle Developer Mode to see how the widgets are constructed.
+                    <br>
+                    Then click on the Gear icon see the HTML, Javascript, and J Code. The top level Gear icon (next to Save) controls the initial
+                    setup of the dashboard.
+                    <br>
+                    Each widget has its own gear icon for configuration.
+                    <br>
+                    <br>
+                    Clicking on a tile will filter the graph and table to the selected metric.
+                    Clicking on a table row will filter the graph and tiles
+                    
+            </div>
+            <a href="#" style="position:absolute;top:50%;right:5px;color:white" eat-click  ng-click="ToggleSidebar()"><i class="glyphicon glyphicon-menu-right" ng-show="SideCollapsed"></i><i class="glyphicon glyphicon-menu-left" ng-show="!SideCollapsed"></i></a>
+        </div>
+        <div style="margin-left:25px;padding:5px;">
+            <div id="Toolbar">
+            <span ng-show="DeveloperMode">
+            <input type="button" value="Add Widget" ng-click="AddChart()">
+            <!-- <input type="button" value="Share" ng-click="Share()"> -->
+            <input type="button" value="Save" ng-click="Save()">
+            <!-- <input type="button" value="Reset" ng-click="Reset()"> -->
+            <a href="#config" eat-click><i class="glyphicon glyphicon-cog" ng-click="OpenSettings()"></i></a>
+            </span>
+            <label><input type="checkbox" ng-model="DeveloperMode">Developer Mode</label>
+            </div>
+            <br style="clear:both">
+             <div gridster="gridsterOpts" ng-model="Charts">
+                <ul>
+                    <!--  ng-if="(item.WidgetType == 'Spacer' && Printing) || DeveloperMode || item.WidgetType != 'Spacer'"  ng-class="{ 'spacer' : item.WidgetType  == 'Spacer'} " -->
+                    <li gridster-item="item" ng-repeat="item in Charts" class="grid-item" >
+                        <div class="toolbar" ng-show="DeveloperMode">
+                            <a href="#config" eat-click><i class="glyphicon glyphicon-cog" ng-click="ConfigureChart(item)"></i></a>
+                            <a href="#config" eat-click><i class="glyphicon glyphicon-trash" ng-click="RemoveChart(item)"></i></a>
+                        </div>
+                        <div id="Chart{{$index}}" class="Chart">
+                        <div ng-switch on="item.WidgetType">
+                        <div id="Tile{{$index}}" ng-switch-when="Tile" style="text-align:center;font-size:1.1em;cursor:pointer;"  ng-click="ClickTile(item)" class="tile">
+                            <table style="width: 100%; height: 100%;"><tr><td align="top" style="text-align: center">
+                                <div ng-class="{ 'active' : item.Active, 'inactive' : !item.Active }">
+                                    <span>{{item.Title}}</span>
+                                </div>
+                                <div dynamic="item.Html" style="display:block;"></div>
+                            </td></tr></table>
+                        </div>
+                        <div id="Table{{$index}}" ng-switch-when="Table" class="DashboardTable" style="vertical-align:top">
+                            <div dynamic="item.Html" style="display:block;"></div>
+                        </div>
+                        <div id="Spacer{{$index}}" ng-switch-when="Spacer">
+                            <span class="noprint">spacer</span>
+                        </div>
+                        </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="ConfigDialog" style="display:none">
+            Type <select ng-model="LastChart.WidgetType" ng-options="type for type in WidgetTypes"></select>
+            Title <input type="text" ng-model="LastChart.Title" style="width:10em" >
+            Formula <input type="text" ng-model="LastChart.Formula" style="width:5em">
+            Format <input type="text" ng-model="LastChart.NumericFormat" style="width:5em">
+            Top <input type="text" ng-model="LastChart.MarginTop" style="width:5em" >
+
+            <br>
+            Javascript
+            <div>
+                <textarea ace="javascript" height="100" ng-model="LastChart.Javascript"></textarea>
+            </div>
+            <div ng-show="LastChart.WidgetType == 'Tile' || LastChart.WidgetType == 'Table'">
+            Html
+            <div>
+                <textarea ace="javascript" height="100" ng-model="LastChart.Html"></textarea>
+            </div>
+            </div>
+            J Code
+            <div>
+                <textarea ace="javascript" height="100" ng-model="LastChart.Query"></textarea>
+            </div>
+
+        </div>
+        <div id="SettingsDialog" style="display:none">
+            J Code
+            <textarea ace="javascript" height="280" ng-model="Script"></textarea>
+            Javascript<br>
+            <textarea ace="javascript" height="50" ng-model="Javascript"></textarea>
+        </div>
+
+        </script>
+      </div>
+
+    </div>
+    <script id="embedded_j_code" type="text">
+        NB. should we pull tihs from an addon instead?
+        NB. install 'github:cdburke/convert_pjson'
+        cocurrent 'pjson'
+        fmtnum=: ,@('d<null>'&(8!:2))
+        fmtnums=: ' ' -.~ }.@,@(',' ,. >@{.@('d<null>'&(8!:1))@,.)
+        fmtint=: ,@('d<null>0'&(8!:2))
+        fmtints=: ' ' -.~ }.@,@(',' ,. >@{.@('d<null>0'&(8!:1))@,.)
+
+        sep=: }.@;@:(','&,each)
+        bc=: '{' , '}' ,~ ]
+        bk=: '[' , ']' ,~ ]
+
+        fixchar=: ]
+
+        ESC=: _2[\('\';'\\';CR;'\r';LF;'\n';TAB;'\t';(8{a.);'\b';FF;'\f';'"';'\"';'/';'\/')
+        decesc=: rplc&(1|."1 ESC)
+        encesc=: rplc&ESC
+        remq=: ]`(}.@}:)@.('"' = {.)
+        isboxed=: 0 < L.
+        ischar=: 2=3!:0
+        isfloat=: 8=3!:0
+        isscalar=: 0 = #@$
+        quotes=: '"'&,@(,&'"')
+
+        false=: 0
+        true=: 1
+        NULL=: 0$0
+        ESS=: a:
+        nos=: 4 : 0
+        s=. x I.@E. y
+        i=. s I. s+#x
+        (i.#y) e. (s,_1) {~ (i,_1) {~^:a: 0
+        )
+        tc=: ,&_1 {~^:a: 0:
+        nos1=: i.@#@] e. #@[ (tc@(]I.+) { _1,~]) I.@E.
+        cutcommas=: 3 : 0
+        y=. ',',y
+        m=. ~:/\ ('"' = y)  > (_2 (|.!.0) '\\' nos y) < (_1 (|.!.0) '\"' E. y)
+        m=. *./ (m < y=','), 0 = _2 +/\ @ (-/)\ m <"1 '{}[]'=/y
+        m <@dltb;._1 y
+        )
+        dec=: 3 : 0
+        dec1 dltb ' ' (y I.@:e. TAB,CRLF)} y
+        )
+        dec1=: 3 : 0
+        if. 0=#y do. '' return. end.
+        if. y-:'null' do. NULL return. end.
+        select. {. y
+        case. ESS do. ". }. y
+        case. '{' do. dec_object y
+        case. '[' do. dec_array y
+        case. '"' do. decesc }.}:y
+        case. do. dec_num y
+        end.
+        )
+        dec_array=: 3 : 0
+        y=. dltb }.}:y
+        if. 0=#y do. $0 return. end.
+        if. -. y +./@:e. '"{[' do. ,dec_num y return. end.
+        dec1 each cutcommas y
+        )
+        dec_num=: 3 : 0
+        nms=. ;: 'false true null'
+        res=. 0 ". ' ' (I.y=',')} y
+        if. -. 1 e. ,nms E.&> <y do. return. end.
+        nos=. <;._1 ',',y -. ' '
+        'f t n'=. nos&(I.@:= <) each nms
+        res=. true t} false f} res
+        if. #n do. ({.NULL) n} res end.
+        )
+        dec_object=: 3 : 0
+        if. 2=#y do. '' return. end.
+        dec_object1 &> a: -.~ cutcommas }.}:y
+        )
+        dec_object1=: 3 : 0
+        n=. 1 i.~ (y=':') > ~:/\ ('"'= y) > (_2 (|.!.0) '\\' nos y) < (_1 (|.!.0) '\"' E. y)
+        k=. decesc remq dltb n {. y
+        v=. dec1 dltb (n+1) }. y
+        k;<v
+        )
+        enc=: 3 : 0
+        if. 1<#$y do.
+        if. isboxed y do.
+            enc_dict y
+        else.
+            bk sep <@enc"_1 y
+        end.
+        elseif. isboxed y do.
+        bk sep enc each y
+        elseif. ischar y do.
+        if. ESS = {. y do. }. y return. end.
+        enc_char y
+        elseif. isfloat y do.
+        enc_num y
+        elseif. do.
+        enc_int y
+        end.
+        )
+        enc_char=: quotes @ encesc @ fixchar
+        enc_num=: bk @ fmtnums`fmtnum @. isscalar
+        enc_int=: bk @ fmtints`fmtint @. isscalar
+        enc_dict=: 3 : 0
+        'rank>2 argument not supported' assert 2 = #$y
+        'rank 2 argument must be a dictionary' assert (2 = {:$y) > 0 e. ischar &> {."1 y
+        key=. (enc_char each ({."1 y)) , each <':'
+        val=. enc each {:"1 y
+        rep=. ;key,.val ,each <',',LF
+        bc LF,(_2}.rep),LF
+        )
+        finalize_pjson_^:(3=(4!:0)@<) 'finalize_pjson_'
+        cocurrent 'base'
+        ('pjson';'z') copath 'base'
+    </script>
+    <script src="dashboard.js"></script>
+    </body>
+</html>
+
