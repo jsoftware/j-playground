@@ -18,13 +18,16 @@ var localjserver = {
     } else {
       jsetstr('CODE_jrx_',cmd);
       var ret = jdo1("(0!:101) CODE_jrx_");
-      //filter out the cmd from the output since it's already been typed in
-      ret = ret.replace(cmd, "").trim();
-      
-      //if showing filter out the output_jrx_lines
-      if (show == true) {
-        ret = ret.split("\n").slice(2).join("\n");
-      }
+
+    //if show filter out the output_jrx_lines
+    //else filter out the cmd from the output
+    if (show) {
+      let n = ret.indexOf("output_jrx_\n")
+      ret = (n === -1) ? "" : ret.slice(12 + n);
+    } else {
+      ret = ret.replace(cmd, "");
+      ret = ret.slice(1 + ret.indexOf("\n"));
+     }
 
       //generate permalink so the user can copy the executed code
       genPermalink();

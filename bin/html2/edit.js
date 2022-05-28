@@ -12,13 +12,39 @@ function clearedit() {
 }
 
 // ---------------------------------------------------------------------
+// multiline direct definition begin
+// result is count of multiline defs started
+// this for single lines only, not surrounding lines
+function dirdef_begin(s) {
+ if (!s.includes("{{")) return 0;
+ let t = splitblankJ(s);
+ let b = t.map(e => e === "{{")
+ let n = b.findIndex(e => e);
+ if (n === -1) return 0;
+ let e = t.map((e, i) => e === "}}" && i > n);
+ return Math.max(0, arraysum(b) - arraysum(e));
+}
+
+// ---------------------------------------------------------------------
+// multiline direct definition end
+// result is count of multiline defs ended
+// same note as dirdef_begin
+function dirdef_end(s) {
+ if (!s.includes("}}")) return 0;
+ let t = splitblankJ(s);
+ let b = t.reduce((a, b) => a + (b === "{{"), 0);
+ let e = t.reduce((a, b) => a + (b === "}}"), 0);
+ return e - b;
+}
+
+// ---------------------------------------------------------------------
 function ecminitvalue() {
  if (ecmLast)
   ecm.setValue(ecmLast);
  else
   ecm.setValue(Exams[0]);
 
-  checkPermalink();
+ checkPermalink();
 }
 
 // ---------------------------------------------------------------------
@@ -58,8 +84,8 @@ function ecmset(s) {
 
 // ---------------------------------------------------------------------
 function ecmget() {
-  return ecm.getDoc().getValue();
- }
+ return ecm.getDoc().getValue();
+}
 
 // ---------------------------------------------------------------------
 function ecmsnap() {
@@ -128,12 +154,10 @@ function initedit() {
 // ----------------------------------------------------------------------
 // return if line is start of multiline definition
 // checks only most common cases using standard library
+// not multiline direct definition
 function ismultiline(t) {
  var s = t.trim();
- //support for direct definitions {{, {{)n {{)d NB. foo
- if (s.indexOf('{{') >= 0) return true;
-
- if (s.length === 0) return false;
+  if (s.length === 0) return false;
  if ("Note'" === s.substring(0, 5)) return true;
  s = splitblankJ(s);
  if ("Note" === s[0]) return true;
@@ -178,13 +202,41 @@ function readentry() {
 // ----------------------------------------------------------------------
 // returns next line, entry from given position
 function readentry1(p) {
- var r = getline(p++);
- if (r.trim().length === 0 || !ismultiline(r)) return [p, r];
- while (p < ecm.lineCount()) {
-  var s = getline(p++);
-  r += "\n" + s;
-  if (s === ")") break;
+ let r = getline(p++);
+ let s = r.trim();
+ if (s.length === 0) return [p, s];
+
+ // comments
+ if ("NB." === s.substring(0, 3)) {
+  while (p < ecm.lineCount()) {
+   let t = getline(p).trim();
+   if ("NB." !== t.substring(0, 3)) break;
+   s += "\n" + dlb1(t.slice(3));
+   p++;
+  }
+  return [p, s];
  }
+
+ // direct definitions
+ let n = dirdef_begin(r);
+ if (n) {
+  while (p < ecm.lineCount()) {
+   let t = getline(p++);
+   r += "\n" + t
+   n = n - dirdef_end(t);
+   if (n <= 0) break;
+  }
+  return [p, r];
+ }
+
+ // explicit definitions
+ if (!ismultiline(r)) return [p, r];
+ while (p < ecm.lineCount()) {
+  var t = getline(p++);
+  r += "\n" + t;
+  if (t === ")") break;
+ }
+
  return [p, r];
 };
 

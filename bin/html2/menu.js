@@ -31,16 +31,20 @@ function menu(t) {
    return menuwiki("Vocabulary/Constants");
   case "controls":
    return menuwiki("Vocabulary/ControlStructures");
-  //case "dictionary":
-   //return menuhelp("dictionary/contents");
+  case "download":
+   return menuwiki("System/Installation/J903");
   case "flip":
    return swappanes();
+  case "github":
+   return menuweb("github.com/jsoftware");
   case "guide":
    return menuwiki("Playground");
   case "log":
    return dlog_select();
   case "nuvoc":
    return menuwiki("NuVoc");
+  case "rosetta":
+   return menuweb("rosettacode.org/wiki/Category:J#mw-pages");
   case "runline":
    return ecmrunline();
   case "runlineshow":
@@ -51,16 +55,16 @@ function menu(t) {
    return ecmrunallx();
   case "shortcuts":
    return menuwiki("Playground/Shortcuts");
+  case "teaservideo":
+   return menuweb("www.youtube.com/watch?v=aV936cVrN0I&list=WL&index=9");
   case "toggleedit":
    return layout.toggleedit();
   case "wiki":
    return menuwiki("");
-  //case "vocab":
-   //return menuhelp("dictionary/vocabul");
   case "plink":
-    return menuplink();
+   return menuplink();
   case "advlab":
-    labnext();
+   labnext();
  }
 }
 
@@ -73,11 +77,6 @@ function menuconsen() {
 function menuguide() {
  menu("guide");
 }
-
-// ---------------------------------------------------------------------
-//function menuhelp(t) {
- //return window.open("https://www.jsoftware.com/docs/help807/" + t + ".htm", "_blank");
-//}
 
 // ---------------------------------------------------------------------
 function menuref() {
@@ -100,15 +99,20 @@ function menuvocab() {
 }
 
 // ---------------------------------------------------------------------
+function menuweb(t) {
+ return window.open("https://" + t);
+}
+
+// ---------------------------------------------------------------------
 function menuwiki(t) {
  return window.open("https://code.jsoftware.com/wiki/" + t, "_blank");
 }
 
 // ---------------------------------------------------------------------
 function menuplink(t) {
-  var url = document.getElementById("mn_plink").childNodes[0].href;
-  return window.open(url, "_blank");
- }
+ var url = document.getElementById("mn_plink").childNodes[0].href;
+ return window.open(url, "_blank");
+}
 
 
 // ---------------------------------------------------------------------
@@ -146,27 +150,26 @@ function about() {
 // ---------------------------------------------------------------------
 function labrun(labPath) {
 
-  //load the labs utilities / doesn't hurt to reload each time
-  jdo1("(0!:0) <'labs/labs805.ijs'")
-  var lab = labPath.slice(labPath.indexOf('/')+1);
-  var lines  = jdo1("lab 'labs/" + lab + ".ijt'");
-  lines.split('\n').forEach(line=>{
-    tcmappend(line+"\n");
-  })
+ //load the labs utilities / doesn't hurt to reload each time
+ jdo1("(0!:0) <'labs/labs805.ijs'")
+ var lab = labPath.slice(labPath.indexOf('/') + 1);
+ var lines = jdo1("lab 'labs/" + lab + ".ijt'");
+ lines.split('\n').forEach(line => {
+  tcmappend(line + "\n");
+ })
 
-  //go back to the base locale so the labs execute where the user can interact
-  jdo1("('base';'z') copath 'jlab805'")
+ //go back to the base locale so the labs execute where the user can interact
+ jdo1("('base';'z') copath 'jlab805'")
 
-  return 0;
+ return 0;
 
 }
 
 // ---------------------------------------------------------------------
 function labnext() {
-  var lines = jdo1("labnext''")
-  lines.split('\n').forEach(line=>{
-    tcmappend(line+"\n");
-  })
-
+ var lines = jdo1("labnext''")
+ lines.split('\n').forEach(line => {
+  tcmappend(line + "\n");
+ })
 
 }

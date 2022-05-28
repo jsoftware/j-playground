@@ -33,7 +33,6 @@ function getcontext(t) {
 
 // ---------------------------------------------------------------------
 function showhelp(e) {
- O("showhelp", e);
  var t = Number(e[0]);
  s = e.substring(1);
  if (t) return menuwiki("Vocabulary/" + s);

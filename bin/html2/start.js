@@ -63,7 +63,7 @@ window.onkeydown = function(e) {
    e.preventDefault();
   }
 
-  if (e.ShiftKey) {
+  if (e.shiftKey) {
    if (has("", e.key)) {
     e.preventDefault();
    }

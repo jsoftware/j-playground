@@ -7,6 +7,15 @@ var O = console.log;
 var S = JSON.stringify;
 
 // ---------------------------------------------------------------------
+var arraysum = e => e.reduce((a, b) => a + b)
+
+// ---------------------------------------------------------------------
+function arraysums(s) {
+  let t=0;
+  return s.map(e=>t+=e);
+}
+
+// ---------------------------------------------------------------------
 function classadd(id, cls) {
  getid(id).classList.add(cls);
 }
@@ -45,6 +54,12 @@ function cmsetsize() {
 // ----------------------------------------------------------------------
 function deb(s) {
  return s.replace(/\s+/g, ' ').replace(/^\s+|\s+$/, '');
+}
+
+// ----------------------------------------------------------------------
+// delete one blank if at front of string
+function dlb1(s) {
+ return s[0] === " " ? s.slice(1) : "";
 }
 
 // ---------------------------------------------------------------------
@@ -89,7 +104,7 @@ function hide(e) {
  e.style.display = "none";
 }
 
-// ----------------------------------------------------------------------
+// ---------------------------------------------------------------------
 function quote(s) {
  return "'" + s.replace(/'/g, "''") + "'";
 }
@@ -115,9 +130,11 @@ function show(e) {
 }
 
 // ---------------------------------------------------------------------
-// split on blanks, ignoring J strings 'abc def'
+// split on blanks, ignoring J strings 'abc def' and comments
 function splitblankJ(s) {
- return s.match(/(?:[^\s']+|'[^']*')+/g);
+ let t = s.match(/(?:[^\s']+|'[^']*')+/g);
+ let n = t.findIndex(e => "NB." === e.substring(0, 3));
+ return n === -1 ? t : t.slice(0, n);
 }
 
 // ---------------------------------------------------------------------
