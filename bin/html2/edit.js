@@ -17,7 +17,8 @@ function clearedit() {
 // this for single lines only, not surrounding lines
 function dirdef_begin(s) {
  if (!s.includes("{{")) return 0;
- let t = splitblankJ(s);
+ let t = towords(s);
+ if (t === 0) return 0;
  let b = t.map(e => e === "{{")
  let n = b.findIndex(e => e);
  if (n === -1) return 0;
@@ -31,7 +32,8 @@ function dirdef_begin(s) {
 // same note as dirdef_begin
 function dirdef_end(s) {
  if (!s.includes("}}")) return 0;
- let t = splitblankJ(s);
+ let t = towords(s);
+ if (t === 0) return 0;
  let b = t.reduce((a, b) => a + (b === "{{"), 0);
  let e = t.reduce((a, b) => a + (b === "}}"), 0);
  return e - b;
@@ -157,9 +159,10 @@ function initedit() {
 // not multiline direct definition
 function ismultiline(t) {
  var s = t.trim();
-  if (s.length === 0) return false;
+ if (s.length === 0) return false;
  if ("Note'" === s.substring(0, 5)) return true;
- s = splitblankJ(s);
+ s = towords(s);
+ if (s === 0) return 0;
  if ("Note" === s[0]) return true;
  var len = s.length;
  var num = ["0", "1", "2", "3", "4"];
@@ -205,10 +208,11 @@ function readentry1(p) {
  let r = getline(p++);
  let s = r.trim();
  if (s.length === 0) return [p, s];
+ let max = ecm.lineCount();
 
  // comments
  if ("NB." === s.substring(0, 3)) {
-  while (p < ecm.lineCount()) {
+  while (p < max) {
    let t = getline(p).trim();
    if ("NB." !== t.substring(0, 3)) break;
    s += "\n" + dlb1(t.slice(3));
@@ -220,21 +224,23 @@ function readentry1(p) {
  // direct definitions
  let n = dirdef_begin(r);
  if (n) {
-  while (p < ecm.lineCount()) {
+  while (p < max) {
    let t = getline(p++);
    r += "\n" + t
    n = n - dirdef_end(t);
    if (n <= 0) break;
+   if (p === max) r += " }}";
   }
   return [p, r];
  }
 
  // explicit definitions
  if (!ismultiline(r)) return [p, r];
- while (p < ecm.lineCount()) {
+ while (p < max) {
   var t = getline(p++);
   r += "\n" + t;
   if (t === ")") break;
+  if (p === max) r += "\n)";
  }
 
  return [p, r];

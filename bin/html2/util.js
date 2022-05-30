@@ -11,8 +11,8 @@ var arraysum = e => e.reduce((a, b) => a + b)
 
 // ---------------------------------------------------------------------
 function arraysums(s) {
-  let t=0;
-  return s.map(e=>t+=e);
+ let t = 0;
+ return s.map(e => t += e);
 }
 
 // ---------------------------------------------------------------------
@@ -135,6 +135,23 @@ function splitblankJ(s) {
  let t = s.match(/(?:[^\s']+|'[^']*')+/g);
  let n = t.findIndex(e => "NB." === e.substring(0, 3));
  return n === -1 ? t : t.slice(0, n);
+}
+
+// ---------------------------------------------------------------------
+// J word formation, ignoring comments
+function towords(s) {
+ let t = jdo1("towords " + quote(s));
+ if (t === 0) {
+  msgbox("error parsing: " + s);
+  return 0;
+ }
+ t = t.split("\n")
+ let n = t.length;
+ if (n > 0) {
+  if ("NB." === t[n - 1].slice(0, 3))
+   t = t.slice(0, n - 1);
+ }
+ return t;
 }
 
 // ---------------------------------------------------------------------
