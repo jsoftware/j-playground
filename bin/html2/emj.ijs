@@ -188,6 +188,20 @@ httpget_z_ =: 3 : 0
   httpget_jpacman_ y
 )
 
+openscriptJS=: 0 : 0
+ ecm.getDoc().setValue(jgetstr("RESPONSE_httpget_"));
+ ecm.setCursor(0,1e8);
+ ecm.focus();
+)
+
+NB. open a script on github
+openscript=: 3 : 0
+ httpget y;3;''
+ (2!:0) openscriptJS
+)
+
+openscript_z_=: openscript_jpacman_
+
 cocurrent 'jws'
 
 ContextHelp=: ,'j'

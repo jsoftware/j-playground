@@ -82,11 +82,11 @@ function inittbar() {
  h += sub2("runline", "Line", "Ctrl+Enter");
  h += sub2("runlineshow", "Line & Show", "Shift+Ctrl+Enter", 1);
  h += sub2("runall", "All Lines", "Ctrl+R", 2);
- h += sub2("runallx", "Clear Term & All Lines", "Ctrl+Shift+R", 2);
+ h += sub2("runallx", "Clear Term & All Lines", "Shift+Ctrl+R", 2);
  h += "</ul></li>"
 
  h += top("Labs", 1);
- h += sub2("advlab", "Advance Labs", "Ctrl+>", 1);
+ h += sub2("advlab", "Advance Labs", "Shift+Ctrl+>", 1);
  for (var i = 0; i < labs.length; i++)
   h += sub1("lab" + i, titles[i]);
  h += "</ul></li>"

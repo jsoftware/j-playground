@@ -239,7 +239,7 @@ function readentry1(p) {
  while (p < max) {
   var t = getline(p++);
   r += "\n" + t;
-  if (t === ")") break;
+  if (")" === dtb(t)) break;
   if (p === max) r += "\n)";
  }
 
