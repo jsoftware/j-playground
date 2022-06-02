@@ -97,6 +97,13 @@ function getrect(e) {
 }
 
 // ---------------------------------------------------------------------
+function getversion() {
+ fetch("version.txt")
+  .then(e => e.text())
+  .then(e => Version = (Number(e) / 1000).toFixed(3));
+}
+
+// ---------------------------------------------------------------------
 function getviewheight() {
  return layout.getviewheight();
 }

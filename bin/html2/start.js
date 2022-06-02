@@ -2,13 +2,11 @@
 
 "use strict";
 
-// playground version, increment as appropriate for testers
-var Version = 1.005
-
 // ---------------------------------------------------------------------
 var lastfocus;
 var popupbox;
 var resizetimer;
+var Version;
 
 // ---------------------------------------------------------------------
 function initbody() {
@@ -21,6 +19,7 @@ function initbody() {
 
 // ---------------------------------------------------------------------
 function initload() {
+ getversion();
  initbody();
  inittbar();
  initdlog();

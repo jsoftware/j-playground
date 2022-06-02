@@ -40,6 +40,20 @@ jobs:
      if: matrix.os == 'ubuntu-18.04'
      # update this later
      run: bin/linux/emj
+
+   - name: update playground version
+     if: matrix.os == 'ubuntu-18.04'
+     run: echo $((1 + `cat bin/html2/version.txt`)) > bin/html2/version.txt
+
+   - name: commit version to repo
+     if: matrix.os == 'ubuntu-18.04'
+     run: |
+        git config --global user.name "github actions"
+        git config --global user.email "ga@example.com"
+        git add bin/html2/version.txt
+        git commit -m "update version.txt"
+        git push
+
 #  tests:
 #   name: Test Results
 #   runs-on: ubuntu-18.04
