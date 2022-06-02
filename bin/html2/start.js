@@ -2,6 +2,10 @@
 
 "use strict";
 
+// playground version, increment as appropriate for testers
+var Version = 1.005
+
+// ---------------------------------------------------------------------
 var lastfocus;
 var popupbox;
 var resizetimer;

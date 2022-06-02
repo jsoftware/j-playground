@@ -106,7 +106,7 @@ function inittbar() {
  h += sub1("guide", "Playground", 2);
  h += sub1("shortcuts", "Shortcuts", 2);
  h += sub1("consen", "Context Sensitive", 1);
- //h += sub1("about", "About", 2);
+ h += sub1("mbabout", "About", 2);
 
  h += "</ul></li>"
  h += "</ul></nav>"

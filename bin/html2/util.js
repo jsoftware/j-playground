@@ -76,6 +76,12 @@ function getclass(e) {
  return document.getElementsByClassName(e);
 }
 
+// ---------------------------------------------------------------------
+function getdate() {
+ return jdo1("9!:14''").split("/")[6];
+}
+
+// ---------------------------------------------------------------------
 function getheight(e) {
  return e.getBoundingClientRect().height;
 }
