@@ -50,6 +50,44 @@ display:none;
 border:0;
 }
 
+/* about ----------------------------------------------------------- */
+.about {
+ background: #f8f8ff;
+ border: 1px solid #bbb;
+ border-radius: 5px;
+ box-shadow: 0 0 1em #aaa;
+ padding: 10px 5px 10px 5px;
+ font-size: 15px;
+ line-height: 1.4em;
+}
+
+.about::backdrop {
+ background: transparent;
+}
+
+.about-button {
+ background: linear-gradient(to bottom, #eee, #ddd);
+ border: 1px solid #aaa;
+ border-radius: 3px;
+ white-space: nowrap;
+ margin-left: 5px;
+ width: 80px;
+ padding: 3px 8px;
+ outline: none;
+}
+
+.about-button:hover {
+ background: linear-gradient(to bottom, #e4e4e4, #d4d4d4);
+ border: 1px solid #bbb;
+}
+
+.about-footer {
+ padding: 6px 8px;
+ display: flex;
+ align-items: center;
+ justify-content: flex-end;
+}
+
 /* pane ------------------------------------------------------------ */
 .panebutton {
 color:#888;

@@ -7,6 +7,12 @@ var cmdlist = [];
 var widgets = [];
 
 // ---------------------------------------------------------------------
+function clearall() {
+ clearedit();
+ clearterm();
+}
+
+// ---------------------------------------------------------------------
 function clearterm() {
  tcm.getDoc().setValue("");
  tcmprompt("   ");
@@ -147,12 +153,11 @@ function tcmenter() {
 
 // ---------------------------------------------------------------------
 function tcmhtml(e) {
-  var div = document.createElement("div");
-  div.innerHTML = e;
-  document.body.appendChild(div);
-  tcmaddlinewidget(div);
- }
- 
+ var div = document.createElement("div");
+ div.innerHTML = e;
+ document.body.appendChild(div);
+ tcmaddlinewidget(div);
+}
 
 // ---------------------------------------------------------------------
 function tcmlogdown() {

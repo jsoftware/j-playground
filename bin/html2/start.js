@@ -2,9 +2,11 @@
 
 "use strict";
 
+// ---------------------------------------------------------------------
 var lastfocus;
 var popupbox;
 var resizetimer;
+var Version;
 
 // ---------------------------------------------------------------------
 function initbody() {
@@ -17,6 +19,7 @@ function initbody() {
 
 // ---------------------------------------------------------------------
 function initload() {
+ getversion();
  initbody();
  inittbar();
  initdlog();
@@ -63,7 +66,7 @@ window.onkeydown = function(e) {
    e.preventDefault();
   }
 
-  if (e.ShiftKey) {
+  if (e.shiftKey) {
    if (has("", e.key)) {
     e.preventDefault();
    }

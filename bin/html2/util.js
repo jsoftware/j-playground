@@ -7,6 +7,15 @@ var O = console.log;
 var S = JSON.stringify;
 
 // ---------------------------------------------------------------------
+var arraysum = e => e.reduce((a, b) => a + b)
+
+// ---------------------------------------------------------------------
+function arraysums(s) {
+ let t = 0;
+ return s.map(e => t += e);
+}
+
+// ---------------------------------------------------------------------
 function classadd(id, cls) {
  getid(id).classList.add(cls);
 }
@@ -47,6 +56,18 @@ function deb(s) {
  return s.replace(/\s+/g, ' ').replace(/^\s+|\s+$/, '');
 }
 
+// ----------------------------------------------------------------------
+// delete one blank if at front of string
+function dlb1(s) {
+ return s[0] === " " ? s.slice(1) : "";
+}
+
+// ----------------------------------------------------------------------
+// delete trailing blanks
+function dtb(s) {
+ return s.replace(/\s+$/, '')
+}
+
 // ---------------------------------------------------------------------
 function dummy() {}
 
@@ -55,6 +76,12 @@ function getclass(e) {
  return document.getElementsByClassName(e);
 }
 
+// ---------------------------------------------------------------------
+function getdate() {
+ return jdo1("9!:14''").split("/")[6];
+}
+
+// ---------------------------------------------------------------------
 function getheight(e) {
  return e.getBoundingClientRect().height;
 }
@@ -67,6 +94,13 @@ function getid(e) {
 // ---------------------------------------------------------------------
 function getrect(e) {
  return e.getBoundingClientRect();
+}
+
+// ---------------------------------------------------------------------
+function getversion() {
+ fetch("version.txt")
+  .then(e => e.text())
+  .then(e => Version = (Number(e) / 1000).toFixed(3));
 }
 
 // ---------------------------------------------------------------------
@@ -89,7 +123,7 @@ function hide(e) {
  e.style.display = "none";
 }
 
-// ----------------------------------------------------------------------
+// ---------------------------------------------------------------------
 function quote(s) {
  return "'" + s.replace(/'/g, "''") + "'";
 }
@@ -115,9 +149,28 @@ function show(e) {
 }
 
 // ---------------------------------------------------------------------
-// split on blanks, ignoring J strings 'abc def'
+// split on blanks, ignoring J strings 'abc def' and comments
 function splitblankJ(s) {
- return s.match(/(?:[^\s']+|'[^']*')+/g);
+ let t = s.match(/(?:[^\s']+|'[^']*')+/g);
+ let n = t.findIndex(e => "NB." === e.substring(0, 3));
+ return n === -1 ? t : t.slice(0, n);
+}
+
+// ---------------------------------------------------------------------
+// J word formation, ignoring comments
+function towords(s) {
+ let t = jdo1("towords " + quote(s));
+ if (t === 0) {
+  msgbox("error parsing: " + s);
+  return 0;
+ }
+ t = t.split("\n")
+ let n = t.length;
+ if (n > 0) {
+  if ("NB." === t[n - 1].slice(0, 3))
+   t = t.slice(0, n - 1);
+ }
+ return t;
 }
 
 // ---------------------------------------------------------------------

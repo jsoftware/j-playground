@@ -198,7 +198,7 @@ Select a circle color to draw. The circle will draw on selection<br>
 <div style='text-align:right'><button id='popup-ok'>OK</button></div>
 )
 
-NB. javascript that is called 
+NB. javascript that is called
 POPUPJS =: 0 : 0
   window.drawCircle = function() {
       var color = document.getElementById('color').value;
