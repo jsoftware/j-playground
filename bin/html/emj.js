@@ -198,15 +198,15 @@ Module['FS_createPath']("/addons/graphics", "color", true, true);
       for (var i = 0; i < files.length; ++i) {
         new DataRequest(files[i]['start'], files[i]['end'], files[i]['audio'] || 0).open('GET', files[i]['filename']);
       }
-      var start32 = Module['___emscripten_embedded_file_data'] >> 2;
-      do {
-        var name_addr = HEAPU32[start32++];
-        var len = HEAPU32[start32++];
-        var content = HEAPU32[start32++];
-        var name = UTF8ToString(name_addr)
-        // canOwn this data in the filesystem, it is a slice of wasm memory that will never change
-        Module['FS_createDataFile'](name, null, HEAP8.subarray(content, content + len), true, true, true);
-      } while (HEAPU32[start32]);
+          var start32 = Module['___emscripten_embedded_file_data'] >> 2;
+          do {
+            var name_addr = HEAPU32[start32++];
+            var len = HEAPU32[start32++];
+            var content = HEAPU32[start32++];
+            var name = UTF8ToString(name_addr)
+            // canOwn this data in the filesystem, it is a slice of wasm memory that will never change
+            Module['FS_createDataFile'](name, null, HEAP8.subarray(content, content + len), true, true, true);
+          } while (HEAPU32[start32]);
       function processPackageData(arrayBuffer) {
         assert(arrayBuffer, 'Loading data file failed.');
         assert(arrayBuffer instanceof ArrayBuffer, 'bad input to processPackageData');
@@ -241,7 +241,7 @@ Module['FS_createPath']("/addons/graphics", "color", true, true);
     }
 
     }
-    loadPackage({"files": [{"filename": "/jlibrary/copy_library_from_current.bat", "start": 0, "end": 528}, {"filename": "/jlibrary/system/defs/hostdefs_win.ijs", "start": 528, "end": 1460}, {"filename": "/jlibrary/system/defs/netdefs_android.ijs", "start": 1460, "end": 3362}, {"filename": "/jlibrary/system/defs/netdefs_linux.ijs", "start": 3362, "end": 5261}, {"filename": "/jlibrary/system/defs/hostdefs_darwin.ijs", "start": 5261, "end": 6936}, {"filename": "/jlibrary/system/defs/netdefs_aix.ijs", "start": 6936, "end": 8714}, {"filename": "/jlibrary/system/defs/netdefs_linux_64.ijs", "start": 8714, "end": 10617}, {"filename": "/jlibrary/system/defs/netdefs_darwin.ijs", "start": 10617, "end": 12671}, {"filename": "/jlibrary/system/defs/hostdefs_android.ijs", "start": 12671, "end": 14240}, {"filename": "/jlibrary/system/defs/hostdefs_linux_64.ijs", "start": 14240, "end": 15812}, {"filename": "/jlibrary/system/defs/hostdefs_win_64.ijs", "start": 15812, "end": 16747}, {"filename": "/jlibrary/system/defs/hostdefs_darwin_64.ijs", "start": 16747, "end": 18317}, {"filename": "/jlibrary/system/defs/netdefs_win_64.ijs", "start": 18317, "end": 21183}, {"filename": "/jlibrary/system/defs/hostdefs_android_64.ijs", "start": 21183, "end": 22755}, {"filename": "/jlibrary/system/defs/hostdefs_aix.ijs", "start": 22755, "end": 24324}, {"filename": "/jlibrary/system/defs/netdefs_win.ijs", "start": 24324, "end": 27187}, {"filename": "/jlibrary/system/defs/netdefs_android_64.ijs", "start": 27187, "end": 29090}, {"filename": "/jlibrary/system/defs/netdefs_sunos.ijs", "start": 29090, "end": 31004}, {"filename": "/jlibrary/system/defs/hostdefs_sunos.ijs", "start": 31004, "end": 32591}, {"filename": "/jlibrary/system/defs/hostdefs_linux.ijs", "start": 32591, "end": 34159}, {"filename": "/jlibrary/system/defs/netdefs_darwin_64.ijs", "start": 34159, "end": 36109}, {"filename": "/jlibrary/system/config/base.cfg", "start": 36109, "end": 38742}, {"filename": "/jlibrary/system/config/folders.cfg", "start": 38742, "end": 39019}, {"filename": "/jlibrary/system/util/tar.ijs", "start": 39019, "end": 44907}, {"filename": "/jlibrary/system/util/pp.ijs", "start": 44907, "end": 53770}, {"filename": "/jlibrary/system/util/pacman.ijs", "start": 53770, "end": 95020}, {"filename": "/jlibrary/system/util/scripts.ijs", "start": 95020, "end": 97024}, {"filename": "/jlibrary/system/util/pm.ijs", "start": 97024, "end": 111447}, {"filename": "/jlibrary/system/util/boot.ijs", "start": 111447, "end": 114930}, {"filename": "/jlibrary/system/util/project.ijs", "start": 114930, "end": 124437}, {"filename": "/jlibrary/system/util/configure.ijs", "start": 124437, "end": 127969}, {"filename": "/jlibrary/system/main/stdlib.ijs", "start": 127969, "end": 188406}, {"filename": "/jlibrary/system/main/socket.ijs", "start": 188406, "end": 197164}, {"filename": "/jlibrary/system/main/regex.ijs", "start": 197164, "end": 207916}, {"filename": "/jlibrary/system/main/task.ijs", "start": 207916, "end": 215392}, {"filename": "/jlibrary/addons/data/jfiles/history.txt", "start": 215392, "end": 215476}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.txt", "start": 215476, "end": 215849}, {"filename": "/jlibrary/addons/data/jfiles/manifest.ijs", "start": 215849, "end": 216265}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.ijs", "start": 216265, "end": 225880}, {"filename": "/jlibrary/addons/data/jfiles/keyfiles.txt", "start": 225880, "end": 228118}, {"filename": "/jlibrary/addons/data/jfiles/test/test1.ijs", "start": 228118, "end": 229507}, {"filename": "/jlibrary/addons/data/jfiles/test/test0.ijs", "start": 229507, "end": 229637}, {"filename": "/jlibrary/addons/data/jmf/history.txt", "start": 229637, "end": 229866}, {"filename": "/jlibrary/addons/data/jmf/jmf.ijs", "start": 229866, "end": 242502}, {"filename": "/jlibrary/addons/data/jmf/manifest.ijs", "start": 242502, "end": 242758}, {"filename": "/jlibrary/addons/data/jmf/test/testjmf.ijs", "start": 242758, "end": 244897}, {"filename": "/jlibrary/addons/data/jmf/test/testdata.ijs", "start": 244897, "end": 245061}, {"filename": "/jlibrary/addons/dev/fold/foldr.ijs", "start": 245061, "end": 249231}, {"filename": "/jlibrary/addons/dev/fold/fold.ijs", "start": 249231, "end": 253400}, {"filename": "/jlibrary/addons/dev/fold/manifest.ijs", "start": 253400, "end": 253609}, {"filename": "/jlibrary/addons/dev/lu/lu.ijs", "start": 253609, "end": 254805}, {"filename": "/jlibrary/addons/dev/lu/manifest.ijs", "start": 254805, "end": 254992}, {"filename": "/jlibrary/bin/profile.ijs", "start": 254992, "end": 256969}, {"filename": "/jlibrary/tools/ftp/busybox.exe", "start": 256969, "end": 856009}, {"filename": "/jlibrary/tools/ftp/license.txt", "start": 856009, "end": 856369}, {"filename": "/jlibrary/tools/ftp/wget.exe", "start": 856369, "end": 1189169}, {"filename": "/jlibrary/tools/ftp/busybox_license.txt", "start": 1189169, "end": 1207517}, {"filename": "/jlibrary/tools/regex/readme.txt", "start": 1207517, "end": 1207561}, {"filename": "/labs/dllbasic.ijt", "start": 1207561, "end": 1210595}, {"filename": "/labs/display.ijt", "start": 1210595, "end": 1218030}, {"filename": "/labs/fntab.ijt", "start": 1218030, "end": 1239866}, {"filename": "/labs/shapley.ijt", "start": 1239866, "end": 1246642}, {"filename": "/labs/iter.ijt", "start": 1246642, "end": 1250018}, {"filename": "/labs/bestfit.ijt", "start": 1250018, "end": 1258488}, {"filename": "/labs/towerofhanoi.ijt", "start": 1258488, "end": 1264984}, {"filename": "/labs/seqmachine.ijt", "start": 1264984, "end": 1279790}, {"filename": "/labs/coleman.ijt", "start": 1279790, "end": 1294480}, {"filename": "/labs/tte.ijt", "start": 1294480, "end": 1302159}, {"filename": "/labs/families.ijt", "start": 1302159, "end": 1310895}, {"filename": "/labs/pythag3.ijt", "start": 1310895, "end": 1318164}, {"filename": "/labs/averages.ijt", "start": 1318164, "end": 1329665}, {"filename": "/labs/bincoefs.ijt", "start": 1329665, "end": 1332394}, {"filename": "/labs/tables.ijt", "start": 1332394, "end": 1340019}, {"filename": "/labs/special_searches.ijt", "start": 1340019, "end": 1346949}, {"filename": "/labs/build_labs.sh", "start": 1346949, "end": 1347131}, {"filename": "/labs/volume.ijt", "start": 1347131, "end": 1347772}, {"filename": "/labs/groups.ijt", "start": 1347772, "end": 1355183}, {"filename": "/labs/huffman.ijt", "start": 1355183, "end": 1363266}, {"filename": "/labs/frame.ijt", "start": 1363266, "end": 1366969}, {"filename": "/labs/jtaste2.ijt", "start": 1366969, "end": 1372121}, {"filename": "/labs/polynom.ijt", "start": 1372121, "end": 1381635}, {"filename": "/labs/dllwin32.ijt", "start": 1381635, "end": 1387063}, {"filename": "/labs/dllcallback.ijt", "start": 1387063, "end": 1389062}, {"filename": "/labs/sparse.ijt", "start": 1389062, "end": 1396708}, {"filename": "/labs/monad.ijt", "start": 1396708, "end": 1398500}, {"filename": "/labs/dllcallback_win.ijt", "start": 1398500, "end": 1404171}, {"filename": "/labs/intro.ijt", "start": 1404171, "end": 1408773}, {"filename": "/labs/labs805.ijs", "start": 1408773, "end": 1425892}, {"filename": "/labs/mathroot.ijt", "start": 1425892, "end": 1438492}, {"filename": "/labs/compositions.ijt", "start": 1438492, "end": 1459761}, {"filename": "/addons/stats/base/random.ijs", "start": 1459761, "end": 1464962}, {"filename": "/addons/stats/base/univariate.ijs", "start": 1464962, "end": 1472790}, {"filename": "/addons/stats/base/combinatorial.ijs", "start": 1472790, "end": 1474582}, {"filename": "/addons/stats/base/distribution.ijs", "start": 1474582, "end": 1478548}, {"filename": "/addons/stats/base/multivariate.ijs", "start": 1478548, "end": 1482552}, {"filename": "/addons/stats/base/manifest.ijs", "start": 1482552, "end": 1482857}, {"filename": "/addons/stats/base/base.ijs", "start": 1482857, "end": 1483085}, {"filename": "/addons/arc/zlib/history.txt", "start": 1483085, "end": 1483147}, {"filename": "/addons/arc/zlib/zlib.ijs", "start": 1483147, "end": 1495853}, {"filename": "/addons/arc/zlib/manifest.ijs", "start": 1495853, "end": 1496044}, {"filename": "/addons/arc/zlib/readme.txt", "start": 1496044, "end": 1496555}, {"filename": "/addons/config/release.txt", "start": 1496555, "end": 1496560}, {"filename": "/addons/config/addins.txt", "start": 1496560, "end": 1496730}, {"filename": "/addons/config/addons.txt", "start": 1496730, "end": 1527689}, {"filename": "/addons/config/config.ijs", "start": 1527689, "end": 1527732}, {"filename": "/addons/config/lastupdate.txt", "start": 1527732, "end": 1527755}, {"filename": "/addons/config/zips.txt", "start": 1527755, "end": 1544900}, {"filename": "/addons/config/tree.txt", "start": 1544900, "end": 1544907}, {"filename": "/addons/config/library.txt", "start": 1544907, "end": 1545070}, {"filename": "/addons/config/revision.txt", "start": 1545070, "end": 1545073}, {"filename": "/addons/general/misc/prompt.ijs", "start": 1545073, "end": 1545722}, {"filename": "/addons/general/misc/evolute.ijs", "start": 1545722, "end": 1545994}, {"filename": "/addons/general/misc/clippaste.ijs", "start": 1545994, "end": 1553699}, {"filename": "/addons/general/misc/parts.ijs", "start": 1553699, "end": 1556099}, {"filename": "/addons/general/misc/inverted.ijs", "start": 1556099, "end": 1557191}, {"filename": "/addons/general/misc/numeric.ijs", "start": 1557191, "end": 1561608}, {"filename": "/addons/general/misc/font.ijs", "start": 1561608, "end": 1563413}, {"filename": "/addons/general/misc/ieee64.ijs", "start": 1563413, "end": 1564258}, {"filename": "/addons/general/misc/bigfiles.ijs", "start": 1564258, "end": 1573429}, {"filename": "/addons/general/misc/manifest.ijs", "start": 1573429, "end": 1574423}, {"filename": "/addons/general/misc/pack.ijs", "start": 1574423, "end": 1577198}, {"filename": "/addons/general/misc/trace.ijs", "start": 1577198, "end": 1582874}, {"filename": "/addons/general/misc/test_bigfiles.ijs", "start": 1582874, "end": 1583763}, {"filename": "/addons/general/misc/guid.ijs", "start": 1583763, "end": 1585179}, {"filename": "/addons/general/misc/test_clippaste.ijs", "start": 1585179, "end": 1586345}, {"filename": "/addons/general/misc/format.ijs", "start": 1586345, "end": 1593884}, {"filename": "/addons/general/misc/jdll.ijs", "start": 1593884, "end": 1598829}, {"filename": "/addons/general/misc/fndisplay.ijs", "start": 1598829, "end": 1603136}, {"filename": "/addons/general/misc/validate.ijs", "start": 1603136, "end": 1605204}, {"filename": "/addons/general/misc/fndef.ijs", "start": 1605204, "end": 1609070}, {"filename": "/addons/math/misc/numbers.ijs", "start": 1609070, "end": 1611842}, {"filename": "/addons/math/misc/amoeba.ijs", "start": 1611842, "end": 1619572}, {"filename": "/addons/math/misc/quatern.ijs", "start": 1619572, "end": 1622380}, {"filename": "/addons/math/misc/det.ijs", "start": 1622380, "end": 1622824}, {"filename": "/addons/math/misc/simplexnr.ijs", "start": 1622824, "end": 1637887}, {"filename": "/addons/math/misc/matfacto.ijs", "start": 1637887, "end": 1641263}, {"filename": "/addons/math/misc/rsa.ijs", "start": 1641263, "end": 1642278}, {"filename": "/addons/math/misc/cheby.ijs", "start": 1642278, "end": 1644351}, {"filename": "/addons/math/misc/integer.ijs", "start": 1644351, "end": 1646683}, {"filename": "/addons/math/misc/pollard.ijs", "start": 1646683, "end": 1648356}, {"filename": "/addons/math/misc/gamesolver.ijs", "start": 1648356, "end": 1650954}, {"filename": "/addons/math/misc/contfrac.ijs", "start": 1650954, "end": 1651768}, {"filename": "/addons/math/misc/integrat.ijs", "start": 1651768, "end": 1654647}, {"filename": "/addons/math/misc/build.ijs", "start": 1654647, "end": 1654785}, {"filename": "/addons/math/misc/legendre.ijs", "start": 1654785, "end": 1655872}, {"filename": "/addons/math/misc/mathutil.ijs", "start": 1655872, "end": 1656758}, {"filename": "/addons/math/misc/odeint.ijs", "start": 1656758, "end": 1663710}, {"filename": "/addons/math/misc/gcd.ijs", "start": 1663710, "end": 1664421}, {"filename": "/addons/math/misc/jacobi.ijs", "start": 1664421, "end": 1665808}, {"filename": "/addons/math/misc/makemat.ijs", "start": 1665808, "end": 1668074}, {"filename": "/addons/math/misc/brent.ijs", "start": 1668074, "end": 1669873}, {"filename": "/addons/math/misc/trig.ijs", "start": 1669873, "end": 1670768}, {"filename": "/addons/math/misc/matutil.ijs", "start": 1670768, "end": 1674105}, {"filename": "/addons/math/misc/linear.ijs", "start": 1674105, "end": 1678938}, {"filename": "/addons/math/misc/svd.ijs", "start": 1678938, "end": 1679703}, {"filename": "/addons/math/misc/manifest.ijs", "start": 1679703, "end": 1681498}, {"filename": "/addons/math/misc/primutil.ijs", "start": 1681498, "end": 1684586}, {"filename": "/addons/math/misc/simplex.ijs", "start": 1684586, "end": 1688629}, {"filename": "/addons/math/misc/fermat.ijs", "start": 1688629, "end": 1689480}, {"filename": "/addons/math/misc/poly.ijs", "start": 1689480, "end": 1691488}, {"filename": "/addons/math/misc/spline.ijs", "start": 1691488, "end": 1693645}, {"filename": "/addons/math/misc/bigpi.ijs", "start": 1693645, "end": 1694146}, {"filename": "/addons/math/misc/mean.ijs", "start": 1694146, "end": 1694577}, {"filename": "/addons/graphics/viewmat/viewmat.ijs", "start": 1694577, "end": 1703650}, {"filename": "/addons/graphics/viewmat/history.txt", "start": 1703650, "end": 1704121}, {"filename": "/addons/graphics/viewmat/manifest.ijs", "start": 1704121, "end": 1704423}, {"filename": "/addons/graphics/bmp/history.txt", "start": 1704423, "end": 1704606}, {"filename": "/addons/graphics/bmp/jbox.bmp", "start": 1704606, "end": 1722868}, {"filename": "/addons/graphics/bmp/bmp.ijs", "start": 1722868, "end": 1724887}, {"filename": "/addons/graphics/bmp/manifest.ijs", "start": 1724887, "end": 1725103}, {"filename": "/addons/graphics/bmp/toucan.bmp", "start": 1725103, "end": 1754981}, {"filename": "/addons/graphics/plot/plotdefs.ijs", "start": 1754981, "end": 1759270}, {"filename": "/addons/graphics/plot/jzplot.ijs", "start": 1759270, "end": 1934712}, {"filename": "/addons/graphics/plot/manifest.ijs", "start": 1934712, "end": 1935017}, {"filename": "/addons/graphics/plot/plot.ijs", "start": 1935017, "end": 1935608}, {"filename": "/addons/graphics/png/manifest.ijs", "start": 1935608, "end": 1935828}, {"filename": "/addons/graphics/png/png.ijs", "start": 1935828, "end": 1945112}, {"filename": "/addons/graphics/png/test/test1.ijs", "start": 1945112, "end": 1945465}, {"filename": "/addons/graphics/afm/history.txt", "start": 1945465, "end": 1945689}, {"filename": "/addons/graphics/afm/afm.ijs", "start": 1945689, "end": 2015735}, {"filename": "/addons/graphics/afm/manifest.ijs", "start": 2015735, "end": 2015916}, {"filename": "/addons/graphics/color/colortab.html", "start": 2015916, "end": 2038943}, {"filename": "/addons/graphics/color/html.ijs", "start": 2038943, "end": 2040104}, {"filename": "/addons/graphics/color/color16.ijs", "start": 2040104, "end": 2040640}, {"filename": "/addons/graphics/color/showcolor.ijs", "start": 2040640, "end": 2041925}, {"filename": "/addons/graphics/color/rgb.ijs", "start": 2041925, "end": 2043036}, {"filename": "/addons/graphics/color/xwin.ijs", "start": 2043036, "end": 2060747}, {"filename": "/addons/graphics/color/manifest.ijs", "start": 2060747, "end": 2061067}, {"filename": "/addons/graphics/color/colorx256.ijs", "start": 2061067, "end": 2061258}, {"filename": "/addons/graphics/color/hues.ijs", "start": 2061258, "end": 2061929}, {"filename": "/addons/graphics/color/colorcss.ijs", "start": 2061929, "end": 2067260}, {"filename": "/addons/graphics/color/colorx256.html", "start": 2067260, "end": 2107183}, {"filename": "/addons/graphics/color/colortab.ijs", "start": 2107183, "end": 2112394}, {"filename": "/addons/graphics/color/color.txt", "start": 2112394, "end": 2113166}], "remote_package_size": 2122773, "package_uuid": "84996557-cc9f-4253-b971-200d3333bca7"});
+    loadPackage({"files": [{"filename": "/jlibrary/copy_library_from_current.bat", "start": 0, "end": 528}, {"filename": "/jlibrary/system/defs/hostdefs_win.ijs", "start": 528, "end": 1460}, {"filename": "/jlibrary/system/defs/netdefs_android.ijs", "start": 1460, "end": 3362}, {"filename": "/jlibrary/system/defs/netdefs_linux.ijs", "start": 3362, "end": 5261}, {"filename": "/jlibrary/system/defs/hostdefs_darwin.ijs", "start": 5261, "end": 6936}, {"filename": "/jlibrary/system/defs/netdefs_aix.ijs", "start": 6936, "end": 8714}, {"filename": "/jlibrary/system/defs/netdefs_linux_64.ijs", "start": 8714, "end": 10617}, {"filename": "/jlibrary/system/defs/netdefs_darwin.ijs", "start": 10617, "end": 12671}, {"filename": "/jlibrary/system/defs/hostdefs_android.ijs", "start": 12671, "end": 14240}, {"filename": "/jlibrary/system/defs/hostdefs_linux_64.ijs", "start": 14240, "end": 15812}, {"filename": "/jlibrary/system/defs/hostdefs_win_64.ijs", "start": 15812, "end": 16747}, {"filename": "/jlibrary/system/defs/hostdefs_darwin_64.ijs", "start": 16747, "end": 18317}, {"filename": "/jlibrary/system/defs/netdefs_win_64.ijs", "start": 18317, "end": 21183}, {"filename": "/jlibrary/system/defs/hostdefs_android_64.ijs", "start": 21183, "end": 22755}, {"filename": "/jlibrary/system/defs/hostdefs_aix.ijs", "start": 22755, "end": 24324}, {"filename": "/jlibrary/system/defs/netdefs_win.ijs", "start": 24324, "end": 27187}, {"filename": "/jlibrary/system/defs/netdefs_android_64.ijs", "start": 27187, "end": 29090}, {"filename": "/jlibrary/system/defs/netdefs_sunos.ijs", "start": 29090, "end": 31004}, {"filename": "/jlibrary/system/defs/hostdefs_sunos.ijs", "start": 31004, "end": 32591}, {"filename": "/jlibrary/system/defs/hostdefs_linux.ijs", "start": 32591, "end": 34159}, {"filename": "/jlibrary/system/defs/netdefs_darwin_64.ijs", "start": 34159, "end": 36109}, {"filename": "/jlibrary/system/config/base.cfg", "start": 36109, "end": 38742}, {"filename": "/jlibrary/system/config/folders.cfg", "start": 38742, "end": 39019}, {"filename": "/jlibrary/system/util/tar.ijs", "start": 39019, "end": 44907}, {"filename": "/jlibrary/system/util/pp.ijs", "start": 44907, "end": 53770}, {"filename": "/jlibrary/system/util/pacman.ijs", "start": 53770, "end": 95020}, {"filename": "/jlibrary/system/util/scripts.ijs", "start": 95020, "end": 97024}, {"filename": "/jlibrary/system/util/pm.ijs", "start": 97024, "end": 111447}, {"filename": "/jlibrary/system/util/boot.ijs", "start": 111447, "end": 114930}, {"filename": "/jlibrary/system/util/project.ijs", "start": 114930, "end": 124437}, {"filename": "/jlibrary/system/util/configure.ijs", "start": 124437, "end": 127969}, {"filename": "/jlibrary/system/main/stdlib.ijs", "start": 127969, "end": 188406}, {"filename": "/jlibrary/system/main/socket.ijs", "start": 188406, "end": 197164}, {"filename": "/jlibrary/system/main/regex.ijs", "start": 197164, "end": 207916}, {"filename": "/jlibrary/system/main/task.ijs", "start": 207916, "end": 215392}, {"filename": "/jlibrary/addons/data/jfiles/history.txt", "start": 215392, "end": 215476}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.txt", "start": 215476, "end": 215849}, {"filename": "/jlibrary/addons/data/jfiles/manifest.ijs", "start": 215849, "end": 216265}, {"filename": "/jlibrary/addons/data/jfiles/jfiles.ijs", "start": 216265, "end": 225880}, {"filename": "/jlibrary/addons/data/jfiles/keyfiles.txt", "start": 225880, "end": 228118}, {"filename": "/jlibrary/addons/data/jfiles/test/test1.ijs", "start": 228118, "end": 229507}, {"filename": "/jlibrary/addons/data/jfiles/test/test0.ijs", "start": 229507, "end": 229637}, {"filename": "/jlibrary/addons/data/jmf/history.txt", "start": 229637, "end": 229866}, {"filename": "/jlibrary/addons/data/jmf/jmf.ijs", "start": 229866, "end": 242502}, {"filename": "/jlibrary/addons/data/jmf/manifest.ijs", "start": 242502, "end": 242758}, {"filename": "/jlibrary/addons/data/jmf/test/testjmf.ijs", "start": 242758, "end": 244897}, {"filename": "/jlibrary/addons/data/jmf/test/testdata.ijs", "start": 244897, "end": 245061}, {"filename": "/jlibrary/addons/dev/fold/foldr.ijs", "start": 245061, "end": 249231}, {"filename": "/jlibrary/addons/dev/fold/fold.ijs", "start": 249231, "end": 253400}, {"filename": "/jlibrary/addons/dev/fold/manifest.ijs", "start": 253400, "end": 253609}, {"filename": "/jlibrary/addons/dev/lu/lu.ijs", "start": 253609, "end": 254805}, {"filename": "/jlibrary/addons/dev/lu/manifest.ijs", "start": 254805, "end": 254992}, {"filename": "/jlibrary/bin/profile.ijs", "start": 254992, "end": 256969}, {"filename": "/jlibrary/tools/ftp/busybox.exe", "start": 256969, "end": 856009}, {"filename": "/jlibrary/tools/ftp/license.txt", "start": 856009, "end": 856369}, {"filename": "/jlibrary/tools/ftp/wget.exe", "start": 856369, "end": 1189169}, {"filename": "/jlibrary/tools/ftp/busybox_license.txt", "start": 1189169, "end": 1207517}, {"filename": "/jlibrary/tools/regex/readme.txt", "start": 1207517, "end": 1207561}, {"filename": "/labs/dllbasic.ijt", "start": 1207561, "end": 1210595}, {"filename": "/labs/display.ijt", "start": 1210595, "end": 1218030}, {"filename": "/labs/fntab.ijt", "start": 1218030, "end": 1239866}, {"filename": "/labs/shapley.ijt", "start": 1239866, "end": 1246642}, {"filename": "/labs/iter.ijt", "start": 1246642, "end": 1250018}, {"filename": "/labs/bestfit.ijt", "start": 1250018, "end": 1258488}, {"filename": "/labs/towerofhanoi.ijt", "start": 1258488, "end": 1264984}, {"filename": "/labs/seqmachine.ijt", "start": 1264984, "end": 1279790}, {"filename": "/labs/coleman.ijt", "start": 1279790, "end": 1294480}, {"filename": "/labs/tte.ijt", "start": 1294480, "end": 1302159}, {"filename": "/labs/families.ijt", "start": 1302159, "end": 1310895}, {"filename": "/labs/pythag3.ijt", "start": 1310895, "end": 1318164}, {"filename": "/labs/averages.ijt", "start": 1318164, "end": 1329665}, {"filename": "/labs/bincoefs.ijt", "start": 1329665, "end": 1332394}, {"filename": "/labs/tables.ijt", "start": 1332394, "end": 1340019}, {"filename": "/labs/special_searches.ijt", "start": 1340019, "end": 1346949}, {"filename": "/labs/build_labs.sh", "start": 1346949, "end": 1347131}, {"filename": "/labs/volume.ijt", "start": 1347131, "end": 1347772}, {"filename": "/labs/groups.ijt", "start": 1347772, "end": 1355183}, {"filename": "/labs/huffman.ijt", "start": 1355183, "end": 1363266}, {"filename": "/labs/frame.ijt", "start": 1363266, "end": 1366969}, {"filename": "/labs/jtaste2.ijt", "start": 1366969, "end": 1372121}, {"filename": "/labs/polynom.ijt", "start": 1372121, "end": 1381635}, {"filename": "/labs/dllwin32.ijt", "start": 1381635, "end": 1387063}, {"filename": "/labs/dllcallback.ijt", "start": 1387063, "end": 1389062}, {"filename": "/labs/sparse.ijt", "start": 1389062, "end": 1396708}, {"filename": "/labs/monad.ijt", "start": 1396708, "end": 1398500}, {"filename": "/labs/dllcallback_win.ijt", "start": 1398500, "end": 1404171}, {"filename": "/labs/intro.ijt", "start": 1404171, "end": 1408773}, {"filename": "/labs/labs805.ijs", "start": 1408773, "end": 1425892}, {"filename": "/labs/mathroot.ijt", "start": 1425892, "end": 1438492}, {"filename": "/labs/compositions.ijt", "start": 1438492, "end": 1459761}, {"filename": "/addons/stats/base/random.ijs", "start": 1459761, "end": 1464962}, {"filename": "/addons/stats/base/univariate.ijs", "start": 1464962, "end": 1472790}, {"filename": "/addons/stats/base/combinatorial.ijs", "start": 1472790, "end": 1474582}, {"filename": "/addons/stats/base/distribution.ijs", "start": 1474582, "end": 1478548}, {"filename": "/addons/stats/base/multivariate.ijs", "start": 1478548, "end": 1482552}, {"filename": "/addons/stats/base/manifest.ijs", "start": 1482552, "end": 1482857}, {"filename": "/addons/stats/base/base.ijs", "start": 1482857, "end": 1483085}, {"filename": "/addons/arc/zlib/history.txt", "start": 1483085, "end": 1483147}, {"filename": "/addons/arc/zlib/zlib.ijs", "start": 1483147, "end": 1495853}, {"filename": "/addons/arc/zlib/manifest.ijs", "start": 1495853, "end": 1496044}, {"filename": "/addons/arc/zlib/readme.txt", "start": 1496044, "end": 1496555}, {"filename": "/addons/config/release.txt", "start": 1496555, "end": 1496560}, {"filename": "/addons/config/addins.txt", "start": 1496560, "end": 1496730}, {"filename": "/addons/config/addons.txt", "start": 1496730, "end": 1527689}, {"filename": "/addons/config/config.ijs", "start": 1527689, "end": 1527732}, {"filename": "/addons/config/lastupdate.txt", "start": 1527732, "end": 1527755}, {"filename": "/addons/config/zips.txt", "start": 1527755, "end": 1544900}, {"filename": "/addons/config/tree.txt", "start": 1544900, "end": 1544907}, {"filename": "/addons/config/library.txt", "start": 1544907, "end": 1545070}, {"filename": "/addons/config/revision.txt", "start": 1545070, "end": 1545073}, {"filename": "/addons/general/misc/prompt.ijs", "start": 1545073, "end": 1545722}, {"filename": "/addons/general/misc/evolute.ijs", "start": 1545722, "end": 1545994}, {"filename": "/addons/general/misc/clippaste.ijs", "start": 1545994, "end": 1553699}, {"filename": "/addons/general/misc/parts.ijs", "start": 1553699, "end": 1556099}, {"filename": "/addons/general/misc/inverted.ijs", "start": 1556099, "end": 1557191}, {"filename": "/addons/general/misc/numeric.ijs", "start": 1557191, "end": 1561608}, {"filename": "/addons/general/misc/font.ijs", "start": 1561608, "end": 1563413}, {"filename": "/addons/general/misc/ieee64.ijs", "start": 1563413, "end": 1564258}, {"filename": "/addons/general/misc/bigfiles.ijs", "start": 1564258, "end": 1573429}, {"filename": "/addons/general/misc/manifest.ijs", "start": 1573429, "end": 1574423}, {"filename": "/addons/general/misc/pack.ijs", "start": 1574423, "end": 1577198}, {"filename": "/addons/general/misc/trace.ijs", "start": 1577198, "end": 1582874}, {"filename": "/addons/general/misc/test_bigfiles.ijs", "start": 1582874, "end": 1583763}, {"filename": "/addons/general/misc/guid.ijs", "start": 1583763, "end": 1585179}, {"filename": "/addons/general/misc/test_clippaste.ijs", "start": 1585179, "end": 1586345}, {"filename": "/addons/general/misc/format.ijs", "start": 1586345, "end": 1593884}, {"filename": "/addons/general/misc/jdll.ijs", "start": 1593884, "end": 1598829}, {"filename": "/addons/general/misc/fndisplay.ijs", "start": 1598829, "end": 1603136}, {"filename": "/addons/general/misc/validate.ijs", "start": 1603136, "end": 1605204}, {"filename": "/addons/general/misc/fndef.ijs", "start": 1605204, "end": 1609070}, {"filename": "/addons/math/misc/numbers.ijs", "start": 1609070, "end": 1611842}, {"filename": "/addons/math/misc/amoeba.ijs", "start": 1611842, "end": 1619572}, {"filename": "/addons/math/misc/quatern.ijs", "start": 1619572, "end": 1622380}, {"filename": "/addons/math/misc/det.ijs", "start": 1622380, "end": 1622824}, {"filename": "/addons/math/misc/simplexnr.ijs", "start": 1622824, "end": 1637887}, {"filename": "/addons/math/misc/matfacto.ijs", "start": 1637887, "end": 1641263}, {"filename": "/addons/math/misc/rsa.ijs", "start": 1641263, "end": 1642278}, {"filename": "/addons/math/misc/cheby.ijs", "start": 1642278, "end": 1644351}, {"filename": "/addons/math/misc/integer.ijs", "start": 1644351, "end": 1646683}, {"filename": "/addons/math/misc/pollard.ijs", "start": 1646683, "end": 1648356}, {"filename": "/addons/math/misc/gamesolver.ijs", "start": 1648356, "end": 1650954}, {"filename": "/addons/math/misc/contfrac.ijs", "start": 1650954, "end": 1651768}, {"filename": "/addons/math/misc/integrat.ijs", "start": 1651768, "end": 1654647}, {"filename": "/addons/math/misc/build.ijs", "start": 1654647, "end": 1654785}, {"filename": "/addons/math/misc/legendre.ijs", "start": 1654785, "end": 1655872}, {"filename": "/addons/math/misc/mathutil.ijs", "start": 1655872, "end": 1656758}, {"filename": "/addons/math/misc/odeint.ijs", "start": 1656758, "end": 1663710}, {"filename": "/addons/math/misc/gcd.ijs", "start": 1663710, "end": 1664421}, {"filename": "/addons/math/misc/jacobi.ijs", "start": 1664421, "end": 1665808}, {"filename": "/addons/math/misc/makemat.ijs", "start": 1665808, "end": 1668074}, {"filename": "/addons/math/misc/brent.ijs", "start": 1668074, "end": 1669873}, {"filename": "/addons/math/misc/trig.ijs", "start": 1669873, "end": 1670768}, {"filename": "/addons/math/misc/matutil.ijs", "start": 1670768, "end": 1674105}, {"filename": "/addons/math/misc/linear.ijs", "start": 1674105, "end": 1678938}, {"filename": "/addons/math/misc/svd.ijs", "start": 1678938, "end": 1679703}, {"filename": "/addons/math/misc/manifest.ijs", "start": 1679703, "end": 1681498}, {"filename": "/addons/math/misc/primutil.ijs", "start": 1681498, "end": 1684586}, {"filename": "/addons/math/misc/simplex.ijs", "start": 1684586, "end": 1688629}, {"filename": "/addons/math/misc/fermat.ijs", "start": 1688629, "end": 1689480}, {"filename": "/addons/math/misc/poly.ijs", "start": 1689480, "end": 1691488}, {"filename": "/addons/math/misc/spline.ijs", "start": 1691488, "end": 1693645}, {"filename": "/addons/math/misc/bigpi.ijs", "start": 1693645, "end": 1694146}, {"filename": "/addons/math/misc/mean.ijs", "start": 1694146, "end": 1694577}, {"filename": "/addons/graphics/viewmat/viewmat.ijs", "start": 1694577, "end": 1703650}, {"filename": "/addons/graphics/viewmat/history.txt", "start": 1703650, "end": 1704121}, {"filename": "/addons/graphics/viewmat/manifest.ijs", "start": 1704121, "end": 1704423}, {"filename": "/addons/graphics/bmp/history.txt", "start": 1704423, "end": 1704606}, {"filename": "/addons/graphics/bmp/jbox.bmp", "start": 1704606, "end": 1722868}, {"filename": "/addons/graphics/bmp/bmp.ijs", "start": 1722868, "end": 1724887}, {"filename": "/addons/graphics/bmp/manifest.ijs", "start": 1724887, "end": 1725103}, {"filename": "/addons/graphics/bmp/toucan.bmp", "start": 1725103, "end": 1754981}, {"filename": "/addons/graphics/plot/plotdefs.ijs", "start": 1754981, "end": 1759270}, {"filename": "/addons/graphics/plot/jzplot.ijs", "start": 1759270, "end": 1934712}, {"filename": "/addons/graphics/plot/manifest.ijs", "start": 1934712, "end": 1935017}, {"filename": "/addons/graphics/plot/plot.ijs", "start": 1935017, "end": 1935608}, {"filename": "/addons/graphics/png/manifest.ijs", "start": 1935608, "end": 1935828}, {"filename": "/addons/graphics/png/png.ijs", "start": 1935828, "end": 1945112}, {"filename": "/addons/graphics/png/test/test1.ijs", "start": 1945112, "end": 1945465}, {"filename": "/addons/graphics/afm/history.txt", "start": 1945465, "end": 1945689}, {"filename": "/addons/graphics/afm/afm.ijs", "start": 1945689, "end": 2015735}, {"filename": "/addons/graphics/afm/manifest.ijs", "start": 2015735, "end": 2015916}, {"filename": "/addons/graphics/color/colortab.html", "start": 2015916, "end": 2038943}, {"filename": "/addons/graphics/color/html.ijs", "start": 2038943, "end": 2040104}, {"filename": "/addons/graphics/color/color16.ijs", "start": 2040104, "end": 2040640}, {"filename": "/addons/graphics/color/showcolor.ijs", "start": 2040640, "end": 2041925}, {"filename": "/addons/graphics/color/rgb.ijs", "start": 2041925, "end": 2043036}, {"filename": "/addons/graphics/color/xwin.ijs", "start": 2043036, "end": 2060747}, {"filename": "/addons/graphics/color/manifest.ijs", "start": 2060747, "end": 2061067}, {"filename": "/addons/graphics/color/colorx256.ijs", "start": 2061067, "end": 2061258}, {"filename": "/addons/graphics/color/hues.ijs", "start": 2061258, "end": 2061929}, {"filename": "/addons/graphics/color/colorcss.ijs", "start": 2061929, "end": 2067260}, {"filename": "/addons/graphics/color/colorx256.html", "start": 2067260, "end": 2107183}, {"filename": "/addons/graphics/color/colortab.ijs", "start": 2107183, "end": 2112394}, {"filename": "/addons/graphics/color/color.txt", "start": 2112394, "end": 2113166}], "remote_package_size": 2123251, "package_uuid": "3519f8c8-dc6d-4693-9c4b-5b44e0354bb4"});
 
   })();
 
@@ -521,6 +521,26 @@ function uleb128Encode(n) {
   return [(n % 128) | 128, n >> 7];
 }
 
+// Converts a signature like 'vii' into a description of the wasm types, like
+// { parameters: ['i32', 'i32'], results: [] }.
+function sigToWasmTypes(sig) {
+  var typeNames = {
+    'i': 'i32',
+    'j': 'i64',
+    'f': 'f32',
+    'd': 'f64',
+    'p': 'i32',
+  };
+  var type = {
+    parameters: [],
+    results: sig[0] == 'v' ? [] : [typeNames[sig[0]]]
+  };
+  for (var i = 1; i < sig.length; ++i) {
+    type.parameters.push(typeNames[sig[i]]);
+  }
+  return type;
+}
+
 // Wraps a JS function as a wasm function with a given signature.
 function convertJsFunctionToWasm(func, sig) {
 
@@ -529,20 +549,7 @@ function convertJsFunctionToWasm(func, sig) {
   // Otherwise, construct a minimal wasm module importing the JS function and
   // re-exporting it.
   if (typeof WebAssembly.Function == "function") {
-    var typeNames = {
-      'i': 'i32',
-      'j': 'i64',
-      'f': 'f32',
-      'd': 'f64'
-    };
-    var type = {
-      parameters: [],
-      results: sig[0] == 'v' ? [] : [typeNames[sig[0]]]
-    };
-    for (var i = 1; i < sig.length; ++i) {
-      type.parameters.push(typeNames[sig[i]]);
-    }
-    return new WebAssembly.Function(type, func);
+    return new WebAssembly.Function(sigToWasmTypes(sig), func);
   }
 
   // The module is static, with the exception of the type section, which is
@@ -555,6 +562,7 @@ function convertJsFunctionToWasm(func, sig) {
   var sigParam = sig.slice(1);
   var typeCodes = {
     'i': 0x7f, // i32
+    'p': 0x7f, // i32
     'j': 0x7e, // i64
     'f': 0x7d, // f32
     'd': 0x7c, // f64
@@ -710,50 +718,6 @@ if (typeof WebAssembly != 'object') {
   abort('no native wasm support detected');
 }
 
-// include: runtime_safe_heap.js
-
-
-// In MINIMAL_RUNTIME, setValue() and getValue() are only available when
-// building with safe heap enabled, for heap safety checking.
-// In traditional runtime, setValue() and getValue() are always available
-// (although their use is highly discouraged due to perf penalties)
-
-/** @param {number} ptr
-    @param {number} value
-    @param {string} type
-    @param {number|boolean=} noSafe */
-function setValue(ptr, value, type = 'i8', noSafe) {
-  if (type.endsWith('*')) type = 'i32';
-  switch (type) {
-    case 'i1': HEAP8[((ptr)>>0)] = value; break;
-    case 'i8': HEAP8[((ptr)>>0)] = value; break;
-    case 'i16': HEAP16[((ptr)>>1)] = value; break;
-    case 'i32': HEAP32[((ptr)>>2)] = value; break;
-    case 'i64': (tempI64 = [value>>>0,(tempDouble=value,(+(Math.abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math.min((+(Math.floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math.ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[((ptr)>>2)] = tempI64[0],HEAP32[(((ptr)+(4))>>2)] = tempI64[1]); break;
-    case 'float': HEAPF32[((ptr)>>2)] = value; break;
-    case 'double': HEAPF64[((ptr)>>3)] = value; break;
-    default: abort('invalid type for setValue: ' + type);
-  }
-}
-
-/** @param {number} ptr
-    @param {string} type
-    @param {number|boolean=} noSafe */
-function getValue(ptr, type = 'i8', noSafe) {
-  if (type.endsWith('*')) type = 'i32';
-  switch (type) {
-    case 'i1': return HEAP8[((ptr)>>0)];
-    case 'i8': return HEAP8[((ptr)>>0)];
-    case 'i16': return HEAP16[((ptr)>>1)];
-    case 'i32': return HEAP32[((ptr)>>2)];
-    case 'i64': return HEAP32[((ptr)>>2)];
-    case 'float': return HEAPF32[((ptr)>>2)];
-    case 'double': return Number(HEAPF64[((ptr)>>3)]);
-    default: abort('invalid type for getValue: ' + type);
-  }
-}
-
-// end include: runtime_safe_heap.js
 // Wasm globals
 
 var wasmMemory;
@@ -813,7 +777,10 @@ function ccall(ident, returnType, argTypes, args, opts) {
   };
 
   function convertReturnValue(ret) {
-    if (returnType === 'string') return UTF8ToString(ret);
+    if (returnType === 'string') {
+      
+      return UTF8ToString(ret);
+    }
     if (returnType === 'boolean') return Boolean(ret);
     return ret;
   }
@@ -962,7 +929,6 @@ function UTF8ArrayToString(heapOrArray, idx, maxBytesToRead) {
  * @return {string}
  */
 function UTF8ToString(ptr, maxBytesToRead) {
-  ;
   return ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead) : '';
 }
 
@@ -1467,12 +1433,16 @@ function abort(what) {
   // Use a wasm runtime error, because a JS error might be seen as a foreign
   // exception, which means we'd run destructors on it. We need the error to
   // simply make the program stop.
+  // FIXME This approach does not work in Wasm EH because it currently does not assume
+  // all RuntimeErrors are from traps; it decides whether a RuntimeError is from
+  // a trap or not based on a hidden field within the object. So at the moment
+  // we don't have a way of throwing a wasm trap from JS. TODO Make a JS API that
+  // allows this in the wasm spec.
 
   // Suppress closure compiler warning here. Closure compiler's builtin extern
   // defintion for WebAssembly.RuntimeError claims it takes no arguments even
   // though it can.
   // TODO(https://github.com/google/closure-compiler/pull/3913): Remove if/when upstream closure gets fixed.
-
   /** @suppress {checkTypes} */
   var e = new WebAssembly.RuntimeError(what);
 
@@ -1618,6 +1588,13 @@ function createWasm() {
         !isDataURI(wasmBinaryFile) &&
         // Don't use streaming for file:// delivered objects in a webview, fetch them synchronously.
         !isFileURI(wasmBinaryFile) &&
+        // Avoid instantiateStreaming() on Node.js environment for now, as while
+        // Node.js v18.1.0 implements it, it does not have a full fetch()
+        // implementation yet.
+        //
+        // Reference:
+        //   https://github.com/emscripten-core/emscripten/pull/16917
+        !ENVIRONMENT_IS_NODE &&
         typeof fetch == 'function') {
       return fetch(wasmBinaryFile, { credentials: 'same-origin' }).then(function(response) {
         // Suppress closure warning here since the upstream definition for
@@ -1669,7 +1646,7 @@ var tempI64;
 var ASM_CONSTS = {
   
 };
-function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval(cmd) || " "; } catch (e) { console.log(e); var ret = "error"; } const byteCount = (Module.lengthBytesUTF8(ret) + 1); const retPtr = Module._malloc(byteCount); Module.stringToUTF8(ret, retPtr, byteCount); return retPtr; }
+function execHost(ptr) { var cmd = Module.UTF8ToString(ptr); try { var ret = eval(cmd) || " "; } catch (e) { console.log(e); var ret = "error"; } const byteCount = (Module.lengthBytesUTF8(ret) + 1); const retPtr = Module._malloc(byteCount); Module.stringToUTF8(ret, retPtr, byteCount); return retPtr; }
 
 
 
@@ -1720,6 +1697,26 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
         });
     }
 
+  
+    /**
+     * @param {number} ptr
+     * @param {string} type
+     */
+  function getValue(ptr, type = 'i8') {
+      if (type.endsWith('*')) type = 'i32';
+      switch (type) {
+        case 'i1': return HEAP8[((ptr)>>0)];
+        case 'i8': return HEAP8[((ptr)>>0)];
+        case 'i16': return HEAP16[((ptr)>>1)];
+        case 'i32': return HEAP32[((ptr)>>2)];
+        case 'i64': return HEAP32[((ptr)>>2)];
+        case 'float': return HEAPF32[((ptr)>>2)];
+        case 'double': return Number(HEAPF64[((ptr)>>3)]);
+        default: abort('invalid type for getValue: ' + type);
+      }
+      return null;
+    }
+
   var wasmTableMirror = [];
   function getWasmTableEntry(funcPtr) {
       var func = wasmTableMirror[funcPtr];
@@ -1757,6 +1754,26 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
         }
       }
       return error.stack.toString();
+    }
+
+  
+    /**
+     * @param {number} ptr
+     * @param {number} value
+     * @param {string} type
+     */
+  function setValue(ptr, value, type = 'i8') {
+      if (type.endsWith('*')) type = 'i32';
+      switch (type) {
+        case 'i1': HEAP8[((ptr)>>0)] = value; break;
+        case 'i8': HEAP8[((ptr)>>0)] = value; break;
+        case 'i16': HEAP16[((ptr)>>1)] = value; break;
+        case 'i32': HEAP32[((ptr)>>2)] = value; break;
+        case 'i64': (tempI64 = [value>>>0,(tempDouble=value,(+(Math.abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math.min((+(Math.floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math.ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[((ptr)>>2)] = tempI64[0],HEAP32[(((ptr)+(4))>>2)] = tempI64[1]); break;
+        case 'float': HEAPF32[((ptr)>>2)] = value; break;
+        case 'double': HEAPF64[((ptr)>>3)] = value; break;
+        default: abort('invalid type for setValue: ' + type);
+      }
     }
 
   function setWasmTableEntry(idx, func) {
@@ -2333,11 +2350,7 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
         },allocate:function(stream, offset, length) {
           MEMFS.expandFileStorage(stream.node, offset + length);
           stream.node.usedBytes = Math.max(stream.node.usedBytes, offset + length);
-        },mmap:function(stream, address, length, position, prot, flags) {
-          if (address !== 0) {
-            // We don't currently support location hints for the address of the mapping
-            throw new FS.ErrnoError(28);
-          }
+        },mmap:function(stream, length, position, prot, flags) {
           if (!FS.isFile(stream.node.mode)) {
             throw new FS.ErrnoError(43);
           }
@@ -3286,7 +3299,7 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
           throw new FS.ErrnoError(138);
         }
         stream.stream_ops.allocate(stream, offset, length);
-      },mmap:(stream, address, length, position, prot, flags) => {
+      },mmap:(stream, length, position, prot, flags) => {
         // User requests writing to file (prot & PROT_WRITE != 0).
         // Checking if we have permissions to write to the file unless
         // MAP_PRIVATE flag is set. According to POSIX spec it is possible
@@ -3304,7 +3317,7 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
         if (!stream.stream_ops.mmap) {
           throw new FS.ErrnoError(43);
         }
-        return stream.stream_ops.mmap(stream, address, length, position, prot, flags);
+        return stream.stream_ops.mmap(stream, length, position, prot, flags);
       },msync:(stream, buffer, offset, length, mmapFlags) => {
         if (!stream || !stream.stream_ops.msync) {
           return 0;
@@ -3488,8 +3501,7 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
         FS.createStandardStreams();
       },quit:() => {
         FS.init.initialized = false;
-        // Call musl-internal function to close all stdio streams, so nothing is
-        // left in internal buffers.
+        // force-flush all streams, so we get musl std streams printed out
         // close all of our streams
         for (var i = 0; i < FS.streams.length; i++) {
           var stream = FS.streams[i];
@@ -3782,9 +3794,7 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
             return fn.apply(null, arguments);
           };
         });
-        // use a custom read function
-        stream_ops.read = (stream, buffer, offset, length, position) => {
-          FS.forceLoadFile(node);
+        function writeChunks(stream, buffer, offset, length, position) {
           var contents = stream.node.contents;
           if (position >= contents.length)
             return 0;
@@ -3799,6 +3809,21 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
             }
           }
           return size;
+        }
+        // use a custom read function
+        stream_ops.read = (stream, buffer, offset, length, position) => {
+          FS.forceLoadFile(node);
+          return writeChunks(stream, buffer, offset, length, position)
+        };
+        // use a custom mmap function
+        stream_ops.mmap = (stream, length, position, prot, flags) => {
+          FS.forceLoadFile(node);
+          var ptr = mmapAlloc(length);
+          if (!ptr) {
+            throw new FS.ErrnoError(48);
+          }
+          writeChunks(stream, HEAP8, ptr, length, position);
+          return { ptr: ptr, allocated: true };
         };
         node.stream_ops = stream_ops;
         return node;
@@ -4069,7 +4094,7 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
         case 8:
           return -28; // These are for sockets. We don't have them fully implemented yet.
         case 9:
-          // musl trusts getown return values, due to a bug where they must be, as they overlap with errors. just return -1 here, so fnctl() returns that, and we set errno ourselves.
+          // musl trusts getown return values, due to a bug where they must be, as they overlap with errors. just return -1 here, so fcntl() returns that, and we set errno ourselves.
           setErrNo(28);
           return -1;
         default: {
@@ -4334,12 +4359,12 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
       HEAP32[(((tmPtr)+(32))>>2)] = dst;
     }
 
-  function __mmap_js(addr, len, prot, flags, fd, off, allocated, builtin) {
+  function __mmap_js(len, prot, flags, fd, off, allocated) {
   try {
   
-      var info = FS.getStream(fd);
-      if (!info) return -8;
-      var res = FS.mmap(info, addr, len, off, prot, flags);
+      var stream = FS.getStream(fd);
+      if (!stream) return -8;
+      var res = FS.mmap(stream, len, off, prot, flags);
       var ptr = res.ptr;
       HEAP32[((allocated)>>2)] = res.allocated;
       return ptr;
@@ -4396,11 +4421,11 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
       var summerNamePtr = allocateUTF8(summerName);
       if (summerOffset < winterOffset) {
         // Northern hemisphere
-        HEAP32[((tzname)>>2)] = winterNamePtr;
-        HEAP32[(((tzname)+(4))>>2)] = summerNamePtr;
+        HEAPU32[((tzname)>>2)] = winterNamePtr;
+        HEAPU32[(((tzname)+(4))>>2)] = summerNamePtr;
       } else {
-        HEAP32[((tzname)>>2)] = summerNamePtr;
-        HEAP32[(((tzname)+(4))>>2)] = winterNamePtr;
+        HEAPU32[((tzname)>>2)] = summerNamePtr;
+        HEAPU32[(((tzname)+(4))>>2)] = winterNamePtr;
       }
     }
   function __tzset_js(timezone, daylight, tzname) {
@@ -4422,7 +4447,7 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
       HEAPU8.copyWithin(dest, src, src + num);
     }
 
-  function _emscripten_get_heap_max() {
+  function getHeapMax() {
       // Stay one Wasm page short of 4GB: while e.g. Chrome is able to allocate
       // full 4GB Wasm memories, the size will wrap back to 0 bytes in Wasm side
       // for any code that deals with heap sizes, which would require special
@@ -4466,7 +4491,7 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
   
       // A limit is set for how much we can grow. We should not exceed that
       // (the wasm binary specifies it, so if we tried, we'd fail anyhow).
-      var maxHeapSize = _emscripten_get_heap_max();
+      var maxHeapSize = getHeapMax();
       if (requestedSize > maxHeapSize) {
         return false;
       }
@@ -4537,21 +4562,14 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
   }
   }
 
+  function convertI32PairToI53Checked(lo, hi) {
+      return ((hi + 0x200000) >>> 0 < 0x400001 - !!lo) ? (lo >>> 0) + hi * 4294967296 : NaN;
+    }
   function _fd_seek(fd, offset_low, offset_high, whence, newOffset) {
   try {
   
-      
+      var offset = convertI32PairToI53Checked(offset_low, offset_high); if (isNaN(offset)) return 61;
       var stream = SYSCALLS.getStreamFromFD(fd);
-      var HIGH_OFFSET = 0x100000000; // 2^32
-      // use an unsigned operator on low and shift high by 32-bits
-      var offset = offset_high * HIGH_OFFSET + (offset_low >>> 0);
-  
-      var DOUBLE_LIMIT = 0x20000000000000; // 2^53
-      // we also check for equality since DOUBLE_LIMIT + 1 == DOUBLE_LIMIT
-      if (offset <= -DOUBLE_LIMIT || offset >= DOUBLE_LIMIT) {
-        return 61;
-      }
-  
       FS.llseek(stream, offset, whence);
       (tempI64 = [stream.position>>>0,(tempDouble=stream.position,(+(Math.abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? ((Math.min((+(Math.floor((tempDouble)/4294967296.0))), 4294967295.0))|0)>>>0 : (~~((+(Math.ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)],HEAP32[((newOffset)>>2)] = tempI64[0],HEAP32[(((newOffset)+(4))>>2)] = tempI64[1]);
       if (stream.getdents && offset === 0 && whence === 0) stream.getdents = null; // reset readdir state
@@ -4578,10 +4596,9 @@ function execHost(ptr){ var cmd = Module.UTF8ToString(ptr); try { var ret = eval
   function _fd_write(fd, iov, iovcnt, pnum) {
   try {
   
-      ;
       var stream = SYSCALLS.getStreamFromFD(fd);
       var num = doWritev(stream, iov, iovcnt);
-      HEAP32[((pnum)>>2)] = num;
+      HEAPU32[((pnum)>>2)] = num;
       return 0;
     } catch (e) {
     if (typeof FS == 'undefined' || !(e instanceof FS.ErrnoError)) throw e;
@@ -5023,7 +5040,7 @@ var dynCall_jiji = Module["dynCall_jiji"] = function() {
   return (dynCall_jiji = Module["dynCall_jiji"] = Module["asm"]["dynCall_jiji"]).apply(null, arguments);
 };
 
-var ___emscripten_embedded_file_data = Module['___emscripten_embedded_file_data'] = 22880;
+var ___emscripten_embedded_file_data = Module['___emscripten_embedded_file_data'] = 23424;
 function invoke_iii(index,a1,a2) {
   var sp = stackSave();
   try {
@@ -5189,14 +5206,15 @@ function callMain(args) {
   var entryFunction = Module['_main'];
 
   args = args || [];
+  args.unshift(thisProgram);
 
-  var argc = args.length+1;
+  var argc = args.length;
   var argv = stackAlloc((argc + 1) * 4);
-  HEAP32[argv >> 2] = allocateUTF8OnStack(thisProgram);
-  for (var i = 1; i < argc; i++) {
-    HEAP32[(argv >> 2) + i] = allocateUTF8OnStack(args[i - 1]);
-  }
-  HEAP32[(argv >> 2) + argc] = 0;
+  var argv_ptr = argv >> 2;
+  args.forEach((arg) => {
+    HEAP32[argv_ptr++] = allocateUTF8OnStack(arg);
+  });
+  HEAP32[argv_ptr] = 0;
 
   try {
 
