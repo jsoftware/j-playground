@@ -645,6 +645,11 @@ static AF atcompX[]={0L, jti1ebar, 0L, 0L, jtsumebar, jtanyebar};
 // If no routine found, return 0 to failover to normal path
 // result bits 0-1 indicate postprocessing needed: 0x=none, 10=+./ (result is binary 0 if search completed), 11=*./ (result is binary 1 if search completed)
 AF jtatcompf(J jt,A a,A w,A self){I m;
+	   
+// DNOSPECIALCODE exits early from jtatcompf to disable special code due to glitches in WASM (issue #85). It's better to be accurate than fast
+#ifdef NOSPECIALCODE
+return 0;
+#endif
  ARGCHK2(a,w);
  m=FAV(self)->flag&255;
  if((m&6)!=6){   // normal comparison

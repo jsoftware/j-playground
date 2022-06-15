@@ -11,7 +11,7 @@ CFLAGS += -fPIC -O2 -fvisibility=hidden -fno-strict-aliasing -fno-stack-protecto
 CFLAGS += -Wno-parentheses -Wno-unused-value -Wno-pointer-sign
 CFLAGS += -Wno-empty-body -Wno-return-type -Wno-constant-logical-operand
 CFLAGS += -Wno-comment -Wno-string-plus-int -Wno-unsequenced  -fomit-frame-pointer
-CFLAGS += -D HTML=1 -D WASM=1 -D TESTS=1 -msimd128
+CFLAGS += -D HTML=1 -D WASM=1 -D TESTS=1 -msimd128 -DNOSPECIALCODE=1
 
 SRCS=$(wildcard *.c) blis/gemm_c-ref.c blis/gemm_vec-ref.c blis/gemm_int-sse2.c
 EXCLUDE:=aes-ni.c andjnative.c fnmatch.c jconsole.c jep.c jfex.c xaes.c xsha.c
@@ -28,7 +28,8 @@ j      : $(OBJ)
 	  $(CC) $(CFLAGS) $(OBJ) -o ../bin/tests/index.html -s BINARYEN_EXTRA_PASSES="--pass-arg=max-func-params@75" \
 	  -s WASM=1 -s EMULATE_FUNCTION_POINTER_CASTS=1 -s EXPORTED_FUNCTIONS='["_main","_em_jdo", "_em_jsetstr", "_em_jgetstr"]' \
 	  -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap","ccall", "UTF8ToString", "lengthBytesUTF8", "stringToUTF8"]' -s NO_EXIT_RUNTIME=1 -s ALLOW_MEMORY_GROWTH=1 \
-	  --preload-file ../jlibrary/ --preload-file ../labs/ --preload-file ../addons/ --embed-file ../bin/html/emj.ijs@emj.ijs --embed-file ../bin/html/testga.ijs@testga.ijs --emrun --preload-file ../test
+	  --preload-file ../jlibrary/ --preload-file ../labs/ --preload-file ../addons/ --embed-file ../bin/html/emj.ijs@emj.ijs --embed-file ../bin/html/testga.ijs@testga.ijs \
+	   --preload-file ../test
 
 clean:;	rm -f $(OBJ) j
 

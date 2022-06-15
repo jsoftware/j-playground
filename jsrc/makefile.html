@@ -10,7 +10,9 @@ CFLAGS += -fPIC -O2 -fvisibility=hidden -fno-strict-aliasing -fno-stack-protecto
 CFLAGS += -Wno-parentheses -Wno-unused-value -Wno-pointer-sign
 CFLAGS += -Wno-empty-body -Wno-return-type -Wno-constant-logical-operand
 CFLAGS += -Wno-comment -Wno-string-plus-int -Wno-unsequenced  -fomit-frame-pointer
-CFLAGS += -D HTML=1 -D WASM=1 
+CFLAGS += -D HTML=1 -D WASM=1 -DNOSPECIALCODE=1
+
+# DNOSPECIALCODE exits early from jtatcompf to disable special code due to glitches in WASM (issue #85). It's better to be accurate than fast
 # these flags do not work on iOS
 # -msse2 -msimd128
 
