@@ -4,6 +4,7 @@
 
 var tcm;
 var cmdlist = [];
+var showProgress = false;
 var widgets = [];
 
 // ---------------------------------------------------------------------
@@ -30,8 +31,14 @@ function docmd(cmd, log, show) {
  if (log) tcmappend(cmd + "\n");
  if (show && cmd.length > 0)
   localjserver.send("output_jrx_=:i.0 0\noutput_jrx_=:" + cmd + "\noutput_jrx_", show);
- else
-  localjserver.send(cmd);
+ else {
+   if (showProgress)
+    //send delayed so the UI can update
+    setTimeout(function() { localjserver.send(cmd); },10);
+    else {
+      localjserver.send(cmd);
+    }
+ }
 }
 
 // ---------------------------------------------------------------------
@@ -39,12 +46,35 @@ function docmds(cmds, log) {
  cmdlist = cmds.map(function(e) {
   return [e, log, false, true];
  });
- docmdnext();
+ //experimental support for showing a progress indicator
+ showProgress = (cmds.filter(x=>x.indexOf("SHOWPROGRESS")>=0).length) > 0;
+ if (showProgress) {
+   //option #1 - just show a spinner
+  popup('<div><img src="images/loading.gif"></div>',50);  
+  //option #2 to show the output of the console.log in popup too
+   /*
+  popup('<div><img src="images/loading.gif"><textarea id="progress-output" style="border:0;outline:0;width:500px;height:200px"></textarea></div>',510);
+  window.out = (function (old_function, div_log) { 
+    return function (text) {
+        old_function(text);
+        if (!div_log) { return; }
+        div_log.value  +=  text + "\n";
+        div_log.scroll({ top: div_log.scrollHeight, behavior: 'smooth' });
+
+    };
+  } (window.out.bind(window), document.getElementById("progress-output")));
+    */
+ }
+ docmdnext(); 
 }
 
 // ---------------------------------------------------------------------
 function docmdnext() {
- if (cmdlist.length === 0) return;
+ if (cmdlist.length === 0) { 
+  var p = getid("popupp");
+  if (p) p.style.display = "none"
+   return;
+ }
  var t = cmdlist.shift();
  if (t.length === 0) {
   tcmappend("\n   ");

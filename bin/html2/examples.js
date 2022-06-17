@@ -278,6 +278,8 @@ NB. Neural Net - from https://gist.githubusercontent.com/jpjacobs/6ff68c07bf764a
 NB. (roughly based on chapters 1-3 of http://neuralnetworksanddeeplearning.com/ by Michael Nielsen)
 NB. main difference is removal of minibatch function and loops in favor of matrix functions, and joining bias and weight calculations.
 
+NB. SHOWPROGRESS=1 experimental support to show progress dialog
+
 NB. *** Preparations ***
 NB. install packages needed
 {{install^:(-.fexist'~addons/tables/',y)'github:jsoftware/tables_',y}}&>;:'dsv csv'

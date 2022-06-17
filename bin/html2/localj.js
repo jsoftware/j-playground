@@ -13,6 +13,7 @@ var jgetstr = Module.cwrap('em_jgetstr','string',['string'])
 var localjserver = {
   send: function(cmd, show=false) {
     //don't execute blank links, instead just execute tcmreturn to reset state
+    
     if (cmd.trim()=='') {
       tcmreturn('');
     } else {
