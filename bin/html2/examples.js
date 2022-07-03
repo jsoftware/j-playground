@@ -274,29 +274,29 @@ NB. filter to a state
 
 ExIds.push("Neural Network");
 addexam(`
-NB. Neural Net - from https://gist.githubusercontent.com/jpjacobs/6ff68c07bf764ad886e097ffbd19f5f0/raw/52b0563a7daa76df7fa57a3743da45ca0755f1a7/nn.ijs
+NB. Neural Network Demo (from https://gist.github.com/jpjacobs/6ff68c07bf764ad886e097ffbd19f5f0)
 NB. (roughly based on chapters 1-3 of http://neuralnetworksanddeeplearning.com/ by Michael Nielsen)
-NB. main difference is removal of minibatch function and loops in favor of matrix functions, and joining bias and weight calculations.
+NB. The main differences with the book are:
+NB. - the removal of the minibatch function and loops in favor of matrix functions
+NB. - joining bias and weight calculations.
 
 NB. SHOWPROGRESS=1 experimental support to show progress dialog
 
 NB. *** Preparations ***
-NB. install packages needed
+NB. install addons needed from github for reading CSV files
 {{install^:(-.fexist'~addons/tables/',y)'github:jsoftware/tables_',y}}&>;:'dsv csv'
-NB. install'github:jsoftware/math_calculus' NB.  if intending to use tanh as loss function
-NB. require them
+NB. require the needed addons
 require 'tables/csv plot viewmat stats/base'
 NB. Onehot and back (inverse)
-onehoti  =: (>:@(i.&1"1))
-onehot   =: (0 1 (#"1)~ 1,.~ <:) :. onehoti
+onehot_z_   =: (0 1 (#"1)~ 1,.~ ]) :. (i.&1"1)
 NB. split train/test data: x : number of random samples to take as test;
 splitdat =: [ |.@split ({~ ?~@#)@]
 
 NB. *** Data download & preprocessing ***
 httpget^:(-.fexist'~temp/spirals.csv')'https://raw.githubusercontent.com/reisanar/datasets/master/spiral.csv'
 num  =: (/: {:"1) ".&> }. readcsv '~temp/spiral.csv' NB. read data; discard column headers
-data =: <: +: (%"1 >./)@(-"1 <./) }:"1 num NB. normalised dat
-labs =: onehot {:"1 num                    NB. labels one-hot encoded
+data =: <: +: (%"1 >./)@(-"1 <./) }:"1 num NB. normalised: _1 < data < 1
+labs =: onehot <: {:"1 num                 NB. labels one-hot encoded
 jit  =:  15%~normalrand ($data), 3         NB. data jitter to be added 3x
 datext=: ,/ 0 2 1|: data + jit             NB. new dataset with 3x jittered data
 labext=: 3 # labs                          NB. corresponding labels
@@ -304,16 +304,17 @@ labext=: 3 # labs                          NB. corresponding labels
 NB. *** Neural network class ***
 cocurrent 'nn' NB. wrap in a J class.
 destroy =: codestroy     NB. to discard a network, do destroy__obj ''
-sig   =: %@:>:@:^@:-     NB. sigmoid func; note @: vs. @ makes enormous difference
+sig   =: %@:>:@:^@:-     NB. sigmoid activation; note @: vs. @ makes enormous difference
 dsig  =: (* -.)@:sig     NB. d sig(y) / d y (note: scalar)
 loss  =: (+/)@:-:@:*:@:- NB. Quadratic loss; assume features in rows.
 dLoss =: -~              NB. gradient of loss
 mpb =: +/ .* 1 , ]       NB. biased matrix product
 
-NB. Create object; called by conew; can be used to re-initialise weights.
+NB. Create object; called by conew; could be used to re-initialise weights.
+NB. takes y: array of layer sizes, from input (=#feature dims) to output (=#~.labels)
 create =: {{
   sizes  =: y 
-  bw     =: ([: <@normalrand@|. 1 0&+)"1]   2 ]\\ sizes NB. bias ,. weight arrays.
+  bw     =: ([: <@normalrand@|. 1 0&+)"1]   2 ]\ sizes NB. bias ,. weight arrays.
   repint =: 1000         NB. reporting every repint epochs in sgd training
   0 0 $ histloss =:2 0$0 NB. keeps training & test loss
 }}
@@ -323,23 +324,24 @@ pred =: fwd&.:|: NB. shortcut for operating on instances in rows
 
 NB. Stochastic Gradient Descent.
 NB. x takes #epochs, batch size and learning rate;
-NB. y is training data or training data;testing data.
-NB. Data arrays have instances in rows, and columns are features; labels
-NB. the numbers of label columns are derived from sizes__obj.
+NB.  if batchsize = _, it performs back prop on the tentire dataset.
+NB. y is training data or training data;testing data (for display only).
+NB. Data arrays have instances in rows, and columns are: features,. labels.
+NB. The numbers of label columns are derived from sizes__obj.
 sgd =: {{
   'ep bs lr' =. x                       NB. epochs, batch size and learning rate
-  'tr ts'  =. 2 {. boxopen y            NB. split training and test data (ifepresent)
+  'tr ts'  =. 2 {. boxopen y            NB. split training and test data (if present)
   tr=. ({~ ?~@#) tr                     NB. random shuffle training data
   'fttr lbtr' =. ({.sizes) split |: tr  NB. first {. sizes rows deemed to be labels
-  'ftts lbts' =. ({.sizes) split |: ts  NB. first {. sizes rows deemed to be labels
+  'ftts lbts' =. ({.sizes) split |: ts  NB. the same for testing data
   losstr =. lossts =. ep$0              NB. for keeping training loss statistics
-  for_e. i. ep do.
-    (-bs) lr&backprop\\ tr               NB. do BP per batch of max batch size
+  for_e. i. ep do.                      NB. repeat for all episodes
+    (-bs) lr&backprop\ tr               NB.   do BP per batch of max batch size
     NB. Do forward pass to compute and record loss for stats.
                 losstr =. losstr e}~ lltr=. (+/%#) lbtr loss fwd fttr
     if. #ts do. NB. the same for testing data if present.
       lossts =. lossts e}~ llts=. (+/%#) lbts loss fwd ftts end.
-    if. 0=repint|e do.
+    if. 0=repint|e do.                  NB. echo state at each repint interval
         if. #ts do. echo 'Epoch complete: ',(":e),' losses: ',(": lltr,llts)
         else.       echo 'Epoch complete: ',(":e),' loss: '  ,(": lltr) end.
     end.
@@ -356,20 +358,20 @@ backprop =: {{
   zs =. 0 $ as =. <act NB. keep z and activations; first activation is input data.
   delta =. ($bw) $ a:  NB. very similar to fwd above, but will keep zs 
   for_p. bw do.        NB. and as for each layer for backward pass.
-    act =. sig z =. (>p) mpb act
-    as  =. as,<act
+    act =. sig z =. (>p) mpb act NB. activations and z's for layer
+    as  =. as,<act     NB. store them for reuse in backward pass 
     zs  =. zs,<z
   end.
   NB. ---Backward pass---
   last=.1                 NB. for triggering special treatment of output layer as first factor
   for_L. |.i.<:#sizes do. NB. for all layers, going backwards (|.)
     if. last do.          NB. first factor f1 in err depends on whether the layer is last or not.
-      last=.0 [ f1 =. lab dLoss _1 {:: as NB. last->get loss w.r.t. last activations
+      last=.0 [ f1 =. lab dLoss _1 {:: as NB. last, so get loss w.r.t. last activations
     else. f1=. (|: }."1 > bw {~ L+1) +/ .* err end. NB. else, update from previous err(L+1)
     err   =. f1 * dsig L {:: zs                     NB. error, i.e. small delta in the URL above                   
     delta =. delta L}~ < err +/ .* |: 1,L {:: as    NB. get update multiplying error with activation, 1 for bias
   end.
-  bs =. #{.y                      NB. Batch size for normalization
+  bs =. #{.y                      NB. batch size for normalization
   bw =: bw (- bs %~ x&*)&.> delta NB. update bw__obj for each layer
 }}
 nn_z_ =: conew&'nn' NB. shortcut function for creation.
@@ -377,8 +379,8 @@ nn_z_ =: conew&'nn' NB. shortcut function for creation.
 NB. Report results on data, taken as y=boxed training/test data split
 report =: {{
   echo 'NN training report'
-  'dtr ltr'=. ({.sizes) split|: 0{:: y NB. split in data and labels
-  'dts lts'=. ({.sizes) split|: 1{:: y
+  'dtr ltr'=. ({.sizes) split|: 0{:: y NB. split training in data and labels
+  'dts lts'=. ({.sizes) split|: 1{:: y NB. Same for testing data
   NB. data plots
   pd 'reset'
   pd 'sub 1 2'
@@ -390,19 +392,18 @@ report =: {{
   pd&> ;/@|:&.> dts (</.~ #.)&|: lts
   pd 'endsub'
   pd 'show'
-  NB. Return some stats.
+  NB. Return accuracies on training and testing data and confusion matrix
   echo 'training accuracy (%)   : ',": 100*(+/%#) *./ ltr=prtr =. (="1 >./) fwd dtr
   echo 'testing  accuracy (%)   : ',": 100*(+/%#) *./ lts=prts =. (="1 >./) fwd dts
-  echo 'confusion matrices training; testing' NB. convert labels into indices into matrix, sort, #/. , reshape KxK  
-  echo conf =. (ltr;lts) ([: ($~ ,~@%:@#) [: #/.~  (,~ ,/@:>@{@,~@:<@~.@,)@/:~@ ,.&((>:@(i.&1"1))@|:) ) each prtr;prts
+  echo 'confusion matrices training; testing' NB. convert labels into indices into matrix, add all possible label combo's, <:@#/. , reshape KxK  
+  echo conf =. (ltr;lts) ([: ($~ ,~@%:@#) [: <:@#/.~  (,~ ,/@:>@{@,~@:<@~.@,)@/:~@ ,.&(onehot inv@|:) ) each prtr;prts
   NB. Show training / testing loss evolution plot.
   'title Loss;xcaption epoch; key train test;keypos rti' plot histloss
-  echo 'decision boundary' NB. shows RGB for classes, the brighter/more pure/crisper, the better
+  echo 'decision boundary' NB. shows RGB for classes, the brighter/more pure/crisper, the better, NOTE: works only for 3 classes, since it uses RGB 
   viewrgb (,~@>: |.@|:@$  256 #. 255 <.@:* [: (%"1 >./)@:(-"1 <./) [: pred [: ,/@:>@{@,~@:<@i: 1+j.) 300
   NB. entropy of predicted labels: higher entropy = higher uncertainty = decision boundary
   'density; mesh 0;aspect 1' plot (,~@>: $ [: -@:(+/"1@:(*^.)) [: (%"1 >./)@:(-"1 <./) [: pred [: ,/@:>@{@,~@:<@i: 1+j.) 300
 }}
-
 cocurrent 'base'
 
 NB. Fix funky errors preventing larger jviewmat pictures:
@@ -414,6 +415,8 @@ assert. (0<:ex)*.(300>:ex) NB. upped limit here.
 code, 1000+ex
 )
 
+NB. Create neural network. First and last neuron count should be 2 and 3, respectively,
+NB.   for matching data dimensionality and label count 
 net =: nn 2 15 8 3
 5000 _ 0.1 sgd__net spl =: 300 splitdat datext ,. labext
 report__net spl
