@@ -314,7 +314,7 @@ NB. Create object; called by conew; could be used to re-initialise weights.
 NB. takes y: array of layer sizes, from input (=#feature dims) to output (=#~.labels)
 create =: {{
   sizes  =: y 
-  bw     =: ([: <@normalrand@|. 1 0&+)"1]   2 ]\ sizes NB. bias ,. weight arrays.
+  bw     =: ([: <@normalrand@|. 1 0&+)"1]   2 ]\\ sizes NB. bias ,. weight arrays.
   repint =: 1000         NB. reporting every repint epochs in sgd training
   0 0 $ histloss =:2 0$0 NB. keeps training & test loss
 }}
@@ -336,7 +336,7 @@ sgd =: {{
   'ftts lbts' =. ({.sizes) split |: ts  NB. the same for testing data
   losstr =. lossts =. ep$0              NB. for keeping training loss statistics
   for_e. i. ep do.                      NB. repeat for all episodes
-    (-bs) lr&backprop\ tr               NB.   do BP per batch of max batch size
+    (-bs) lr&backprop\\ tr               NB.   do BP per batch of max batch size
     NB. Do forward pass to compute and record loss for stats.
                 losstr =. losstr e}~ lltr=. (+/%#) lbtr loss fwd fttr
     if. #ts do. NB. the same for testing data if present.
