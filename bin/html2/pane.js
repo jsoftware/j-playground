@@ -12,7 +12,7 @@ var mainPane = "<div id='mainpane'><div id='maintop' class='panetop'>" +
  "&nbsp;Term" + "</div><div id='main'></div></div>";
 
 var sidePane = "<div id='sidepane'><div id='sidetop' class='panetop'>" +
- "&nbsp;Edit" + "</div><div id='side'></div></div>";
+ "&nbsp;Edit" + "<span style='float:right'><button style=\"height:19px\" onclick='menu(\"runall\");'>Run</button>&nbsp;&nbsp;&nbsp;</span></div><div id='side'></div></div>";
 
 var viewPane = "<div id='viewpane'><div id='viewtop' class='panetop'>" +
  "&nbsp;View" + "</div><div id='view'></div></div>";
