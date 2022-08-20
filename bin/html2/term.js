@@ -50,7 +50,7 @@ function docmds(cmds, log) {
  showProgress = (cmds.filter(x=>x.indexOf("SHOWPROGRESS")>=0).length) > 0;
  if (showProgress) {
    //option #1 - just show a spinner
-  popup('<div><img src="images/loading.gif"></div>',50);  
+  popup('<div id="loading"><img src="images/loading.gif"></div>',50);  
   //option #2 to show the output of the console.log in popup too
    /*
   popup('<div><img src="images/loading.gif"><textarea id="progress-output" style="border:0;outline:0;width:500px;height:200px"></textarea></div>',510);
@@ -71,8 +71,9 @@ function docmds(cmds, log) {
 // ---------------------------------------------------------------------
 function docmdnext() {
  if (cmdlist.length === 0) { 
-  var p = getid("popupp");
-  if (p) p.style.display = "none"
+  var p = getid("loading");
+  //this closes the popup
+  if (p) p.parentNode.parentNode.style.display = "none"
    return;
  }
  var t = cmdlist.shift();
