@@ -132,6 +132,12 @@ NB. data shown in 2d and 3d:
 plot dat=: sin@*/~ i:2j50
 'surface' plot dat
 
+plot dat=: +/~ sin i:12j50
+
+sombrero0=: [: (1&o. % ]) [: %: [: +/~ *:
+   
+'surface' plot sombrero0 i:12j99
+
 NB. the pd function is the low-level plot driver:
 pd 'multi 1,1 2 3'
 pd  '';"1 |:(i.6) ^/ 1 + 0.2 * i.3
