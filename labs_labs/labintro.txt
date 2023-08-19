@@ -9,8 +9,8 @@ A section starts with comments (such as these), optionally
 followed by J sentences which are automatically executed in
 the J session.
 
-Select menu Studio|Advance, or use the corresponding shortcut
-key, to advance to the next section.
+Select menu Labs|'Advance current lab', or use the corresponding
+shortcut key, to advance to the next section.
 )
 i.5         NB. automatically executed
 +/\i.5      NB. automatically executed

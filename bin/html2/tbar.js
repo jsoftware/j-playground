@@ -86,7 +86,7 @@ function inittbar() {
  h += "</ul></li>"
 
  h += top("Labs", 1);
- h += sub2("advlab", "Advance Labs", "Shift+Ctrl+>", 1);
+ h += sub2("advlab", "Advance current lab", "Shift+Ctrl+>", 1);
  for (var i = 0; i < labs.length; i++)
   h += sub1("lab" + i, titles[i]);
  h += "</ul></li>"
