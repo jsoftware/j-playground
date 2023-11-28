@@ -44,16 +44,20 @@ var localjserver = {
 }
 
 function genPermalink() {
-  document.getElementById("mn_plink").childNodes[0].href = '#code='+encodeURIComponent(ecmget())
-    //replace parentheses as they cause problems in markdown
-    .replace(/\(/g, '%28').replace(/\)/g, '%29');;
+  let bytes = new TextEncoder("utf-8").encode(ecmget());
+  let base64 = btoa(String.fromCodePoint(...bytes));
+  document.getElementById("mn_plink").childNodes[0].href = '#base64=' + base64;
 }
 
 function checkPermalink() {
   var code = decodeURIComponent(window.location.hash).substr(1);
-  if (code.substring(0,5)=='code=') {
-    code = code.substring(5);
-    ecmset(code);
+  if (code.substring(0,7) == 'base64=') {
+    let base64 = code.substr(7);
+    let arr = Uint8Array.from(atob(base64), (b) => b.codePointAt(0));
+    ecmset(new TextDecoder("utf-8").decode(arr));
+  }
+  else if (code.substring(0,5) == 'code=') {
+    ecmset(code.substring(5));
   }
   else if (code.toLowerCase().substring(0,4) == 'url=') {
       let url = code.substring(4);
