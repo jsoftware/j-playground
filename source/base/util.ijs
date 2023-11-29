@@ -57,7 +57,7 @@ NB. credit to https://plj541.github.io/Tools/JPlayground.txt
 NB. J-Playground verbs for using Javascript in the browser
 
 0!:100 jPlay=: 0 : 0
-9!:7'+++++++++|-'
+9!:7 {. Boxes_j_
 (<~.'plj'; 18!:2 <'base') 18!:2&> <"0 ;:'base pj'
 cocurrent'plj'
 
