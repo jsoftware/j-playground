@@ -3,7 +3,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "j907_wasm" ]
+# disabled for nonce
+#    branches: [ "j907_wasm" ]
 
   workflow_dispatch:
 
