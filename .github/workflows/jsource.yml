@@ -1,7 +1,9 @@
 name: JE
 
 on:
- - push
+
+# not yet
+# - push
 
 # trigger workflow on file change
 #on:
