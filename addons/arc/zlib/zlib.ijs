@@ -1,9 +1,19 @@
 coclass 'jzlib'
 
-zlib=: IFUNIX{::'zlib1.dll';unxlib 'z'
-NOZLIB=: 0=(zlib,' zlibVersion >',(IFWIN#'+'),' x')&cd ::0:''
-zcompress2=: (zlib, ' compress2  ',(IFWIN#'+'),' i *c *x *c x i')&cd
-zuncompress=: (zlib, ' uncompress  ',(IFWIN#'+'),' i *c *x *c x')&cd
+3 : 0''
+zlib=: (IFUNIX+UNAME-:'Darwin'){::'libz-ng1.dll';'libz-ng.2.so';'libz-ng.2.dylib'
+NOZLIB=: 0=(zlib,' zlibng_version >',(IFWIN#'+'),' x')&cd ::0:''
+if. 0=NOZLIB do.
+  zcompress2=: (zlib, ' zng_compress2  ',(IFWIN#'+'),' i *c *x *c x i')&cd
+  zuncompress=: (zlib, ' zng_uncompress  ',(IFWIN#'+'),' i *c *x *c x')&cd
+else.
+  zlib=: IFUNIX{::'zlib1.dll';unxlib 'z'
+  NOZLIB=: 0=(zlib,' zlibVersion >',(IFWIN#'+'),' x')&cd ::0:''
+  zcompress2=: (zlib, ' compress2  ',(IFWIN#'+'),' i *c *x *c x i')&cd
+  zuncompress=: (zlib, ' uncompress  ',(IFWIN#'+'),' i *c *x *c x')&cd
+end.
+''
+)
 MAX_DEFLATE=: 16bffff
 
 DYNAMIC=: 1
@@ -459,7 +469,7 @@ code, 2000+ex
 install=: 3 : 0
 if. -. IFWIN do. return. end.
 require 'pacman'
-'rc p'=. httpget_jpacman_ 'http://www.jsoftware.com/download/', z=. 'winlib/',(IF64{::'x86';'x64'),'/zlib1.dll'
+'rc p'=. httpget_jpacman_ 'http://www.jsoftware.com/download/', z=. 'winlib/',(IF64{::'x86';('arm64'-:9!:56'cpu'){::'x64';'arm64'),'/zlib1.dll'
 if. rc do.
   smoutput 'unable to download: ',z return.
 end.

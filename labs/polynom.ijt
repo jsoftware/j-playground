@@ -357,11 +357,8 @@ c p. x
 
 NB. =========================================================
 Lab Section
-We will test this derivative of the function f=: c&p. in two ways; first by applying the first derivative operator D.1 to f, and secondly by comparing the derivative with the secant slope obtained from the operator SCS of an earlier section. Thus:
+We will test this derivative of the function f=: c&p. by comparing the derivative with the secant slope obtained from the operator SCS of an earlier section. Thus:
 )
-f=: 3 1 4 2 & p.
-
-f D.1 x
 
 0.01 c&p. SCS x
 

@@ -1,4 +1,6 @@
 // tbar
+//
+// items end in 1 = draw line underneath
 
 "use strict";
 
@@ -12,10 +14,12 @@ function inittbar() {
   "Huffman Coding",
   "Sequential Machines",
   "The Tower of Hanoi",
+  "The Book of Numbers",
   "Coleman (sample topics)",
+  "Finite Mathematics",
   "Averages",
-  "Best Fit",
   "Binomial Coefficients",
+  "Catalan Numbers",
   "Families of Functions",
   "Function Tables",
   "Frame's Method",
@@ -24,39 +28,51 @@ function inittbar() {
   "Mathematical Roots of J",
   "Polynomials",
   "Pythagorean Triples",
+  "Rotations",
   "Shapley Value on Old Macdonald's Farm",
   "Math Tables",
-  "Volume",
   "Special Searches"
- ]
+ ];
 
  function top(n, w) {
-  return '<li' + pid(n) + ' class="top_menu"><a href="#">' + n + '</a><ul class="sub_menu width' + w + '">'
+  return (
+   "<li" +
+   pid(n) +
+   ' class="top_menu"><a href="#">' +
+   n +
+   '</a><ul class="sub_menu width' +
+   w +
+   '">'
+  );
  }
 
- /* beautify preserve:start */
  function sep(e) {
   if (!e) return "";
   var c = " class='lisep";
   // 1 = underline, 2=space only, 3=both
   switch (e) {
-   case 1: return c + 1 + "'";
-   case 2: return c + 2 + "'";
-   case 3: return c + 1 + " " + c + 2 + "'";}
+   case 1:
+    return c + 1 + "'";
+   case 2:
+    return c + 2 + "'";
+   case 3:
+    return c + 1 + " " + c + 2 + "'";
+  }
  }
- /* beautify preserve:end */
 
  function pid(id) {
   return ' id="mn_' + id.replace(/ /g, "") + '"';
  }
 
  function sub1(id, n, c) {
-  return '<li' + pid(id) + sep(c) + '><a href="#" onclick="menu(\'' + id + '\');">' + n + '</a></li>';
+  let s = "<li" + pid(id) + sep(c) + '><a href="#" onclick="menu(\'';
+  return s + id + "');\">" + n + "</a></li>";
  }
 
  function sub2(id, n, k, c) {
-  return '<li' + pid(id) + sep(c) + '><a href="#" onclick="menu(\'' + id + '\');">' +
-   n + '<span style="float:right">' + k + '</span></a></li>';
+  let s = "<li" + pid(id) + sep(c) + '><a href="#" onclick="menu(\'';
+  s = s + id + "');\">" + n + '<span style="float:right">';
+  return s + k + "</span></a></li>";
  }
 
  h += '<ul class="dropdown" style="float:left">';
@@ -69,27 +85,25 @@ function inittbar() {
  h += sub2("log", "Input Log", "Ctrl+D", 1);
  h += sub2("center", "Center Panes", "Shift+Ctrl+C", 2);
  h += sub2("flip", "Flip Panes", "Shift+Ctrl+L", 1);
- h += "</ul></li>"
+ h += "</ul></li>";
 
  h += top("Examples", 0);
- for (var i = 0; i < Exams.length; i++)
-  h += sub1("exam" + i, ExIds[i]);
+ for (var i = 0; i < Exams.length; i++) h += sub1("exam" + i, ExIds[i]);
  //h += sub1("exam" + i, ExIds[i], 1);
  //h += sub1("clearedit", "Clear Edit");
- h += "</ul></li>"
+ h += "</ul></li>";
 
  h += top("Edit Run", 1);
  h += sub2("runline", "Line", "Ctrl+Enter");
  h += sub2("runlineshow", "Line & Show", "Shift+Ctrl+Enter", 1);
  h += sub2("runall", "All Lines", "Ctrl+R", 2);
  h += sub2("runallx", "Clear Term & All Lines", "Shift+Ctrl+R", 2);
- h += "</ul></li>"
+ h += "</ul></li>";
 
  h += top("Labs", 1);
- h += sub2("advlab", "Advance Labs", "Shift+Ctrl+>", 1);
- for (var i = 0; i < labs.length; i++)
-  h += sub1("lab" + i, titles[i]);
- h += "</ul></li>"
+ h += sub2("advlab", "Advance Lab", "Shift+Ctrl+>", 1);
+ for (var i = 0; i < labs.length; i++) h += sub1("lab" + i, titles[i]);
+ h += "</ul></li>";
 
  h += top("Links", 1);
  h += sub1("plink", "Last Run Permalink", 1);
@@ -98,9 +112,9 @@ function inittbar() {
  h += sub2("nvcontext", "Vocabulary Context Sensitive", "Ctrl+F1", 1);
  h += sub1("github", "Jsoftware github", 2);
  h += sub1("download", "Download J", 1);
- h += sub1("teaservideo", "Teaser Video (youtube)", 2)
+ h += sub1("teaservideo", "Teaser Video (youtube)", 2);
  h += sub1("rosetta", "Rosetta Code", 1);
- h += "</ul></li>"
+ h += "</ul></li>";
 
  h += top("Help", 1);
  h += sub1("guide", "Playground", 2);
@@ -108,8 +122,9 @@ function inittbar() {
  h += sub1("consen", "Context Sensitive", 1);
  h += sub1("mbabout", "About", 2);
 
- h += "</ul></li>"
- h += "</ul></nav>"
+ h += "</ul></li></ul>";
+ h += '<div class="topright">' + JVersion + "/wasm</div>";
+ h += "</nav>";
 
  getid("tbar").innerHTML = h;
 }

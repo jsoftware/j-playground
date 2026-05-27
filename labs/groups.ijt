@@ -129,15 +129,15 @@ g=:a2
 g
 g f16/ g             NB. / (instead of table) gives "bare" table of products
 , g f16/ g           NB. , ravels the table to give the list of products
-g , , g f16 g        NB. Append these products to the group g
-~. g , , g f16 g     NB. Nub (~.) removes duplicates
-g=: ~. g , , g f16 g NB. New g with appended new products
+g , , g f16/ g        NB. Append these products to the group g
+~. g , , g f16/ g     NB. Nub (~.) removes duplicates
+g=: ~. g , , g f16/ g NB. New g with appended new products
 g
-g=: ~. g , , g f16 g
+g=: ~. g , , g f16/ g
 g
-g=: ~. g , , g f16 g
+g=: ~. g , , g f16/ g
 g
-g=: ~. g , , g f16 g
+g=: ~. g , , g f16/ g
 g
 
 NB. =========================================================

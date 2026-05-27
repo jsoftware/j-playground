@@ -1,8 +1,4 @@
-NB. startup J code for the j playground
-NB. make changes in the playground source directory and rebuild
-
-Displayload_j_=: 0
-SystemFolders_j_=: |: ('temp';'') ,. ('addons';'/addons/')
+NB. init
 
 load 'jlibrary/system/util/scripts.ijs'
 load 'jlibrary/system/util/pacman.ijs'

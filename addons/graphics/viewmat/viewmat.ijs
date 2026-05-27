@@ -6,9 +6,11 @@ coinsert 'jgl2 jni jaresu'
 
 IFJNET=: (IFJNET"_)^:(0=4!:0<'IFJNET')0
 IFPLAY=: (IFPLAY"_)^:(0=4!:0<'IFPLAY')0
+IFIPAD=: (IFIPAD"_)^:(0=4!:0<'IFIPAD')0
+IFRETINA=: (IFRETINA"_)^:(0=4!:0<'IFRETINA')1
 3 : 0''
 if. 0~: 4!:0<'VIEWMATGUI' do.
-  VIEWMATGUI=: (IFQT +. IFJA +. ((;:'jwin32 jjava')e.~<11!:0 ::0:'qwd')) > IFJHS +. IFIOS
+  VIEWMATGUI=: (IFQT +. IFJA +. ((;:'jwin32 jjava')e.~<11!:0 ::0:'qwd')) > IFJHS +. IFIOS>IFQT
 end.
 EMPTY
 )
@@ -83,7 +85,7 @@ getvm=: 4 : 0
 tit=. ": tit
 tit=. tit, (0=#tit) # 'viewmat'
 if. ifRGB do.
-  mat=. dat
+  mat=. 4 c. dat
   ang=. ''
 else.
   'mat ang'=. x getvm1 dat
@@ -151,7 +153,9 @@ hcascade=: 3 : 0
 )
 hforms=: 3 : 0
 fms=. <;._2 &> <;._2 wdqpx''
+if. 0=#fms do. empty '' return. end.
 fms=. fms #~ (2{"1 fms) e. VMH
+if. 0=#fms do. empty '' return. end.
 fms \: 0 ". &> 4{"1 fms
 )
 hremove=: 3 : 0
@@ -184,10 +188,9 @@ if. #ANG do. mwh vf_show mat return. end.
 mat=. , mwh fitvm mat
 glpixels (0 0, mwh), mat (27 b.) 16bffffff
 )
-viewmat_jctrl_fkey=: 3 : 'labnext_jlab_ :: ] '''''
+viewmat_jctrl_fkey=: 3 : 'lab_jlab_ 0'
 viewmat_sctrl_fkey=: 3 : 0
 fl=. jpath '~temp/',TITLE,'.png'
-wd 'psel viewmat'
 (getbitmap'') writepng fl
 )
 viewmat_g_resize=: 3 : 0
@@ -200,25 +203,25 @@ needresize=: 0
 )
 viewmat_g_paint=: 3 : 0
 try.
-mat=. finite MAT
-'rws cls'=. $mat
-gwh=. glqwh''
-if. ifRGB > SHOW do.
-  glbrush glrgb 0 0 0
-  glrect 0 0,gwh
-  mwh=. cls,rws
-else.
-  mwh=. gwh
-end.
-if. #ANG do. mwh vf_show mat return. end.
-mat=. , mwh fitvm mat
-glpixels (0 0, mwh), setalpha mat
-glpaintx^:IFJA ''
-SHOW=: 1
-EMPTY
+  mat=. finite MAT
+  'rws cls'=. $mat
+  gwh=. glqwh''
+  if. ifRGB > SHOW do.
+    glbrush glrgb 0 0 0
+    glrect 0 0,gwh
+    mwh=. cls,rws
+  else.
+    mwh=. gwh
+  end.
+  if. #ANG do. mwh vf_show mat return. end.
+  mat=. , mwh fitvm mat
+  glpixels (0 0, mwh), setalpha mat
+  glpaintx^:IFJA ''
+  SHOW=: 1
+  EMPTY
 catch.
-viewmat_close''
-echo 13!:12''
+  viewmat_close''
+  echo 13!:12''
 end.
 )
 viewmat_close=: 3 : 0
@@ -267,6 +270,8 @@ hw {. xc }."1 xr }. mat
 )
 vf_show=: 4 : 0
 
+ang=. tomatrix ANG
+
 mwh=. x
 mat=. y
 'rws cls'=. $mat
@@ -285,23 +290,27 @@ mid=. x j."1 0 y
 if. len < 3 do.
 elseif. len e. 3 4 do.
   pixel=. _1 + i.len
-  glpixel _2 [\ , rndint +."1 mid + + ANG */ pixel
+  glpixel _2 [\ , rndint +."1 mid + + ang */ pixel
 elseif. len < 20 do.
   ext=. -: len * 0.75
   lines=. ext ,. (-ext), ext - ext * 0.7 * 1j0.8
-  gllines _4 [\ , rndint +."1 mid + + ANG */ lines
+  gllines _4 [\ , rndint +."1 mid + + ang */ lines
 elseif. do.
   ext=. -: len * 0.75
   lines=. ext , -ext
-  gllines _4 [\ , rndint +."1 mid + + ANG */ lines
+  gllines _4 [\ , rndint +."1 mid + + ang */ lines
   poly=. ext - 0,(10 <. len*0.2) * 1j0.6,0.6,1j_0.6
-  glpolygon _8 [\ , rndint +."1 mid + + ANG */ poly
+  glpolygon _8 [\ , rndint +."1 mid + + ang */ poly
 end.
 
 )
 closeall=: 3 : 0
-for_loc. setvmh VMH do.
-  viewmat_close__loc''
+for_fm. hforms'' do.
+  id=. > 1 { fm
+  loc=. 2 { fm
+  hremove__loc''
+  wd 'psel ',id,';pclose'
+  destroy__loc''
 end.
 )
 getsize=: 3 : 0
@@ -317,8 +326,8 @@ fms=. hforms''
 if. 0=#fms do.
   sminfo 'viewmat';'No viewmat forms.' return.
 end.
-wd 'psel ',(<0 1) pick fms
-getbitmap''
+loc=. (<0 2) { fms
+setalpha no_gui_bitmap__loc ''
 )
 savemat=: 3 : 0
 fl=. y
@@ -329,8 +338,8 @@ fms=. hforms''
 if. 0=#fms
 do. sminfo 'viewmat';'No viewmat forms.' return.
 end.
-wd 'psel ',(<0 1) pick fms
-(getbitmap'') writepng fl
+loc=. (<0 2) { fms
+(setalpha no_gui_bitmap__loc '') writepng fl
 )
 setsize=: 3 : 0
 fms=. hforms''
@@ -437,22 +446,32 @@ end.
 )
 vmwin=: 3 : 0
 if. IFQT do.
-  wd 'pc viewmat;pn *',TITLE
+  wd 'pc viewmat closeok;pn *',TITLE
+  wd 'menupop "&File";'
+  wd 'menu quit "&Quit" "Ctrl+Q" "" "";'
+  wd 'menupopz;'
   wd 'minwh ', ":mwh0
   wd 'cc g isigraph flush'
   wd 'pshow'
 elseif. IFJA do.
-  wd 'pc viewmat;pn *',TITLE
+  wd 'pc viewmat closeok;pn *',TITLE
+  wd 'menupop "&File";'
+  wd 'menu quit "&Quit" "Ctrl+Q" "" "";'
+  wd 'menupopz;'
   wd 'wh _1 _1;cc g isigraph flush'
   wd 'pshow'
 elseif. do.
-  wd 'pc6j viewmat;pn *',TITLE
+  wd 'pc6j viewmat closeok;pn *',TITLE
+  wd 'menupop "&File";'
+  wd 'menu quit "&Quit" "Ctrl+Q" "" "";'
+  wd 'menupopz;'
   wd 'xywh ', ":0 0, <.@(*&0.5) mwh0
   wd 'cc g isigraph'
   wd 'pshow'
 end.
 EMPTY
 )
+viewmat_quit_button=: wd bind 'pclose'
 adjwh=: 3 : 0
 wh0=. y
 'w h'=. 2}. ". wd 'qform'

@@ -14,12 +14,13 @@ function mbabout() {
  window.addEventListener("keyup", keyup);
 }
 
-// -------------------------------------------------------------// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 function pdraw() {
+ let ver = jdo1("9!:14''").split("/").slice(0, 2).join("/");
  let msg = `Playground: ${Version}<br/>
-Engine: j903/j32/linux<br/>
+Engine: ${ver}<br/>
 Build: Wasm/${getdate()}<br/><br/>
-Copyright © 2022 Jsoftware Inc.<br/>`
+Copyright © 2026 Jsoftware Inc.<br/>`;
  let icon = `<img src="images/jgreen.png"
 style="height:64px;width 64px;margin:0px 20px 0px 5px"/>`;
  let h = `<div style="display:flex;flex:0 0 auto;margin:10px">

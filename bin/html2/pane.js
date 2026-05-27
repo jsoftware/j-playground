@@ -8,16 +8,26 @@
 
 var panex;
 
-var mainPane = "<div id='mainpane'><div id='maintop' class='panetop'>" +
- "&nbsp;Term" + "</div><div id='main'></div></div>";
+var mainPane = `<div id='mainpane'><div id='maintop' class='panetop'>
+ &nbsp;Term
+ <span style='float:right'><button class='topbutton';"
+ onclick='menu("clearterm");'>
+ &nbsp;Clear&nbsp;</button>&nbsp;&nbsp;&nbsp;</span>
+ </div><div id='main'></div></div>`;
 
-var sidePane = "<div id='sidepane'><div id='sidetop' class='panetop'>" +
- "&nbsp;Edit" + "<span style='float:right'><button style=\"height:19px\" onclick='menu(\"runall\");'>Run</button>&nbsp;&nbsp;&nbsp;</span></div><div id='side'></div></div>";
+var sidePane = `<div id='sidepane'><div id='sidetop' class='panetop'>
+ &nbsp;Edit
+ <span style='float:right'><button class='topbutton';"
+ onclick='menu("runall");'>
+ &nbsp;Run&nbsp;</button>&nbsp;&nbsp;&nbsp;</span>
+ </div><div id='side'></div></div>`;
 
-var viewPane = "<div id='viewpane'><div id='viewtop' class='panetop'>" +
- "&nbsp;View" + "</div><div id='view'></div></div>";
+var viewPane =
+ "<div id='viewpane'><div id='viewtop' class='panetop'>" +
+ "&nbsp;View" +
+ "</div><div id='view'></div></div>";
 
-var vBar = "<div id='vb' class='bar fl'></div>"
+var vBar = "<div id='vb' class='bar fl'></div>";
 var hBar = "<div id='hb' class='bar'></div>";
 
 // ---------------------------------------------------------------------
@@ -30,12 +40,18 @@ function initpanes(t) {
  panex = t;
  var p = getid("panes");
  if (t === 0) {
-  p.innerHTML = "<div style='display:flex;'>" +
-   mainPane + vBar + divsplit(viewPane + hBar + sidePane) +
+  p.innerHTML =
+   "<div style='display:flex;'>" +
+   mainPane +
+   vBar +
+   divsplit(viewPane + hBar + sidePane) +
    "</div>";
  } else {
-  p.innerHTML = "<div style='display:flex;flex-direction:column;'>" +
-   divsplit(sidePane + vBar + viewPane) + hBar + mainPane +
+  p.innerHTML =
+   "<div style='display:flex;flex-direction:column;'>" +
+   divsplit(sidePane + vBar + viewPane) +
+   hBar +
+   mainPane +
    "</div>";
  }
 }
@@ -52,7 +68,7 @@ function docget(t) {
 
 // ---------------------------------------------------------------------
 function docset(t, d) {
- var td = t.getDoc()
+ var td = t.getDoc();
  t.swapDoc(d.doc);
  t.setCursor(d.cur);
  if (d.foc) t.focus();

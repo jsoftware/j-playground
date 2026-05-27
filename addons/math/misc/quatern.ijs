@@ -89,25 +89,24 @@ end.
 
 NB. qnfmt v format quaternions
 qnfmt=: 3 : 0 "1
-  b=. 1,}.0 0 0 0~:,y NB. supress imaginary zeros
-  }.;b#' ijk'(, ":)each y
+b=. 1,}.0 0 0 0~:,y NB. supress imaginary zeros
+}.;b#' ijk'(, ":)each y
 )
 
 NB. internal helper for qnumbers: parse a single element of a quaternion
-qnum=.4 :0
-  if. {.y e. 'ijk' do.
-    (x ". }. y) * ' ijk'={.y
-  else.
-    4 {. x ". y
-  end.
-)   
+qnum=. 4 :0
+if. {.y e. 'ijk' do.
+  (x ". }. y) * ' ijk'={.y
+else.
+  4 {. x ". y
+end.
+)
 
 NB. qnumbers v extract quanternions from literal representation
 qnumbers=: qnum f. 1 : 0 ("1)
-  _. qnumbers y
+_. qnumbers y
 :
-  if. ' ' e. y do. x qnumbers every cut y return. end.
-  if. ('b' e. y) +. (-. 1 e. 'ijk' e. y) +. (-. 1 e. '0123456789' e. y) do. 4 {. x ". y return. end.
- +/(x&u;.1~ (1) 0} e.&'ijk') y
+if. ' ' e. y do. x qnumbers every cut y return. end.
+if. ('b' e. y) +. (-. 1 e. 'ijk' e. y) +. (-. 1 e. '0123456789' e. y) do. 4 {. x ". y return. end.
++/(x&u;.1~ (1) 0} e.&'ijk') y
 )
- 

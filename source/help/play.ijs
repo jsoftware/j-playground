@@ -11,7 +11,7 @@ dic=. 0 ". ndx{.y
 bal=. (ndx+1) }. y
 if. dic=0 do.
   s=. helpcontext bal
-else.-
+else.
   s=. helpcontext1 bal
 end.
 if. (0=#s) +. 0<#WF do.
@@ -20,7 +20,7 @@ else.
   r=. '91',(dic#'nuvoc/'),s
 end.
 playhtml_j_=: r
-(2!:0) getJS_j_
+(2!:1) getJS_j_
 )
 
 NB. =========================================================

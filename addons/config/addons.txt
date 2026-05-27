@@ -1,10 +1,16 @@
-api/expat 1.0.11 
+api/curl 1.0.4 
+libcurl
+libcurl interface
+
+see readme.txt
+)
+api/expat 1.0.12 
 libexpat
 libexpat interface
 
 see readme.txt
 )
-api/gles 1.0.31 
+api/gles 1.0.32 
 Modern OpenGL API
 OpenGL 4.2 and OpenGL ES 3.1 API definitions
 
@@ -20,22 +26,13 @@ api/jc 1.0.1
 api: J to C library (streams/fds/system)
 J bindings to C library (streams/fds/system) amd related utilties
 )
-api/jni 1.0.15 
+api/jni 1.0.16 
 JNI
 Java Native Interface
 
 Contributed by Bill Lam
 )
-api/lapacke 1.0.12 
-LAPACKE
-LAPACK version 3.X is a comprehensive FORTRAN library that does linear algebra operations including matrix inversions, least squared solutions to linear sets of equations, eigenvector analysis, singular value decomposition, etc. It is a very comprehensive and reputable package that has found extensive use in the scientific community.
-
-This package contains the LAPACKE C Interface to LAPACK
-http://www.netlib.org/lapack/lapacke.html
-
-Binary for Linux, install liblapacke (or similar) from your distro repository.
-)
-api/ncurses 1.0.8 
+api/ncurses 1.0.9 
 NCURSES/PDCURSES API
 CRT screen handling and optimization package
 
@@ -43,11 +40,15 @@ To install shared library/dll,
 linux: (debian) sudo aptitude install libncurses5 (or libncursesw5 for unicode)
 win32: download pre-compiled binary from http://pdcurses.sourceforge.net/
 )
-api/python3 1.0.8 
+api/python3 2.0.3 
 api: python3 to J shared library
-api language bindings for python3 use of J shared library
+python3 API for calling J shared library for 64-bit OS
 )
-arc/zlib 1.0.9 
+arc/lz4 1.0.5 
+lz4 utilities
+Utilities for lz4
+)
+arc/zlib 1.0.11 
 zlib utilities
 Utilities for zlib
 )
@@ -77,13 +78,13 @@ The npy files should contain a single numpy array.
 
 The npz files are zips of one or more npy files.
 )
-convert/pjson 1.0.23 
+convert/pjson 1.0.24 
 A json encoder/decoder
 A json encoder/decoder
 
 http://json.org/
 )
-data/ddmysql 1.0.15 
+data/ddmysql 1.0.18 
 Data driver for MySQL
 Accessing MySQL server with native C API using the data driver (JDD) interface such ddcon and ddfet.  Requires MySQL client library or Connector/C.
 
@@ -91,7 +92,7 @@ For Linux, install libmysqlclient (or similar) from your distro repository.  Or 
 
 See wiki page http://code.jsoftware.com/wiki/JDD for help.
 )
-data/ddsqlite 1.0.42 
+data/ddsqlite 1.0.43 
 Data driver for SQLite
 Accessing SQLite database with C API using the data driver (JDD) interface such as ddcon and ddfet.  Requires sqlite 3.6.0 or newer.
 
@@ -99,7 +100,11 @@ See readme.txt for shared library installation.
 
 See wiki page http://code.jsoftware.com/wiki/JDD for help.
 )
-data/jd 4.4.100 convert/pjson,data/jfiles,data/jmf
+data/dict 1.1.3 
+Dictionary addon
+Dictionary data structure
+)
+data/jd 4.4.120 convert/pjson,data/jfiles,data/jmf
 Jd
 Jd is a commercial database product from Jsoftware.
 Although similar in terminology and features to
@@ -131,15 +136,15 @@ keyed file system.
 A keyed file is a J component file in which data is accessed
 using keywords.
 )
-data/jmf 1.0.42 
+data/jmf 1.0.44 
 J Memory Mapped File
 J Memory Mapped File
 )
-data/odbc 1.0.48 
+data/odbc 1.0.57 
 ODBC
 Accessing database using odbc api
 )
-data/sqlite 1.0.36 
+data/sqlite 1.0.47 
 Sqlite enhanced API for J
 Sqlite allows direct access to sqlite databases.
 
@@ -153,13 +158,13 @@ This allows accessing database without low-level knowledge of odbc api.
 
 This package is the result of a consultation work done for Anssi Seppälä.  Significant changes were also made in data/odbc addon to support this package.  This work is released to the public by the request and permission of Anssi Seppälä.  Thank you, Anssi.
 )
-debug/dissect 4.6.42 graphics/gl2
+debug/dissect 4.6.52 graphics/gl2
 Run a sentence and produce a 2D display of results
 dissect runs a sentence after inserting instrumentation at the execution of each primitive.
 Then it creates a 2D display showing each word and the results of executing it.
 The user can click on the display to probe execution.
 )
-debug/jig 2.0.18 graphics/gl2
+debug/jig 2.0.29 graphics/gl2
 Augmented Display of J results
 Jig displays an interactive SVG window that allows users to easily see the shape, type and other properties of the results of J sentences. Jig runs in the jqt environment and requires the full version of the QT ide
 )
@@ -176,15 +181,15 @@ during debugging.  The errors it looks for are the following:
 
 See the program header for description and directives.
 )
-debug/tte 0.0.8 
+debug/tte 0.0.9 
 Explicate a given tacit verb
 Addon: tte is an adverb to "explicate" a given tacitly-defined verb by generating an explanatory explicit definition from the given tacit definition. The result is a working verb which will behave the same as the verb being explicated.
 )
-demos/coins 1.0.15 
+demos/coins 1.0.18 
 coins project demo
 This is a sample project based on the coins demo.
 )
-demos/isigraph 1.0.72 graphics/gl2,graphics/viewmat
+demos/isigraph 1.0.77 graphics/gl2,graphics/viewmat
 isigraph demos
 This package contains isigraph example scripts.
 
@@ -197,25 +202,33 @@ demos/publish 1.0.3 afm,bmp,colortab,format/publish,general/misc/font,gl2,numeri
 publish project demo
 This is a sample project using Publish.
 )
-demos/qtdemo 1.0.26 api/gles,graphics/bmp,graphics/plot,graphics/viewmat,ide/qt
+demos/qtdemo 1.0.40 api/gles,graphics/bmp,graphics/plot,graphics/viewmat,ide/qt
 qt demo
 simple demos for qt
 )
-demos/wd 1.0.143 convert/pjson,demos/isigraph,demos/wdplot,games/2048,games/minesweeper,games/solitaire,general/misc,graphics/plot,graphics/print,graphics/viewmat,math/deoptim,math/eigenpic,math/misc,stats/base
+demos/wd 1.0.152 convert/pjson,demos/isigraph,demos/wdplot,games/2048,games/minesweeper,games/solitaire,general/misc,graphics/plot,graphics/print,graphics/viewmat,math/deoptim,math/eigenpic,math/misc,stats/base
 wd demos
 wd demos using qt and jandroid
 )
-demos/wdplot 1.0.50 graphics/plot
+demos/wdplot 1.0.55 graphics/plot
 Plot demos wd emulation
 Plot demos using wd emulation
 )
-dev/fold 1.0.7 
+dev/eformat 1.0.51 
+error-message formatter for JE
+message-format code, called from jtjeformat
+)
+dev/fold 1.0.12 
 Fold implementation in J
 J emulations of the Fold primitives
 )
-dev/lu 1.0.2 
+dev/lu 1.0.6 
 LU implementation in J
 J LU code, called from 128!:10
+)
+dev/modular 1.0.4 
+modular arithmetic
+modular arithmetic
 )
 docs/joxygen 1.0.11 
 Documenting J Scripts
@@ -223,10 +236,6 @@ Generates html documentation from in-script comments
 Inspired by Doxygen and Roxygen.
 
 Contributed by Ric Sherlock & Chris Burke
-)
-finance/actuarial 1.0.11 
-Actuarial functions
-Various actuarial functions.
 )
 finance/interest 1.0.20 
 Compound interest functions
@@ -236,11 +245,11 @@ format/datefmt 1.0.17
 Date formatting functions
 Various date formatting functions.
 )
-format/printf 1.0.12 
+format/printf 1.0.15 
 C-style printf formatting
 Printf provides verbs and adverbs for formatted printing in the manner of C's printf and sprintf.
 )
-format/publish 1.0.29 afm,bmp,colortab,general/misc/font,gl2,numeric,plot,regex,trig
+format/publish 1.0.30 afm,bmp,colortab,general/misc/font,gl2,numeric,plot,regex,trig
 builds pdf reports from markup
 Publish generates a PDF report from source in plain text files in an html-like markup language.
 
@@ -288,11 +297,7 @@ User interfaces available for various J environments currently include:
 
 Authors: Ric Sherlock
 )
-games/bagofnouns 1.0.93 
-Distributed game controller
-Lets people play a game over Zoom
-)
-games/minesweeper 1.0.52 graphics/gl2
+games/minesweeper 1.0.54 graphics/gl2
 Classic Minesweeper game
 Implentation of classic Minesweeper game.
 
@@ -306,7 +311,7 @@ games/nurikabe 1.0.38 graphics/gl2
 Nurikabe
 Nurikabe puzzle, see wiki Essays/Nurikabe.
 )
-games/pousse 1.0.37 graphics/gl2
+games/pousse 1.0.38 graphics/gl2
 pousse
 pousse
 )
@@ -335,7 +340,7 @@ Uses regex funtionality built into J to parse INI formats and is therefore not d
 
 Copyright 2008 (C) Ric Sherlock
 )
-general/jod 1.0.22 data/jfiles
+general/jod 1.1.2 data/jfiles
 JOD J Object Dictionary
 JOD (J Object Dictionary) is a J programming and refactoring 
 tool. JOD supports linked dictionary databases and provides 
@@ -358,8 +363,9 @@ More information is available on the JOD Page and GitHub at:
   
    https://analyzethedatanotthedrivel.org/the-jod-page/
    https://github.com/bakerjd99/jod  
+   https://github.com/bakerjd99/jod/blob/master/joddocument/pdfdoc/jod.pdf
 )
-general/joddocument 1.0.22 
+general/joddocument 1.1.2 
 JOD Documentation
 JOD Document contains (jod.pdf) which documents the JOD system.
 
@@ -381,7 +387,7 @@ https://github.com/bakerjd99/joddoc
 John Baker
 bakerjd99@gmail.com
 )
-general/jodsource 1.0.22 general/jod
+general/jodsource 1.1.2 general/jod
 JOD Object Dictionary Source
 (jodsource) contains serialized dictionary dump scripts 
 (joddev,jod,utils). These dump scripts contain all the
@@ -416,7 +422,7 @@ More information is available on the JOD Page at:
   
    https://analyzethedatanotthedrivel.org/the-jod-page/
 )
-general/misc 2.5.3 
+general/misc 2.6.0 
 misc general scripts
 trace.ijs Execution trace utilities
 fndisplay.ijs Display hooks, forks and other syntax elements
@@ -458,11 +464,11 @@ graphics/afm 1.0.15
 AFM
 Adobe Font Metrics
 )
-graphics/bmp 1.0.14 
+graphics/bmp 1.0.17 
 bitmap utilities
 Utilities for *.bmp files
 )
-graphics/cairo 1.0.11 
+graphics/cairo 1.0.12 
 cairographics
 cairographics interface and gl2 emulation
 )
@@ -470,15 +476,7 @@ graphics/color 1.0.19
 Color tables
 Color tables and related scripts.
 )
-graphics/d3 0.0.8 
-D3 (Data Driven Documents) for JHS
-Addon 'graphics/d3' is a package of D3 interface verbs written for JHS.
-
-D3.js (or "D3 for data-driven documents") is a free JavaScript library to display given digital data into graphic, dynamic forms.
-
-D3 is described here: http://en.wikipedia.org/wiki/D3.js
-)
-graphics/freeglut 1.0.3 
+graphics/freeglut 1.0.4 
 freeglut OpenGL demo
 Demo of the open source freeglut library usage on J.
 
@@ -489,7 +487,7 @@ Based on https://rosettacode.org/wiki/OpenGL/Utah_Teapot
 
 Ubuntu will need libglut.so.3.10.0
 )
-graphics/fvj4 1.0.17 media/imagekit
+graphics/fvj4 1.0.18 media/imagekit
 Materials for Fractals, Visualization and J, 4th edition, Parts 1 & 2.
 The FVJ4 package provides materials for Fractals, Visualization and J, 4th edition including scripts for simple winodws for plotting polygons, working with raster arrays, Also scripts for creating POV-Ray scenes, viewing automata, executing the Game of Life in color are included. 
 )
@@ -501,11 +499,11 @@ This works with gnuplot V4.0 or later, and may work with earlier versions.
 
 The original script was contributed by L. Fraser Jackson.
 )
-graphics/graph 1.0.23 graphics/color,graphics/gl2,graphics/png
+graphics/graph 1.0.24 graphics/color,graphics/gl2,graphics/png
 Graph
 2D Graph
 )
-graphics/graphviz 2.0.12 
+graphics/graphviz 2.0.14 
 Graph Visualization
 Integrated with J, a popular graph drawing visualization library.
 Includes user interface Graph View and a utility to visualize
@@ -516,7 +514,7 @@ Based on Graphviz from http://www.graphviz.org/
 
 Copyright 2006 (C) Oleg Kobchenko
 )
-graphics/jpeg 1.0.20 
+graphics/jpeg 1.0.22 
 jpeg utilities
 Utilities for *.jpg files
 )
@@ -524,15 +522,15 @@ graphics/pdfdraw 1.0.7
 pdf drawing utilities
 Utilities for drawing to a PDF file or a Publish JPF file.
 )
-graphics/plot 1.0.195 general/misc,graphics/afm,graphics/bmp,graphics/color,graphics/gl2,graphics/png,math/misc
+graphics/plot 1.0.209 general/misc,graphics/afm,graphics/bmp,graphics/color,graphics/gl2,graphics/png,math/misc
 Plot
 Plot package
 )
-graphics/png 1.0.28 arc/zlib
+graphics/png 1.0.30 arc/zlib
 png utilities
 Utilities for *.png files
 )
-graphics/pplatimg 1.0.4 
+graphics/pplatimg 1.0.7 
 Platform neutral image I/O utilities
 Implementations for Windows, Linux and Mac OS X.
 Supports BMP, GIF, JPEG, PNG, TIFF, Exif, ICO, WMF,
@@ -545,7 +543,7 @@ The gdk-pixbuf Library from GTK+.
 Ported to 64-bit platforms by Bill Lam
 Based on media/platimg developed by Oleg Kobchenko
 )
-graphics/print 1.0.18 
+graphics/print 1.0.19 
 print
 print text files
 )
@@ -553,23 +551,27 @@ graphics/treemap 1.0.16
 Displays a treemap
 Displays a treemap in an isigraph control.
 )
-graphics/viewmat 1.0.83 graphics/bmp,graphics/color,graphics/gl2,graphics/png
+graphics/viewmat 1.0.94 graphics/bmp,graphics/color,graphics/gl2,graphics/png
 Displays a viewmat
 Viewmat displays tables of data graphically.
 )
-gui/cobrowser 2.1.2 
+graphics/viewmax 1.0.2 graphics/gl2,graphics/png
+Viewmat extended
+Viewmax displays cross-sections of arrays of arbitrary rank.
+)
+gui/cobrowser 2.1.4 
 updated cobrowser
 cobrowse - famous SmallTalk tool for J
 )
-ide/ja 1.0.34 
+ide/ja 1.0.38 
 J Android
 J Android development
 )
-ide/jhs 1.0.330 
+ide/jhs 1.0.411 
 JHS IDE
 JHS IDE
 )
-ide/jnet 1.0.25 general/misc,graphics/bmp
+ide/jnet 1.0.34 general/misc,graphics/bmp
 JNET IDE
 JNET IDE *not* supported by Jsoftware.
 
@@ -585,22 +587,36 @@ Linux:
 
 Read data/migration.txt for differences with J6 wd commands.
 )
-ide/qt 1.1.147 
+ide/qt 1.1.183 
 Qt IDE
 Qt development
 )
-labs/labs 1.0.208 
+labs/labs 1.0.238 
 LABS
 LABS
 )
-math/cal 2.1.24 format/zulu,graphics/plot,math/uu,math/calculus
+math/arrayfire 2.1.22 
+ArrayFire
+cd bindings and utilities for ArrayFire shared library
+
+https://arrayfire.org
+
+"ArrayFire is a high performance software library for
+parallel computing with an easy-to-use API. Its array based
+function set makes parallel programming more accessible."
+
+J-ArrayFire cd bindings make it easy to have
+high performance computing for things like matrix multiply
+with cpu cores, Nvidia gpus, and opencl.
+)
+math/cal 2.1.25 format/zulu,graphics/plot,math/uu,math/calculus
 Scientific calculator engine
 CAL is a platform-independent engine.
 It forms the basis of TABULA, a backfitting scientific calculator.
 )
-math/calculus 1.0.6 
+math/calculus 1.0.7 
 differentiation and integration
-Conjunctions to perform differentiation and integration of J verbs, and secant-slope approximation for verbs that cannot be handled symbolically
+Conjunctions to perform differentiation and integration of J verbs, secant-slope approximation for verbs that cannot be handled symbolically, and Taylor series
 )
 math/deoptim 1.0.26 
 Differential Evolution for optimization of multidimensional functions
@@ -615,7 +631,7 @@ math/eigenpic 1.0.19
 eigenpic
 eigenpicture
 )
-math/fftw 1.1.17 
+math/fftw 1.1.19 
 FFTW
 FFTW (Fastest Fourier Transform in the West) is a collection of fast C routines for computing the Discrete Fourier Transform in one or more dimensions. It includes complex, real, and parallel transforms, and can handle arbitrary array sizes efficiently. The FFTW Add-On consists of a DLL incorporating the FFTW routines, plus supporting J scripts and labs. FFTW and the FFTW package are distributed under the terms of the GNU General Public License. For more information on GNU, see the GNU web page.
 
@@ -627,21 +643,7 @@ Libflann, approximate nearest neighbors search.
 http://www.cs.ubc.ca/research/flann/
 please see doc/README.txt for usage.
 )
-math/lapack 1.1.55 
-LAPACK
-LAPACK (Linear Algebra Package) is a set of routines for solving systems of simultaneous linear equations, least-squares solutions of linear systems of equations, eigenvalue problems, and singular value problems. The associated matrix factorizations (LU, Cholesky, QR, SVD, Schur, generalized Schur) are also provided, as are related computations such as reordering of the Schur factorizations and estimating condition numbers.
-
-Binary for Mac is provided by the veclib framework.
-
-Binary for Linux, install liblapack3 (or similar) from your distro repository. If available, install libopenblas-base or libatlas3-base which provides an optimized version of BLAS.
-
-For 64-bit windows, a prebuilt jlapack64.dll is provided by David Hotham and is included in this addon.  Note that this jlapack64.dll requres a msvc runtime which can be downloaded from http://www.microsoft.com/en-us/download/details.aspx?id=2092 .
-
-For Android, run install_jlapack_'' to install the shared library.
-
-Reference BLAS implementation may be orders of magnitude slower than optimized implementations.
-)
-math/lapack2 1.0.11 
+math/lapack2 2.1.6 
 LAPACK2
 LAPACK (Linear Algebra Package) is a set of routines for solving systems of simultaneous linear equations, least-squares solutions of linear systems of equations, eigenvalue problems, and singular value problems. The associated matrix factorizations (LU, Cholesky, QR, SVD, Schur, generalized Schur) are also provided, as are related computations such as reordering of the Schur factorizations and estimating condition numbers.
 
@@ -659,7 +661,7 @@ Reference BLAS implementation may be orders of magnitude slower than optimized i
 
 See wiki page: code.jsoftware.com/wiki/Vocabulary/LAPACK
 )
-math/lbfgs 1.0.9 
+math/lbfgs 1.0.10 
 LBFGS for unconstrained nonlinear optimization
 The Limited Memory Broyden-Fletcher-Goldfarb-Shanno (BFGS) method to solve an unconstrained nonlinear optimization problem.
 
@@ -669,7 +671,7 @@ The code can also be used for unconstrained problems and is as efficient for the
 
 See wiki page: code.jsoftware.com/wiki/Addons/math/lbfgs
 )
-math/misc 1.2.6 
+math/misc 1.2.9 
 misc math scripts
 amoeba.ijs Nelder-Mead multi-dimentional minimization, aka the amoeba method
 bigpi.ijs Calculate several digits of pi
@@ -704,7 +706,7 @@ spline.ijs Spline utilities
 svd.ijs Singular value decomposition
 trig.ijs Trigonometric functions
 )
-math/mt 0.12.1 general/misc,math/lapack2,math/misc
+math/mt 0.14.14 general/misc,math/lapack2,math/misc,stats/base
 Matrix toolbox
 Library to solve some problems in matrix algebra:
 transforming, decomposing, reducing to condensed form,
@@ -712,23 +714,23 @@ factorization, equation solving, function applying, condition
 number estimating. Is based mostly on LAPACK algorithms, but
 doesn't require LAPACK.
 )
-math/tabula 2.1.12 format/zulu,math/cal,math/uu
+math/tabula 2.1.13 format/zulu,math/cal,math/uu
 TABULA - scientific calculator
 TABULA is a backfitting scientific calculator.
 It has many built-in physical constants and knows about units of measurement.
 )
-math/uu 2.1.27 format/zulu
+math/uu 2.1.29 format/zulu
 Scientific units conversion package
 UU (units-to-units) is a scientific units conversion package
 based on the SI system of units.
 )
-media/imagekit 1.0.8 graphics/viewmat
+media/imagekit 1.0.10 graphics/viewmat
 Utilities for accessing 24-bit jpeg, png, bmp image files in J.
 The image kit package provides utilities for accessing 24-bit jpeg, png image files in J. The core functions allow reading and writing image files as 3-dimensional J arrays.
 
 The addon includes several scripts. The main script, imagekit.ijs, provides J functions for the basic image reading, writing, and viewing images through other J addons. Another script, html_gallery.ijs, provides J functions that create thumbnails and image galleries under J program control. Sample scripts and a rotation form script are also included.
 )
-media/videolabs 1.0.12 
+media/videolabs 1.0.14 
 Video labs for jqt,jhs and console
 
 )
@@ -745,7 +747,7 @@ remoteprofile loads a class profile from the web and executes it
 studentinit sets startup to point to remoteprofile
 They allow you to manage the profile of all your students
 )
-misc/miscutils 1.0.5 format/printf
+misc/miscutils 1.0.9 format/printf
 Miscellaneous utility definitions
 langexten contains basic extensions to J.
 klutils contains function for 'keyed lists', which are tables where specified columns are 'key' and the rest are 'data'
@@ -755,27 +757,27 @@ net/clientserver 1.0.9
 Simple client server
 Simple client server.
 )
-net/jcs 1.0.30 net/zmq
+net/jcs 1.0.31 net/zmq
 J client/server built on zeromq
 This is a J client/server built on zeromq.
 )
-net/websocket 1.0.8 
+net/websocket 1.0.9 
 Websocket server
 This is a websocket server which allows a web browser to make calls to J.
 )
-net/zmq 1.0.16 
+net/zmq 1.0.17 
 J interface to zeromq
 This is a J interface to ZeroMQ distributed messaging, http://zeromq.org.
 
 Client/server examples and labs are in ~addons/net/jcs
 )
-profiles/profiles 1.0.5 
+profiles/profiles 1.0.6 
 Suggested User Profiles
 When one of these files is loaded, the user's config is updated.
 
 explorer.ijs sets up to update packages, loads visualization and debug tools, and sets PF keys for debugging.
 )
-stats/base 1.0.21 
+stats/base 1.0.22 
 Basic statistics package
 Basic statistics package.
 
@@ -788,13 +790,13 @@ Currently covers normal and uniform distributions.
 
 Addon compiled by Ric Sherlock & Fraser Jackson from many contributions by the J community.
 )
-stats/jserver4r 1.0.4 
+stats/jserver4r 1.0.8 
 Call J from R
 This library provides a J server for the R statistical package.
 
 For more information, see wiki page http://code.jsoftware.com/wiki/Interfaces/R/Jserver4R .
 )
-stats/r 1.0.34 
+stats/r 1.0.43 
 Interfaces to R statistical package
 This addon has interfaces to the R statistical package.
 
@@ -833,7 +835,7 @@ The worksheets can be read as a whole, or by range.
 
 Excel was developed by Anssi Seppala and Chris Burke.
 )
-tables/tara 1.2.43 
+tables/tara 1.2.49 
 Read/write Excel *.xls files
 Tara reads and writes files in Excel format. It supports the biff8 format used in Excel 97/2000/xp/2003. It also reads older formats used in earlier versions of Excel. It can also work with spreadsheets like OpenOffice and Gnumeric that support Excel formats. It runs on Windows, Linux and Mac OSX. MS Excel or OpenOffice are not required to use Tara.
 
@@ -841,14 +843,13 @@ After it is installed, run lab 'Tara and Excel' for examples of using the system
 
 Tara was developed and is copyrighted by Bill Lam, bbill.lam@gmail.com, but may be used freely, even for commercial purposes.
 )
-tables/taraxml 1.0.10 
+tables/taraxml 1.0.16 
 Platform independent system for reading OpenXML (Excel 2007 *.xlsx) files
 The TaraXML addon reads files in Microsoft Excel's OpenXML format. For reading and writing older non-XML Excel formats see the Tara addon.
 
 TaraXML depends on a command line transformation utility.
 Linux: xsltproc which should be available in various linux distro.
-Windows: msxsl.exe available from http://www.microsoft.com/en-us/download/details.aspx?id=21714
-  msxsl.exe depends on msxml4 (not msxml6!) http://www.microsoft.com/en-us/download/details.aspx?id=19662
+Windows: xsltproc included in this addon.
 TaraXML was developed by Ric Sherlock and Bill Lam. 
 )
 tables/wdooo 1.0.38 
@@ -867,7 +868,7 @@ Date/time arithmetic.
 
 Extends the `dates.ijs` system script.
 )
-web/gethttp 1.0.22 
+web/gethttp 1.1.6 
 Retrieve files from web
 J interface to Wget/cURL for retrieving files using http, https or ftp protocols.
 Retrieve file contents or save to file.

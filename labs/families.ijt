@@ -148,11 +148,12 @@ Lab Section
 
 Similarly, the function h=: f - f@- is odd, and its graph is reflected in the origin.
 
-The even and odd parts of f are defined to be one-half of the functions g and h, so that their sum gives the original function. The operators even=: ..- and odd=: .:- give these even and odd parts. For example:
+The even and odd parts of f are defined to be one-half of the functions g and h, so that their sum gives the original function. The operators even and odd=, defined below, give these even and odd parts.
 )
-even=: ..-
+even=: {{ u -:@:+ u@:- }}
 
-odd=: .:-
+odd=: {{ u -:@:- u@:- }}
+
 
 ep=: f even
 

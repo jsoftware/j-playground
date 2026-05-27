@@ -27,13 +27,13 @@ NB. this method has very rapid convergence.
 NB.
 NB. eg:   43.75 14 = ^&3 integrate 3 4
 integrate=: 2 : 0
-'lower upper sd'=. 3{.y,8
+'lower upper sd'=. 3{.v,8
 in=. 5
 len=. 2^i.in
 diff=. upper-lower
 int=. 3 : ',(_1 1*r*3^_0.5)+/+/\r,}:y#+:r=.%+:y'
 scale=. [: lower&+ diff&*
-f=. diff&*@(+/)@:x@scale@int % +:
+f=. diff&*@(+/)@:u@scale@int % +:
 g=. f"0 len
 whilst. 1 do.
   r=. g
@@ -65,9 +65,9 @@ NB. result is the integral
 NB.
 NB. eg:   43.75 = ^&3 simpson 3 4
 simpson=: 2 : 0
-'lower upper int'=. 3{.y,128
+'lower upper int'=. 3{.v,128
 size=. (upper-lower)%int
-val=. x lower+size*i.>:int
+val=. u lower+size*i.>:int
 size * +/val * 3%~ 1,((int-1)$4 2),1
 )
 
@@ -85,12 +85,12 @@ NB. result is the integral
 NB.
 NB. eg: 43.75 = ^&3 adapt 3 4
 adapt=: 2 : 0
-'lb ub t'=. 3{.y,1e_8
-a=. x simpson (lb,ub,8)
-b=. x simpson (lb,ub,16)
+'lb ub t'=. 3{.v,1e_8
+a=. u simpson (lb,ub,8)
+b=. u simpson (lb,ub,16)
 if. (|a-b)<|b*t do. b return. end.
 c=. -:lb+ub
-(x adapt (lb,c,t)) + x adapt (c,ub,t)
+(u adapt (lb,c,t)) + u adapt (c,ub,t)
 )
 
 NB. =========================================================

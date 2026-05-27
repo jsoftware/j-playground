@@ -1,4 +1,4 @@
-NB. stats/base/univariate
+NB.%stats/base/univariate
 NB. Univariate statistics
 
 NB.*mean v         arithmetic mean (dyadic: weighted)
@@ -12,8 +12,8 @@ NB.*var v          sample variance (dyadic: weighted)
 NB.*stddev v       standard deviation (dyadic: weighted)
 NB.*varp v         population variance
 NB.*stddevp v      population standard deviation
-NB.*skewness v     skewness
-NB.*kurtosis v     kurtosis
+NB. skewness v     skewness
+NB. kurtosis v     kurtosis
 NB.
 NB.*min v          minimum
 NB.*max v          maximum

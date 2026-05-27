@@ -306,4 +306,4 @@ Lab Section PRIME FACTORS
 We will conclude by showing the prime factors of the table of triangles, first removing the identity element, because an attempt to factor a zero would give a domain error:
 )
 
-<@q: }. tri
+<@q:"0 }. tri

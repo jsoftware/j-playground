@@ -1,4 +1,4 @@
-NB. stats/base/distribution
+NB.%stats/base/distribution
 NB. Statistical distributions
 
 NB. discrete:

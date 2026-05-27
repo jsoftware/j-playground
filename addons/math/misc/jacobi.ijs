@@ -35,8 +35,6 @@ ndx=. ,{;~ir
 perm=. 0 0&{ ; ] ; |. ; 1 1&{
 sign=. _1: ^ <&0
 
-count=. 0
-
 while.
   big=. imax utm * |,r
   ind=. big { ndx
@@ -50,7 +48,6 @@ do.
   s=. ((cos,-sin),sin,cos) (perm >ind) } id
   r=. s mp r mp |:s
   q=. q mp |:s
-  count=. >:countW
 end.
 
 r=. diag r

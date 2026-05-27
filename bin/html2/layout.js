@@ -7,10 +7,8 @@
 let mbarsize, tbarsize, topsize;
 
 // ---------------------------------------------------------------------
-var layout = new function() {
+var layout = new (function () {
  let r = new Object();
-
- let O = console.log;
  let hprop, vprop, vstate;
  let panes;
 
@@ -27,49 +25,66 @@ var layout = new function() {
  r.centerpanes = centerpanes;
 
  // ---------------------------------------------------------------------
- r.closeviewer = function() {
+ r.closeviewer = function () {
   vstate = 0;
   resizer();
  };
 
  // ----------------------------------------------------------------------
- r.exec = function(str) {
+ r.exec = function (str) {
   return eval(str);
  };
 
  // ---------------------------------------------------------------------
  // for testing...
- r.fini = function() {
+ r.fini = function () {
   editopen();
  };
 
  // ---------------------------------------------------------------------
- r.getmainheight = function() {
+ r.getmainheight = function () {
   return Math.max(0, getheight(mainpane) - topsize);
  };
 
  // ---------------------------------------------------------------------
- r.getsideheight = function() {
+ r.getsideheight = function () {
   return Math.max(0, getheight(sidepane) - topsize);
  };
 
  // ---------------------------------------------------------------------
- r.getviewheight = function() {
+ r.getviewheight = function () {
   return Math.max(0, getheight(viewpane) - topsize - 2);
  };
 
  // ---------------------------------------------------------------------
- r.heights = function() {
-  O("body=" + getheight(document.body) + ", tbar=" + getheight(tbar) +
-   ", topsize=" + topsize + ", panes=" + getheight(panes) +
-   ", mainpane=" + getheight(mainpane) + ", main=" + getheight(main) +
-   ", sidepane=" + getheight(sidepane) + ", side=" + getheight(side) +
-   ", viewpane=" + getheight(viewpane) + ", view=" + getheight(view));
+ r.heights = function () {
+  O(
+   "body=" +
+    getheight(document.body) +
+    ", tbar=" +
+    getheight(tbar) +
+    ", topsize=" +
+    topsize +
+    ", panes=" +
+    getheight(panes) +
+    ", mainpane=" +
+    getheight(mainpane) +
+    ", main=" +
+    getheight(main) +
+    ", sidepane=" +
+    getheight(sidepane) +
+    ", side=" +
+    getheight(side) +
+    ", viewpane=" +
+    getheight(viewpane) +
+    ", view=" +
+    getheight(view)
+  );
  };
 
  // ---------------------------------------------------------------------
  // called at outset or when panes are flipped
- r.init = function() {
+ r.init = function () {
   panes = getid("panes");
 
   topsize = getheight(maintop);
@@ -81,13 +96,13 @@ var layout = new function() {
  };
 
  // ---------------------------------------------------------------------
- r.openview = function() {
+ r.openview = function () {
   vstate = 1;
   resizer();
  };
 
  // ---------------------------------------------------------------------
- r.showedit = function(ifshow) {
+ r.showedit = function (ifshow) {
   if (ifshow) {
    if (panex && vprop > 0.1) return;
    if (!panex && hprop < 0.9) return;
@@ -100,7 +115,7 @@ var layout = new function() {
  };
 
  // ---------------------------------------------------------------------
- r.size = function() {
+ r.size = function () {
   let h, m, s, t, w, bh, lh, lw, rh, rw, th, tw;
 
   h = getheight(document.body) - tbarsize;
@@ -166,13 +181,13 @@ var layout = new function() {
  };
 
  // ---------------------------------------------------------------------
- r.state = function() {
-  O("vstate=" + vstate + ", panex,hprop,vprop=" + panex + ", " +
-   round(hprop, 0.001) + ", " + round(vprop, 0.001));
+ r.state = function () {
+  let s = "vstate=" + vstate + ", panex,hprop,vprop=" + panex + ", ";
+  O(s + round(hprop, 0.001) + ", " + round(vprop, 0.001));
  };
 
  // ---------------------------------------------------------------------
- r.toggleedit = function() {
+ r.toggleedit = function () {
   if (panex) {
    if (vprop < 0.05) centerpanes();
    else vprop = 0;
@@ -183,12 +198,24 @@ var layout = new function() {
   resizer();
  };
 
-// ---------------------------------------------------------------------
- r.widths = function() {
-  O("body=" + window.innerWidth + ", tbar=" + getwidth(tbar) +
-   ", panes=" + getwidth(panes) +
-   ", splitpane=" + getwidth(splitpane) + ", sidepane=" + getwidth(sidepane) +
-   ", mainpane=" + getwidth(mainpane) + ", main=" + getwidth(main));
+ // ---------------------------------------------------------------------
+ r.widths = function () {
+  O(
+   "body=" +
+    window.innerWidth +
+    ", tbar=" +
+    getwidth(tbar) +
+    ", panes=" +
+    getwidth(panes) +
+    ", splitpane=" +
+    getwidth(splitpane) +
+    ", sidepane=" +
+    getwidth(sidepane) +
+    ", mainpane=" +
+    getwidth(mainpane) +
+    ", main=" +
+    getwidth(main)
+  );
  };
 
  // sliders ------------------------------------------------------------
@@ -251,7 +278,7 @@ var layout = new function() {
 
  // ---------------------------------------------------------------------
  return r;
-}();
+})();
 
 var state = layout.state;
 

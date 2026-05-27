@@ -19,7 +19,7 @@ function dirdef_begin(s) {
  if (!s.includes("{{")) return 0;
  let t = towords(s);
  if (t === 0) return 0;
- let b = t.map(e => e === "{{")
+ let b = t.map(e => e === "{{");
  let n = b.findIndex(e => e);
  if (n === -1) return 0;
  let e = t.map((e, i) => e === "}}" && i > n);
@@ -41,10 +41,8 @@ function dirdef_end(s) {
 
 // ---------------------------------------------------------------------
 function ecminitvalue() {
- if (ecmLast)
-  ecm.setValue(ecmLast);
- else
-  ecm.setValue(Exams[0]);
+ if (ecmLast) ecm.setValue(ecmLast);
+ else ecm.setValue(Exams[0]);
 
  checkPermalink();
 }
@@ -117,36 +115,34 @@ function editopen() {
 function getline(p) {
  if (p >= ecm.lineCount()) return undefined;
  return ecm.getLine(p).replace("\r", "").replace("\t", " ");
-};
+}
 
 // ---------------------------------------------------------------------
 function initedit() {
  ecm = cmopen("side", "j");
 
- /* beautify preserve:start */
  var keys = {
- "F1": menuvocab,
- "Ctrl-D": dlog_select,
- "Ctrl-R": ecmrunall,
- "Ctrl-Enter": ecmrunline,
- "Ctrl-F1": context,
- "Shift-Ctrl-F1": nvcontext,
- "Shift-Ctrl-T": clearterm,
- "Shift-F1": menunuvoc,
- "Shift-Ctrl-Down": dummy,
- "Shift-Ctrl-Up": dummy,
- "Shift-Ctrl-C": layout.centerpanes,
- "Shift-Ctrl-E": layout.toggleedit,
- "Shift-Ctrl-L": swappanes,
- "Shift-Ctrl-R": ecmrunallx,
- "Shift-Ctrl-Enter": ecmrunlineshow,
- "Shift-Ctrl-.": labnext
+  F1: menunuvoc,
+  "Ctrl-D": dlog_select,
+  "Ctrl-R": ecmrunall,
+  "Ctrl-Enter": ecmrunline,
+  "Ctrl-F1": context,
+  "Shift-Ctrl-F1": nvcontext,
+  "Shift-Ctrl-T": clearterm,
+  "Shift-F1": menunuvoc,
+  "Shift-Ctrl-Down": dummy,
+  "Shift-Ctrl-Up": dummy,
+  "Shift-Ctrl-C": layout.centerpanes,
+  "Shift-Ctrl-E": layout.toggleedit,
+  "Shift-Ctrl-L": swappanes,
+  "Shift-Ctrl-R": ecmrunallx,
+  "Shift-Ctrl-Enter": ecmrunlineshow,
+  "Shift-Ctrl-.": labnext
  };
- /* beautify preserve:end */
 
  ecm.setOption("extraKeys", keys);
  ecm.setOption("matchBrackets", true);
- ecm.on("focus", function() {
+ ecm.on("focus", function () {
   lastfocus = ecm;
  });
 
@@ -168,8 +164,8 @@ function ismultiline(t) {
  var num = ["0", "1", "2", "3", "4"];
  var def = ["noun", "adverb", "conjunction", "verb", "monad", "dyad"];
  for (var i = 1; i < len; i++) {
-  if (s[i] !== "define" &&
-   (s[i] !== ":" || i === len - 1 || s[i + 1] !== "0")) continue;
+  if (s[i] !== "define" && (s[i] !== ":" || i === len - 1 || s[i + 1] !== "0"))
+   continue;
   if (has(def, s[i - 1]) || has(num, s[i - 1])) return true;
  }
  return false;
@@ -226,7 +222,7 @@ function readentry1(p) {
  if (n) {
   while (p < max) {
    let t = getline(p++);
-   r += "\n" + t
+   r += "\n" + t;
    n = n - dirdef_end(t);
    if (n <= 0) break;
    if (p === max) r += " }}";
@@ -244,7 +240,7 @@ function readentry1(p) {
  }
 
  return [p, r];
-};
+}
 
 // ----------------------------------------------------------------------
 function readall() {
@@ -262,7 +258,6 @@ function readall() {
 // ----------------------------------------------------------------------
 function remNB(s) {
  s = s.substring(3 + s.indexOf("NB."));
- if (" " === s.substring(0, 1))
-  s = s.substring(1);
+ if (" " === s.substring(0, 1)) s = s.substring(1);
  return s;
 }

@@ -3,23 +3,31 @@
 "use strict";
 
 // ---------------------------------------------------------------------
+// playground version
+var Version = "2.001";
+
+// ---------------------------------------------------------------------
+// J takes longer to initialize than javascript, so the GUI
+// waits on it being set from the J binary (in localj.js)
+var JVersion = "";
+
+// ---------------------------------------------------------------------
 var lastfocus;
 var popupbox;
 var resizetimer;
-var Version;
 
 // ---------------------------------------------------------------------
 function initbody() {
  var h = `<div id='tbar'></div>
 <div id='panes'></div>
-<div id='popupp'><div id='popup'></div></div>`
+<div id='popupp'><div id='popup'></div></div>`;
  document.body.innerHTML = h;
  popupbox = getid("popupp");
 }
 
 // ---------------------------------------------------------------------
-function initload() {
- getversion();
+async function initload() {
+ await ifjversion();
  initbody();
  inittbar();
  initdlog();
@@ -36,29 +44,37 @@ function initload() {
 
 // ---------------------------------------------------------------------
 function showstate(e) {
- var b = ["mainpane", "maintop", "sidepane", "sidetop", "mn_View",
-  "mn_Examples", "mn_EditRun", "mn_context", "mn_nvcontext"
+ var b = [
+  "mainpane",
+  "maintop",
+  "sidepane",
+  "sidetop",
+  "mn_View",
+  "mn_Examples",
+  "mn_EditRun",
+  "mn_context",
+  "mn_nvcontext"
  ];
  if (e)
-  b.map(function(x) {
+  b.map(function (x) {
    getid(x).classList.remove("disabled");
   });
  else
-  b.map(function(x) {
+  b.map(function (x) {
    getid(x).classList.add("disabled");
   });
- if (tcm)
-  tcm.options.readOnly = !e;
+ if (tcm) tcm.options.readOnly = !e;
 }
 
 // ---------------------------------------------------------------------
 function resizer() {
- layout.size()
+ layout.size();
 }
 
 // ---------------------------------------------------------------------
-window.onkeydown = function(e) {
- if (e.keyCode === 27) // escape
+window.onkeydown = function (e) {
+ if (e.keyCode === 27)
+  // escape
   popupbox.style.display = "none";
 
  if (e.ctrlKey) {
@@ -72,22 +88,22 @@ window.onkeydown = function(e) {
    }
   }
  }
-}
+};
 
 // ---------------------------------------------------------------------
-window.onclick = function(e) {
+window.onclick = function (e) {
  if (e.target == popupbox) {
   popupbox.style.display = "none";
- };
-}
+ }
+};
 
 // ---------------------------------------------------------------------
-window.onresize = function() {
+window.onresize = function () {
  clearTimeout(resizetimer);
  resizetimer = setTimeout(resizer, 150);
-}
+};
 
 // ---------------------------------------------------------------------
-window.onload = function() {
+window.onload = function () {
  initload();
-}
+};

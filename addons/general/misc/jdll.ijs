@@ -61,6 +61,7 @@ NB. form: trs jfix data_address
 NB. trs=type,rank,shape_address
 jfix=: 4 : 0
 't r s'=. x
+r=. 63 (17 b.) r
 d=. y,0
 len=. */p=. i2j memr s,0,r*SZI
 if. t=1 do. p$ (1{a.)=memr d,len
@@ -87,6 +88,7 @@ NB. return value of name
 jget=: 3 : 0
 cmd=. libj,' JGetM i x *c *x *x *x *x'
 'e p n t r s d'=. cmd cd pJ,(,y);4#<,0
+r=. 63 (17 b.) r
 if. e do.
   smoutput 'error code: ',":e
   return.

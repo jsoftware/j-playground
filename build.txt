@@ -1,0 +1,25 @@
+The build is done in an emscripten docker image.
+
+The scripts here were written on linux mint, but similar scripts should run on any OS.
+
+Build docker image:
+
+`docker/build_image.sh`
+
+Read in jsource:
+
+`./getjsource.sh`
+
+Run the wasm build:
+
+`./runall.sh`
+
+This step calls:
+
+`getrest.sh` - get rest of code into jsource \
+`docker/runbuild.sh` - run the docker build \
+`cp2html.sh` - copy build into the html folder
+
+Start a http-server listening on port 8080 to display the playground:
+
+`html/run.sh`

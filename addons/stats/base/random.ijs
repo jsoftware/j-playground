@@ -1,4 +1,4 @@
-NB. stats/base/random
+NB.%stats/base/random
 NB. Random number generation
 
 NB.*setrl v       set random link

@@ -16,12 +16,9 @@ function initmenu() {
 // ---------------------------------------------------------------------
 function menu(t) {
  menucloseall();
- if ("exam" === t.substring(0, 4))
-  return ecmset(Exams[Number(t.substring(4))]);
- if ("lab" === t.substring(0, 3))
-  return labrun(labs[Number(t.substring(3))]);
- if (window[t])
-  return window[t]();
+ if ("exam" === t.substring(0, 4)) return ecmset(Exams[Number(t.substring(4))]);
+ if ("lab" === t.substring(0, 3)) return labrun(labs[Number(t.substring(3))]);
+ if (window[t]) return window[t]();
  switch (t) {
   case "center":
    return layout.centerpanes();
@@ -32,7 +29,7 @@ function menu(t) {
   case "controls":
    return menuwiki("Vocabulary/ControlStructures");
   case "download":
-   return menuwiki("System/Installation/J903");
+   return menuwiki("System/Installation");
   case "flip":
    return swappanes();
   case "github":
@@ -114,7 +111,6 @@ function menuplink(t) {
  return window.open(url, "_blank");
 }
 
-
 // ---------------------------------------------------------------------
 function menuclose() {
  menuclose1(this);
@@ -136,40 +132,25 @@ function menuopen() {
 }
 
 // ---------------------------------------------------------------------
-function about() {
- var h = popupheader("Playground", true) + "<p>Version 1.01</p>";
- if (!!jver) {
-  var v = jver.substring(1).split("/");
-  h += "<p>" + v[0] + " " + v[1].substring(1) + "-bit " + v[2]; // + " " + v[3];
-  h += "<br/>" + v[6] + "</p>";
- }
- h += "<hr><p>&copy; 2018 Jsoftware</p>";
- popup(h, 200);
-}
-
-// ---------------------------------------------------------------------
 function labrun(labPath) {
-
  //load the labs utilities / doesn't hurt to reload each time
- jdo1("(0!:0) <'labs/labs805.ijs'")
- var lab = labPath.slice(labPath.indexOf('/') + 1);
+ jdo1("(0!:0) <'labs/labs805.ijs'");
+ var lab = labPath.slice(labPath.indexOf("/") + 1);
  var lines = jdo1("lab 'labs/" + lab + ".ijt'");
- lines.split('\n').forEach(line => {
+ lines.split("\n").forEach(line => {
   tcmappend(line + "\n");
- })
+ });
 
  //go back to the base locale so the labs execute where the user can interact
- jdo1("('base';'z') copath 'jlab805'")
+ jdo1("('base';'z') copath 'jlab805'");
 
  return 0;
-
 }
 
 // ---------------------------------------------------------------------
 function labnext() {
- var lines = jdo1("labnext''")
- lines.split('\n').forEach(line => {
+ var lines = jdo1("labnext''");
+ lines.split("\n").forEach(line => {
   tcmappend(line + "\n");
- })
-
+ });
 }

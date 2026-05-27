@@ -5,7 +5,7 @@ NB. =========================================================
 Lab Section Tables
 Addition and multiplication tables help to clarify the behaviour of addition and multiplication. This lab uses J to experiment with tables for them as well as for other less familiar operations.
 
-To advance to the next panel select menu Studio|Advance.
+To advance to the next panel select menu Labs|Advance Lab.
 )
 
 NB. =========================================================
@@ -90,6 +90,10 @@ equals
 
 * The numbers on the diagonal are all squares.
 )
+
+PREPARE
+s=:y-5
+PREPARE
 
 NB. =========================================================
 Lab Section Symmetric lists

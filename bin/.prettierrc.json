@@ -1,0 +1,11 @@
+{
+ "arrowParens": "avoid",
+ "bracketSameLine": true,
+ "bracketSpacing": true,
+ "objectWrap": "collapse",
+ "printWidth": 80,
+ "semi": true,
+ "tabWidth": 1,
+ "trailingComma": "none",
+ "useTabs": false
+}

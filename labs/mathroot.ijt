@@ -578,6 +578,6 @@ _ q: m,n
 
 (m+.n), <./&.(_&q:) m,n
 
-totient=: * -.@%@~.&.q:
+totient=: * -.@%@~.&.(q:"0)
 
 (totient m), +/1=m+.i.m

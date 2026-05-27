@@ -16,7 +16,7 @@ end.
 if. (0~: 4!:0<'USEPPPNG') > IFIOS +. UNAME-:'Android' do.
   USEPPPNG=: (0 < #1!:0 jpath '~addons/graphics/pplatimg/pplatimg.ijs')
   require^:USEPPPNG 'graphics/pplatimg'
-  if. USEPPPNG *. UNAME-:'Linux' do.
+  if. USEPPPNG *. (<UNAME)e.'Linux';'FreeBSD';'OpenBSD' do.
     USEPPPNG=: (LIBGDKPIX_pplatimg_,' dummyfunction + n')&cd :: (2={.@cder) ''
     USEPPPNG=: 0
   end.
@@ -271,10 +271,14 @@ end.
 if. USEQTPNG do.
   dat writeimg_jqtide_ (>file);'png';'quality';_1
 elseif. USEJAPNG do.
-  if. 805> ".}.(i.&'/' {. ])9!:14'' do.
-    dat writeimg_ja_ (>file);'png';'quality';_1
-  else.
+  if. 3=4!:0<'revinfo_j_' do.
     writeimg_ja_ dat;(>file);'png'
+  else.
+    if. 805> ".}.(i.&'/' {. ])9!:14'' do.
+      dat writeimg_ja_ (>file);'png';'quality';_1
+    else.
+      writeimg_ja_ dat;(>file);'png'
+    end.
   end.
 elseif. USEJNPNG do.
   writeimg_jnet_ dat;(>file);'png'
@@ -347,7 +351,7 @@ be32inv=: (_2&ic)@:(,@:(|."1)@(_4&(]\))^:ENDIAN)
 le32=: ,@:(|."1)@(_4&(]\))^:(-.ENDIAN)@:(2&ic)
 le32inv=: (_2&ic)@:(,@:(|."1)@(_4&(]\))^:(-.ENDIAN))
 crc32=: ((_2&ic)@((4&{.)`(_4&{.)@.('a'~:{.2 ic a.i.'a'))@(3&ic))^:IF64 @: (((i.32) e. 32 26 23 22 16 12 11 10 8 7 5 4 2 1 0)&(128!:3))
-signbyte=: ] - 256 * 127 <  ]
+signbyte=: ] - 256 * 127 < ]
 readpng_z_=: readpng_jpng_
 writepng_z_=: writepng_jpng_
 readpnghdr_z_=: readpnghdr_jpng_

@@ -21,13 +21,13 @@ function getcontext(t) {
   end = txt.length;
  } else {
   let doc = cm.getDoc();
-  let cur = doc.getCursor()
+  let cur = doc.getCursor();
   txt = doc.getLine(cur.line);
   bgn = end = cur.ch;
  }
  if (!txt.trim()) return tcm.focus();
- txt = t + " " + ((cm === tcm) ? 0 : 1) + " " + bgn + " " + end + " " + txt;
- let cmd = "helpplay_jws_ '" + txt + "'"
+ txt = t + " " + (cm === tcm ? 0 : 1) + " " + bgn + " " + end + " " + txt;
+ let cmd = "helpplay_jws_ '" + txt + "'";
  localjserver.send(cmd);
 }
 
@@ -38,17 +38,10 @@ function showhelp(e) {
  if (t) return menuwiki("Vocabulary/" + s);
  var p = tcm.getCursor().line;
  var n = tcm.lineCount() - 1;
- if (n === p)
-  tcmappend("\n");
+ if (n === p) tcmappend("\n");
  else {
   var len = tcm.getLine(n).length;
-  tcm.getDoc().setSelection({
-   line: p + 1,
-   ch: 0
-  }, {
-   line: n,
-   ch: len
-  });
+  tcm.getDoc().setSelection({ line: p + 1, ch: 0 }, { line: n, ch: len });
   tcm.replaceSelection("");
  }
  return tcmappend(s);

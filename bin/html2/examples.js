@@ -1,4 +1,6 @@
 // examples
+//
+// excluded from prettier
 
 var Exams = [];
 var ExIds = [];
@@ -135,7 +137,7 @@ plot dat=: sin@*/~ i:2j50
 plot dat=: +/~ sin i:12j50
 
 sombrero0=: [: (1&o. % ]) [: %: [: +/~ *:
-   
+
 'surface' plot sombrero0 i:12j99
 
 NB. the pd function is the low-level plot driver:
@@ -219,14 +221,14 @@ getCircle =: 3 : 0
 )
 
 NB. initialize JS
-(2!:0) POPUPJS
+(2!:1) POPUPJS
 
 NB. show the popup
-(2!:0) 'popup(jgetstr("POPUPHTML"),500,"ok")'
+(2!:1) 'popup(jgetstr("POPUPHTML"),500,"ok")'
 
 NB. execute some javascript after the popup is displayed to draw the circle
 NB. add a delay to let the popup finish rendering
-(2!:0) 'setTimeout(function() { drawCircle() },100)'
+(2!:1) 'setTimeout(function() { drawCircle() },100)'
 `);
 
 ExIds.push("CSV");
@@ -319,7 +321,7 @@ mpb =: +/ .* 1 , ]       NB. biased matrix product
 NB. Create object; called by conew; could be used to re-initialise weights.
 NB. takes y: array of layer sizes, from input (=#feature dims) to output (=#~.labels)
 create =: {{
-  sizes  =: y 
+  sizes  =: y
   bw     =: ([: <@normalrand@|. 1 0&+)"1]   2 ]\\ sizes NB. bias ,. weight arrays.
   repint =: 1000         NB. reporting every repint epochs in sgd training
   0 0 $ histloss =:2 0$0 NB. keeps training & test loss
@@ -359,13 +361,13 @@ NB. Backpropagation to update biases & weights
 NB. x: learning rate
 NB. y: data ,. labels (rows = instances, # columns for labels derived from sizes.
 backprop =: {{
-  'act lab' =. ({.sizes) split |: y  NB. y: inst x ft -> ft x inst 
+  'act lab' =. ({.sizes) split |: y  NB. y: inst x ft -> ft x inst
   NB. ---Foward pass---
   zs =. 0 $ as =. <act NB. keep z and activations; first activation is input data.
-  delta =. ($bw) $ a:  NB. very similar to fwd above, but will keep zs 
+  delta =. ($bw) $ a:  NB. very similar to fwd above, but will keep zs
   for_p. bw do.        NB. and as for each layer for backward pass.
     act =. sig z =. (>p) mpb act NB. activations and z's for layer
-    as  =. as,<act     NB. store them for reuse in backward pass 
+    as  =. as,<act     NB. store them for reuse in backward pass
     zs  =. zs,<z
   end.
   NB. ---Backward pass---
@@ -374,7 +376,7 @@ backprop =: {{
     if. last do.          NB. first factor f1 in err depends on whether the layer is last or not.
       last=.0 [ f1 =. lab dLoss _1 {:: as NB. last, so get loss w.r.t. last activations
     else. f1=. (|: }."1 > bw {~ L+1) +/ .* err end. NB. else, update from previous err(L+1)
-    err   =. f1 * dsig L {:: zs                     NB. error, i.e. small delta in the URL above                   
+    err   =. f1 * dsig L {:: zs                     NB. error, i.e. small delta in the URL above
     delta =. delta L}~ < err +/ .* |: 1,L {:: as    NB. get update multiplying error with activation, 1 for bias
   end.
   bs =. #{.y                      NB. batch size for normalization
@@ -401,11 +403,11 @@ report =: {{
   NB. Return accuracies on training and testing data and confusion matrix
   echo 'training accuracy (%)   : ',": 100*(+/%#) *./ ltr=prtr =. (="1 >./) fwd dtr
   echo 'testing  accuracy (%)   : ',": 100*(+/%#) *./ lts=prts =. (="1 >./) fwd dts
-  echo 'confusion matrices training; testing' NB. convert labels into indices into matrix, add all possible label combo's, <:@#/. , reshape KxK  
+  echo 'confusion matrices training; testing' NB. convert labels into indices into matrix, add all possible label combo's, <:@#/. , reshape KxK
   echo conf =. (ltr;lts) ([: ($~ ,~@%:@#) [: <:@#/.~  (,~ ,/@:>@{@,~@:<@~.@,)@/:~@ ,.&(onehot inv@|:) ) each prtr;prts
   NB. Show training / testing loss evolution plot.
   'title Loss;xcaption epoch; key train test;keypos rti' plot histloss
-  echo 'decision boundary' NB. shows RGB for classes, the brighter/more pure/crisper, the better, NOTE: works only for 3 classes, since it uses RGB 
+  echo 'decision boundary' NB. shows RGB for classes, the brighter/more pure/crisper, the better, NOTE: works only for 3 classes, since it uses RGB
   viewrgb (,~@>: |.@|:@$  256 #. 255 <.@:* [: (%"1 >./)@:(-"1 <./) [: pred [: ,/@:>@{@,~@:<@i: 1+j.) 300
   NB. entropy of predicted labels: higher entropy = higher uncertainty = decision boundary
   'density; mesh 0;aspect 1' plot (,~@>: $ [: -@:(+/"1@:(*^.)) [: (%"1 >./)@:(-"1 <./) [: pred [: ,/@:>@{@,~@:<@i: 1+j.) 300
@@ -422,7 +424,7 @@ code, 1000+ex
 )
 
 NB. Create neural network. First and last neuron count should be 2 and 3, respectively,
-NB.   for matching data dimensionality and label count 
+NB.   for matching data dimensionality and label count
 net =: nn 2 15 8 3
 5000 _ 0.1 sgd__net spl =: 300 splitdat datext ,. labext
 report__net spl
@@ -436,10 +438,12 @@ var labs =[
     'general/huffman',
     'general/seqmachine',
     'general/towerofhanoi',
+    'livetexts/candg',
     'livetexts/coleman',
+    'livetexts/finitemath',
     'math/averages',
-    'math/bestfit',
     'math/bincoefs',
+    'math/catalan',
     'math/families',
     'math/fntab',
     'math/frame',
@@ -448,12 +452,9 @@ var labs =[
     'math/mathroot',
     'math/polynom',
     'math/pythag3',
+    'math/rot',
     'math/shapley',
     'math/tables',
-    'math/volume',
     'system/special_searches',
     ]
-
-    //'core/display',
-    //'core/sparse',
 

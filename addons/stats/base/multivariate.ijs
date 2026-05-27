@@ -1,7 +1,7 @@
-NB. stats/base/multivariate
+NB.%stats/base/multivariate
 NB. Multivariate statistics
 
-NB.*XtY            sum of cross products (monadic is XtX)
+NB.*XtY v          sum of cross products (monadic is XtX)
 NB.*spdev v        sum of cross products of deviations
 NB. cov v          (co)variance or var/cov matrix
 NB.*covp v         population (co)variance or var/cov matrix

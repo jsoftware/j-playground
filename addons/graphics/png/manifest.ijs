@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 Utilities for *.png files
 )
 
-VERSION=: '1.0.28'
+VERSION=: '1.0.30'
 
 RELEASE=: ''
 

@@ -13,6 +13,10 @@ td {
 white-space:nowrap;
 }
 
+nav {
+width:100%;
+}
+
 .alt {
 background:#e4dfec;
 }
@@ -119,6 +123,17 @@ border-bottom:1px solid #c6c6be;
 background: linear-gradient(to bottom, #f0f0e0, #e0e0d0);
 }
 
+.topbutton {
+height:18px;
+margin:0px;
+padding:0px 4px 2px 4px;
+}
+
+.topright {
+float:right;
+padding:4px 10px 0px 0px;
+}
+
 .vtop {
 vertical-align:top;
 }
@@ -127,7 +142,7 @@ vertical-align:top;
 #dlog {
 padding:0px;
 border:1px solid #c6c6be;
-width:400px;
+width:450px;
 white-space:nowrap;
 }
 
@@ -141,7 +156,8 @@ vertical-align:middle;
 }
 
 #dlogsel {
-font-size:0.9em;
+font-size:1.1em;
+font-family: monospace;
 width:100%;
 }
 
@@ -150,10 +166,6 @@ background:#e9e9e9;
 font-size:smaller;
 font-weight:bold;
 padding:3px 0px 3px 3px;
-}
-
-#dlogtop table {
-margin:0;
 }
 
 /* sliders ---------------------------------------------------------- */

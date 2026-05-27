@@ -1,4 +1,4 @@
-NB. stats/base/combinatorial
+NB.%stats/base/combinatorial
 NB. Sample design
 
 NB. comb v         combinations of size x from i.y

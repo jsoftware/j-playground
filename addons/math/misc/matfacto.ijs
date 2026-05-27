@@ -60,10 +60,10 @@ NB.   U is upper triangular
 NB. The original matrix is: p {"1 L mp U
 NB. See https://code.jsoftware.com/wiki/Essays/LU_Decomposition
 LU=: 3 : 0
- 'm n'=. $ A=. y
- if. 1=m do.
+'m n'=. $ A=. y
+if. 1=m do.
   p ; (=1) ; p{"1 A [ p=. C. (n-1);~.0,(0~:,A)i.1
- else.
+else.
   m2=. >.m%2
   'p1 L1 U1'=. LU m2{.A
   D=. (/:p1) {"1 m2}.A
@@ -75,22 +75,22 @@ LU=: 3 : 0
   p3=. (i.m2),m2+p2
   H=. (/:p3) {"1 U1
   (p1{p3) ; (L1,FE1,.L2) ; H,(-n){."1 U2
- end.
+end.
 )
 
 NB. =========================================================
 NB.*LUcheck v LU decomposition of matrix y with checking
-NB. same arguments and result as LU 
+NB. same arguments and result as LU
 LUcheck=: 3 : 0
- A=. y
- assert. <:/$A
- 'p L U'=.z=. LU A
- 'm n'=. $A
- assert. (($p) -: ,n) *. (i.n) e. p
- assert. (($L) -: m,m) *. ((0~:L)<:(i.m)>:/i.m) *. 1=(<0 1)|:L
- assert. (($U) -: m,n) *.  (0~:U)<:(i.m)<:/i.n
- assert. A -: p {"1 L mp U
- z
+A=. y
+assert. <:/$A
+'p L U'=. z=. LU A
+'m n'=. $A
+assert. (($p) -: ,n) *. (i.n) e. p
+assert. (($L) -: m,m) *. ((0~:L)<:(i.m)>:/i.m) *. 1=(<0 1)|:L
+assert. (($U) -: m,n) *. (0~:U)<:(i.m)<:/i.n
+assert. A -: p {"1 L mp U
+z
 )
 
 NB. =========================================================
@@ -105,7 +105,7 @@ A1=: _3]\ 1 4 6, 4 0 3, 6 3 2    NB. not Positive definite
 A2=: _4]\ 33 7j_8 7j_10 3j_4, 7j8 28 2j4 _10j_11, 7j10 2j_4 22 3j3, 3j4 _10j11 3j_3 16
 A3=: (+/ .* |:) _10 + 10 20 ?.@$ 20
 
-choleski 6 6 {. A  NB. fails as not PD 
+choleski 6 6 {. A  NB. fails as not PD
 choleski A1        NB. fails as not PD
 {{y -: (] mp +@|:) choleski y}} every A2;A3
 lud A              NB. fails as not square

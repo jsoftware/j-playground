@@ -13,7 +13,6 @@ a=. ''''
 quote=: (a&,@(,&a))@ (#~ >:@(=&a))
 plurals=: ] , (1: ~: [) # 's'"_
 round=: [ * [: <. 0.5"_ + %~
-setlocale=: 18!:4 @ <
 termLF=: , (0: < #) # LF"_ -. _1&{.
 termdelLF=: }.~ [: - 0: i.~ LF&= @ |.
 tolist=: ; @: (DEL&, each) @: (,&DEL each)
@@ -90,11 +89,11 @@ IMMEX=: y
 9!:29 [ 1
 )
 run1=: 3 : 0
-setlocale 'base'
+cocurrent 'base'
 0!:111 y [ 4!:55<'y'
 )
 runquiet=: 3 : 0
-setlocale 'base'
+cocurrent 'base'
 0!:100 y [ 4!:55<'y'
 )
 setfontsize=: 4 : 0
@@ -115,10 +114,6 @@ else.
   y
 end.
 )
-f=. 3 : 'labnext_jlab805_ :: ] '''''
-plot_jctrl_fkey_jwplot_=: f f.
-jvm_jctrl_fkey_jviewmat_=: f f.
-graph_jctrl_fkey_jzgraph_=: f f.
 labaddons=: 3 : 0
 ADDLABS=: ''
 p=. jpath '~addons/'
@@ -227,7 +222,7 @@ elseif. do. ''
 end.
 )
 ADVANCE=: 0 : 0
-To advance the lab, select menu Help|Studio|Advance or the
+To advance the lab, select menu Labs|Advance Lab or the
 corresponding shortcut.
 )
 
