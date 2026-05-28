@@ -18,6 +18,8 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+#          path: 'bin/html2'
+
 jobs:
   deploy:
     environment:
@@ -32,7 +34,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'bin/html2'
+          path: '.'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
