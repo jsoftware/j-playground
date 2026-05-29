@@ -489,6 +489,16 @@ NB. fini
 
 cocurrent 'z'
 
+JVERSION_z_=: 3 : 0''
+v=. <;.1 '/',9!:14''
+y=. ": {. 6!:0''
+r=. 'Playground: ',2!:0'Version'
+r=. r,LF,'Engine: ', }.; 2 {. v
+r=. r,LF,'Build: Wasm', 5 pick v
+r=. r,LF,'Library ',":JLIB
+r,LF2,'Copyright © ',y,' Jsoftware Inc'
+)
+
 NB. =========================================================
 NB. run startup.ijs
 startupJS=: 0 : 0
